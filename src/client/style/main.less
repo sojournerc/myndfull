@@ -1,0 +1,60 @@
+
+@import './mixins.less';
+@import './basscss.less';
+@import './colors.less';
+@import './button.less';
+@import './dnd.less';
+
+body {
+  color: #ededed;
+  background-color: black;
+  border-color: #ededed;
+  .m0;
+}
+
+#Header {
+  background-color: #454545;
+}
+
+#PaneLeft, #PaneRight {
+  background-color: #666;
+}
+
+#Page {
+  background-color: #efefef;
+  color: #212121;
+  &:hover {
+    background-color: darken(#efefef, 5%);
+  }
+  &.selected {
+    border: 4px solid red;
+  }
+}
+
+.wireframe-section {
+  background-color: #efefef;
+}
+
+.wireframe-row {
+  background-color: #adadad;
+}
+
+.wireframe-column {
+  background-color: #666;
+}
+
+.wireframe-module {
+  background-color: #212121;
+  color: #efefef;
+}
+
+.wireframe-module-wrapper {
+  & + .wireframe-module-wrapper {
+    .mt1;
+  }
+}
+
+.dragging-element {
+  cursor: move;
+}
+

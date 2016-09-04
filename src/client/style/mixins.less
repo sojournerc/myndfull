@@ -1,0 +1,10 @@
+
+// support multiple arguments
+// http://stackoverflow.com/questions/11419741/less-css-mixins-with-variable-number-of-arguments
+.transition (@transition1,@transition2:X,...) {
+  @value: ~`"@{arguments}".replace(/[\[\]]|\,\sX/g, '')`;
+  -webkit-transition: @value;
+     -moz-transition: @value;
+      -ms-transition: @value;
+          transition: @value;
+}

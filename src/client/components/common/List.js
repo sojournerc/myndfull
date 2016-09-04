@@ -6,7 +6,7 @@ import create from '../componentFactory';
 import ITEM_TYPES from '../../constants/item-types';
 
 import ListItem from './ListItem';
-import { AddButton } from './Buttons';
+import { SubmitButton } from './Buttons';
 import { TextInput } from './Inputs';
 
 export default create({
@@ -16,10 +16,17 @@ export default create({
     itemType: React.PropTypes.oneOf(ITEM_TYPES).isRequired,
     inputValue: React.PropTypes.string.isRequired,
     onAddItem: React.PropTypes.func.isRequired,
+    onRemoveItem: React.PropTypes.func.isRequired,
     onInputChange: React.PropTypes.func.isRequired
   },
+  _onSubmit(ev) {
+    ev.preventDefault();
+    if (this.props.inputValue) {
+      this.props.onAddItem(this.props.inputValue);
+    }
+  },
   render() {
-    const { items, inputValue, onAddItem, onInputChange } = this.props;
+    const { items, inputValue, onAddItem, onRemoveItem, onInputChange } = this.props;
     return (
       <div
         className={cn(
@@ -28,17 +35,16 @@ export default create({
           {
           }
         )}>
-          <div>
+          <form onSubmit={this._onSubmit}>
             <TextInput onChange={onInputChange} value={inputValue} />
-            <AddButton onClick={onAddItem} text={'Add'} />
-          </div>
+            <SubmitButton text={'Add'} />
+          </form>
           {items.map((item, i) =>
             <ListItem
               index={i}
               key={i}
               item={item}
-              onClick={this.props.handlePagePick}
-              selected={i === selectedPageIdx}
+              onRemoveItem={onRemoveItem}
             />
           )}
       </div>

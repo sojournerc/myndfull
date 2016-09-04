@@ -1,6 +1,5 @@
 
 import create from '../actionFactory';
-import createAsync from '../asyncActionFactory';
 
 import {
   ADD_TASK,

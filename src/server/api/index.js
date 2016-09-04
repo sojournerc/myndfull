@@ -13,7 +13,7 @@ restify(Goal, 'goals');
 
 function handleError(ctx, err) {
   ctx.status = 400;
-  ctx.body = err;
+  ctx.body = err.stack || err;
 }
 
 function restify(Model, path) {
@@ -26,7 +26,7 @@ function restify(Model, path) {
   });
   router.post(`/${path}`, koaBody, function*() {
     try {
-      const body = JSON.parse(this.request.body);
+      const body = this.request.body;
       const created = yield Model.create(body);
       this.status = 201;
       this.body = created;
@@ -34,7 +34,7 @@ function restify(Model, path) {
   });
   router.put(`/${path}`, koaBody, function*() {
     try {
-      const body = JSON.parse(this.request.body);
+      const body = this.request.body;
       yield Model.upsert(body);
       // TODO: if the DB moves off SQLite this can be removed as the upsert will return the row instead
       const updated = yield Model.findOne({

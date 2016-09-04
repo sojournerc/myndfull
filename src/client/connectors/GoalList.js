@@ -4,7 +4,12 @@ import List from '../components/common/List';
 
 import { GOAL } from '../constants/item-types';
 
-import { changeGoalText } from '../redux/goals/actions';
+import {
+  changeGoalText,
+  postNewGoal,
+  deleteGoal,
+  fetchGoals
+} from '../redux/goals/actions';
 
 const mapStateToProps = (state) => ({
   itemType: GOAL,
@@ -13,8 +18,15 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddItem() {
-
+  onAddItem(val) {
+    dispatch(postNewGoal(val)).then(() => {
+      dispatch(fetchGoals());
+    });
+  },
+  onRemoveItem(id) {
+    dispatch(deleteGoal(id)).then(() => {
+      dispatch(fetchGoals());
+    });
   },
   onInputChange(ev) {
     dispatch(changeGoalText(ev.currentTarget.value))

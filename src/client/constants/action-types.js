@@ -3,9 +3,16 @@
 export const SET_MODE = 'SET_MODE';
 
 // goals
+export const GET_GOALS = 'GET_GOALS';
+export const GET_GOALS_SUCCESS = 'GET_GOALS_SUCCESS';
+export const GET_GOALS_FAIL = 'GET_GOALS_FAIL';
 export const ADD_GOAL = 'ADD_GOAL';
+export const ADD_GOAL_SUCCESS = 'ADD_GOAL_SUCCESS';
+export const ADD_GOAL_FAIL = 'ADD_GOAL_FAIL';
 export const MOVE_GOAL = 'MOVE_GOAL';
 export const REMOVE_GOAL = 'REMOVE_GOAL';
+export const REMOVE_GOAL_SUCCESS = 'REMOVE_GOAL_SUCCESS';
+export const REMOVE_GOAL_FAIL = 'REMOVE_GOAL_FAIL';
 export const CHANGE_GOAL_TEXT = 'CHANGE_GOAL_TEXT';
 
 // tasks

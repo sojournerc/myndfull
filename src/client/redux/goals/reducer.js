@@ -2,7 +2,12 @@
 import R from 'ramda';
 
 import {
+  GET_GOALS,
+  GET_GOALS_SUCCESS,
+  GET_GOALS_FAIL,
   ADD_GOAL,
+  ADD_GOAL_SUCCESS,
+  ADD_GOAL_FAIL,
   MOVE_GOAL,
   REMOVE_GOAL,
   CHANGE_GOAL_TEXT
@@ -10,13 +15,25 @@ import {
 
 const initialState = {
   goalList: [],
-  newGoalText: ''
+  newGoalText: '',
+  isFetching: false,
+  isSaving: false
 };
 
-export default function pages(state = initialState, { type, payload }) {
+export default function goals(state = initialState, { type, payload }) {
   switch (type) {
+  case GET_GOALS:
+    return Object.assign({}, state, { isFetching: true });
+  case GET_GOALS_SUCCESS:
+    return Object.assign({}, state, { isFetching: false, goalList: payload });
+  case GET_GOALS_FAIL:
+    return Object.assign({}, state, { isFetching: false });
   case ADD_GOAL:
-    return Object.assign({}, state, { selectedPageIdx: payload });
+    return Object.assign({}, state, { isSaving: true });
+  case ADD_GOAL_SUCCESS:
+    return Object.assign({}, state, { newGoalText: '', isSaving: false });
+  case ADD_GOAL_FAIL:
+    return Object.assign({}, state, { isSaving: false });
   case MOVE_GOAL:
     return state;
   case REMOVE_GOAL:

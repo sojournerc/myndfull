@@ -9,7 +9,9 @@ import goals from './goals/reducer';
 import tasks from './tasks/reducer';
 import dnd from './dnd/reducer';
 
-const loggerMiddleware = createLogger();
+const loggerMiddleware = createLogger({
+  collapsed: true
+});
 
 export const reducer = combineReducers({
   ui,

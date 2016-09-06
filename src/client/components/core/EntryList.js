@@ -16,7 +16,7 @@ export default create({
       'mh100',
       'overflow-auto'
     )}>
-      {entries.map((entry, i) => <Entry key={i} entry={entry} />)}
+      {entries.map((entry, i) => <Entry key={i} entry={entry} isLast={(i === entries.length - 1)} />)}
     </div>
   }
 });

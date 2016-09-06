@@ -1,9 +1,11 @@
 
 import Sequelize from 'sequelize';
+import { getDBConnectionString } from '../config';
 
-const db = new Sequelize('myndmap', 'user', 'pass', {
-  dialect: 'sqlite',
-  storage: `${__dirname}/../../database.sqlite`
+const dbConnectString = getDBConnectionString();
+
+const db = new Sequelize(dbConnectString, {
+  dialect: 'postgres'
 });
 
 export const models = db.models;

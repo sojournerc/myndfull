@@ -1,0 +1,6 @@
+
+{
+  "dbName": "myndfull",
+  "dbHost": "localhost",
+  "dbPort": 5432
+}

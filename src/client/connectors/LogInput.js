@@ -16,9 +16,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onAdd(val) {
     dispatch(postNewEntry(val)).then(() => {
-      dispatch(fetchEntries()).then(() => {
-        console.log('SCROLL TO BOTTOM')
-      });
+      dispatch(fetchEntries());
     });
   },
   onInputChange(val) {

@@ -3,14 +3,18 @@ import fs from 'fs';
 
 // reading these from the file system b/c we don't want to include any configuratin in the rolled up bundle
 const DEFAULT = JSON.parse(fs.readFileSync(`${process.cwd()}/config.default.json`));
-const CUSTOM = JSON.parse(fs.readFileSync(`${process.cwd()}/config.custom.json`));
+
+let CUSTOM = {};
+try {
+  CUSTOM = JSON.parse(fs.readFileSync(`${process.cwd()}/config.custom.json`));
+} catch (e) { console.warn('No custom configuration found'); }
 
 const OPEN_SHIFT = {
   dbUser: process.env.OPENSHIFT_POSTGRESQL_DB_USERNAME,
   dbPassword: process.env.OPENSHIFT_POSTGRESQL_DB_PASSWORD,
   dbHost: process.env.OPENSHIFT_POSTGRESQL_DB_HOST,
   dbPort: process.env.OPENSHIFT_POSTGRESQL_DB_PORT
-}
+};
 
 // can't use Object assign b/c the above environment variables will be undefined and will
 // clobber the default / custom values

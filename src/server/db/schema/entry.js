@@ -8,5 +8,4 @@ const Entry = db.define('entry', {
 
 });
 
-Entry.sync({ force: true });
 export default Entry;

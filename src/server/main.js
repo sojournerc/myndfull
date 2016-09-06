@@ -35,6 +35,12 @@ app.use(logger());
 
 app.use(mount('/api', api));
 
+// support openshift health check
+router.get('/health', function*(){
+  this.status = 200;
+  this.body = { status: 'up' };
+});
+
 router.get('/', function*() {
   yield this.render('home', {
     title: 'Myndfull'

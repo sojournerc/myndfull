@@ -1,6 +1,9 @@
 {
   "name": "myndfull",
   "version": "0.0.1",
+  "scripts": {
+    "start": "node build/server/main.js"
+  },
   "dependencies": {
     "babel-polyfill": "^6.13.0",
     "classnames": "^2.2.5",

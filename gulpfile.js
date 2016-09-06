@@ -46,6 +46,7 @@ gulp.task('rollup_client', function () {
     entry: pathIn + '/main.js',
     sourceMap: true,
     plugins: [
+      commonJs(),
       buble({
         transforms: {
           modules: false,
@@ -58,8 +59,7 @@ gulp.task('rollup_client', function () {
         main: true,
         browser: true
       }),
-      replace({ 'process.env.NODE_ENV': JSON.stringify('development') }),
-      commonJs()
+      replace({ 'process.env.NODE_ENV': JSON.stringify('development') })
     ]
   })
   .on('error', function (err) { console.error(cliColor.red(err.stack)); stream.end(); })

@@ -30,13 +30,11 @@ const App = create({
 
     const showPaneRight = false;
     const showPaneLeft = true;
-    const showFooter = false;
+    const showFooter = true;
     const showHeader = true;
 
     return <div className={cn(
       'vh100',
-      'flex',
-      'flex-column',
       {
         'dragging-element': dragging
       }
@@ -46,7 +44,7 @@ const App = create({
         <HeaderContent mode={mode} />
       </Header>
       }
-      <div className={cn('flex-gs-80')}>
+      <div id="BodyInner">
         <div className={cn(
           'h100',
           'flex',

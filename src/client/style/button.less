@@ -1,9 +1,30 @@
 
 .button {
   background-color: @buttonColor;
-  color: #212121;
-  .line-height-2;
+  border: 2px @theme1 solid;
+  .rounded;
+  .line-height-1;
+  .truncate;
+  font-size: 0.9rem;
+  &:focus {
+    outline: none;
+  }
   &:hover {
-    background-color: darken(@buttonColor, 5%);
+    opacity: 0.9;
+  }
+  & > * {
+    .p1;
+    .inline-block;
+  }
+  &.button-light {
+    background-color: @lighter;
+    color: @theme1;
+  }
+  &.button-dark {
+    background-color: @theme5;
+    color: @lighter;
+  }
+  &.button-small {
+    padding: 0;
   }
 }

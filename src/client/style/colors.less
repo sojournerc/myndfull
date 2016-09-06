@@ -1,2 +1,45 @@
 
-@buttonColor: #af832a;
+@theme1: #8f9779;
+@theme2: #78866b;
+@theme3: #738276;
+@theme4: #738678;
+@theme5: #4d5d53;
+@themeLight: lighten(@theme3, 40%);
+
+.theme1-bg { background-color: @theme1; }
+.theme1-color { color: @theme1 }
+.theme2-bg { background-color: @theme2; }
+.theme2-color { color: @theme2 }
+.theme3-bg { background-color: @theme3; }
+.theme3-color { color: @theme3 }
+.theme4-bg { background-color: @theme4; }
+.theme4-color { color: @theme4 }
+.theme5-bg { background-color: @theme5; }
+.theme5-color { color: @theme5 }
+.themeLight-bg { background-color: @themeLight; }
+.themeLight-color { color: @themeLight }
+
+@buttonColor: @theme3;
+
+@darkest: #121212;
+@darker: #454545;
+@dark: #878787;
+@mid: #aaa;
+@light: #cdcdcd;
+@lighter: #dedede;
+@lightest: #eaeaea;
+
+.darkest-bg { background-color: @darkest; }
+.darkest-color { color: @darkest }
+.darker-bg { background-color: @darker; }
+.darker-color { color: @darker }
+.dark-bg { background-color: @dark; }
+.dark-color { color: @dark }
+.mid-bg { background-color: @mid; }
+.mid-color { color: @mid }
+.light-bg { background-color: @light; }
+.light-color { color: @light }
+.lighter-bg { background-color: @lighter; }
+.lighter-color { color: @lighter }
+.lightest-bg { background-color: @lightest; }
+.lightest-color { color: @lightest }

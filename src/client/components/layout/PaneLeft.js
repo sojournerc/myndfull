@@ -12,6 +12,8 @@ export default create({
     return <div id="PaneLeft" className={cn(
       'p2',
       'border-right',
+      'border-box',
+      'h100',
       {
         'flex-gs-20': true
       }

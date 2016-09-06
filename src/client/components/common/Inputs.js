@@ -1,9 +1,9 @@
 
 import React from 'react';
 
-const buttonPropTypes = {
+const inputPropTypes = {
   value: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func.isRequired
+  onChange: React.PropTypes.func.isRequired,
 }
 
 export function TextInput(props) {
@@ -12,9 +12,20 @@ export function TextInput(props) {
     <input type="text" className="input" onChange={onChange} value={value} />
   );
 }
-TextInput.propTypes = buttonPropTypes;
+TextInput.propTypes = inputPropTypes;
+
+export function TextArea(props) {
+  const { value, onChange, onKeyUp } = props;
+  return (
+    <textarea type="text" className="input" onChange={onChange} value={value} onKeyUp={onKeyUp} />
+  );
+}
+TextArea.propTypes = Object.assign({}, inputPropTypes, {
+  onKeyUp: React.PropTypes.func
+});
 
 // export all buttons on default
 export default {
-  TextInput
+  TextInput,
+  TextArea
 }

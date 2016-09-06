@@ -3,31 +3,64 @@
 @import './basscss.less';
 @import './colors.less';
 @import './button.less';
+@import './list.less';
+@import './input.less';
 @import './dnd.less';
 
+@headerHeight: 4rem;
+@footerHeight: 6rem;
+
+html {
+  font-size: 13px;
+}
+
 body {
-  color: #ededed;
-  background-color: black;
-  border-color: #ededed;
+  color: @darker;
+  background-color: @light;
+  font-family: sans-serif;
   .m0;
 }
 
+#BodyInner {
+  .fixed;
+  .left-0;
+  .right-0;
+  top: @headerHeight;
+  bottom: @footerHeight;
+}
+
 #Header {
-  background-color: #454545;
+  .fixed;
+  .left-0;
+  .right-0;
+  .top-0;
+  .border-top;
+  .border-box;
+  height: @headerHeight;
+  color: @light;
+  background-color: @theme5;
 }
 
-#PaneLeft, #PaneRight {
-  background-color: #666;
+#Footer {
+  .fixed;
+  .left-0;
+  .right-0;
+  .bottom-0;
+  .border-top;
+  .border-box;
+  height: @footerHeight;
+  background-color: @darker;
 }
 
-#Page {
-  background-color: #efefef;
-  color: #212121;
-  &:hover {
-    background-color: darken(#efefef, 5%);
-  }
-  &.selected {
-    border: 4px solid red;
+#PaneLeft {
+  background-color: @themeLight
+}
+
+#EntryList {
+  & > * {
+    &:nth-child(odd) {
+      background-color: @lighter;
+    }
   }
 }
 
@@ -57,4 +90,3 @@ body {
 .dragging-element {
   cursor: move;
 }
-

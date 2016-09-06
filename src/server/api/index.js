@@ -4,12 +4,16 @@ import KoaBody from 'koa-body';
 import Router from 'koa-router';
 
 import Goal from '../db/schema/goal';
+import Task from '../db/schema/task';
+import Entry from '../db/schema/entry';
 
 const app = new Koa();
 const router = Router()
 const koaBody = KoaBody();
 
 restify(Goal, 'goals');
+restify(Task, 'tasks');
+restify(Entry, 'entries');
 
 function handleError(ctx, err) {
   ctx.status = 400;

@@ -6,17 +6,16 @@ import create from '../componentFactory';
 import ITEM_TYPES from '../../constants/item-types';
 
 import ListItem from './ListItem';
-import { SubmitButton } from './Buttons';
-import { TextInput } from './Inputs';
+import TextForm from './TextForm';
 
 export default create({
   displayName: 'List',
   propTypes: {
     items: React.PropTypes.array.isRequired,
     itemType: React.PropTypes.oneOf(ITEM_TYPES).isRequired,
+    onRemoveItem: React.PropTypes.func.isRequired,
     inputValue: React.PropTypes.string.isRequired,
     onAddItem: React.PropTypes.func.isRequired,
-    onRemoveItem: React.PropTypes.func.isRequired,
     onInputChange: React.PropTypes.func.isRequired
   },
   _onSubmit(ev) {
@@ -30,23 +29,22 @@ export default create({
     return (
       <div
         className={cn(
-          'items-center',
-          'justify-around',
-          {
-          }
         )}>
-          <form onSubmit={this._onSubmit}>
-            <TextInput onChange={onInputChange} value={inputValue} />
-            <SubmitButton text={'Add'} />
-          </form>
-          {items.map((item, i) =>
-            <ListItem
-              index={i}
-              key={i}
-              item={item}
-              onRemoveItem={onRemoveItem}
-            />
-          )}
+          <TextForm inputValue={inputValue} onInputChange={onInputChange} onAdd={onAddItem} />
+          <div className="mb2 list border-box">
+            {!!items.length &&
+            items.map((item, i) =>
+              <ListItem
+                index={i}
+                key={i}
+                item={item}
+                onRemoveItem={onRemoveItem}
+              />
+            )
+            ||
+            <div className="p2 center mid-color">{'-------- no items --------'}</div>
+            }
+          </div>
       </div>
     )
   }

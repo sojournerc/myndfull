@@ -9,10 +9,8 @@ export default create({
     children: React.PropTypes.node
   },
   render() {
-    return <div className={cn(
-      'flex-gs-10',
-      'p2',
-      'border-top'
+    return <div id="Footer" className={cn(
+
     )}>
       {this.props.children}
     </div>

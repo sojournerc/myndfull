@@ -4,7 +4,12 @@ import List from '../components/common/List';
 
 import { TASK } from '../constants/item-types';
 
-import { changeTaskText } from '../redux/tasks/actions';
+import {
+  changeTaskText,
+  postNewTask,
+  deleteTask,
+  fetchTasks
+} from '../redux/tasks/actions';
 
 const mapStateToProps = (state) => ({
   itemType: TASK,
@@ -13,11 +18,18 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddItem() {
-
+  onAddItem(val) {
+    dispatch(postNewTask(val)).then(() => {
+      dispatch(fetchTasks());
+    });
   },
-  onInputChange(ev) {
-    dispatch(changeTaskText(ev.currentTarget.value))
+  onRemoveItem(id) {
+    dispatch(deleteTask(id)).then(() => {
+      dispatch(fetchTasks());
+    });
+  },
+  onInputChange(val) {
+    dispatch(changeTaskText(val))
   }
 });
 

@@ -28,8 +28,8 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(fetchGoals());
     });
   },
-  onInputChange(ev) {
-    dispatch(changeGoalText(ev.currentTarget.value))
+  onInputChange(val) {
+    dispatch(changeGoalText(val))
   }
 });
 

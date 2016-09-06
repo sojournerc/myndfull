@@ -1,0 +1,9 @@
+
+.list {
+  background-color: @lighter;
+  & > * {
+    &:nth-child(odd) {
+      background-color: @lightest;
+    }
+  }
+}

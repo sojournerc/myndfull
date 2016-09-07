@@ -13,7 +13,7 @@ const db = new Sequelize(dbConnectString, {
   }
 });
 
-db.sync();
+db.sync({ force: true });
 export const models = db.models;
 
 export default db;

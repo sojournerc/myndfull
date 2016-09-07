@@ -8,5 +8,5 @@ const Goal = db.define('goal', {
 }, {
 
 });
-
+Goal.sync();
 export default Goal;

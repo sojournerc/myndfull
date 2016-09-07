@@ -8,5 +8,5 @@ const Task = db.define('task', {
 }, {
 
 });
-
+Task.sync();
 export default Task;

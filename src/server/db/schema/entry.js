@@ -7,5 +7,5 @@ const Entry = db.define('entry', {
 }, {
 
 });
-
+Entry.sync();
 export default Entry;

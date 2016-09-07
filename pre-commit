@@ -4,3 +4,4 @@ gulp rollup_client_prod
 gulp build_less_prod
 
 git add build/client/prod/.
+git add build/server/.

@@ -136,7 +136,9 @@ function restify(Model, path) {
 
 app$1.use(router$1.routes());
 
-const PORT = 5000;
+const PORT = process.env.NODE_PORT || 5000;
+const IP = process.env.NODE_IP || 'localhost';
+
 const VIEW_PATH = `${__dirname}/../../views`;
 const DEV_CLIENT_PATH = `${__dirname}/../client/dev`;
 const PROD_CLIENT_PATH = `${__dirname}/../client/prod`;
@@ -183,7 +185,7 @@ process.on('uncaughtException', function(err) {
   console.error(err.stack);
 });
 
-app.listen(PORT)
-console.info(`listening on port ${PORT}`);
+app.listen(PORT, IP)
+console.info(`listening on port ${IP}:${PORT}`);
 
 module.exports = app;

@@ -15,15 +15,16 @@ var source = require('vinyl-source-stream');
 
 // plugins
 var buble = require('rollup-plugin-buble');
-var babel = require('rollup-plugin-babel');
 var nodeResolve = require('rollup-plugin-node-resolve');
 var commonJs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
 
 var CLIENT_PATH_IN = './src/client';
-var CLIENT_PATH_OUT = './build/client/js';
+var DEV_CLIENT_OUT = './build/client/dev/js';
+var PROD_CLIENT_OUT = './build/client/prod/js';
 var LESS_MAIN = './src/client/style/main.less';
-var LESS_OUT = './build/client/css';
+var LESS_DEV_OUT = './build/client/dev/css';
+var LESS_PROD_OUT = './build/client/prod/css';
 
 gulp.task('default', ['develop']);
 gulp.task('develop', ['build_dev', 'watchClient', 'watchServer']);
@@ -46,7 +47,6 @@ gulp.task('watchClient', function () {
   gulp.watch('./src/client/style/**/*.less', ['build_less_dev']);
 });
 
-
 function rollupClient(env) {
   return rollup({
     format: 'umd',
@@ -60,17 +60,11 @@ function rollupClient(env) {
           generator: false
         }
       }),
-      // babel(),
       nodeResolve({
         module: true,
         jsnext: true,
         main: true,
-        browser: true,
-        skip: [
-          // 'core-js',
-          // 'regenerator-runtime',
-          // 'symbol-observable'
-        ]
+        browser: true
       }),
       replace({ 'process.env.NODE_ENV': JSON.stringify(env) })
     ]
@@ -83,14 +77,14 @@ gulp.task('rollup_client_dev', function () {
   .pipe(buffer())
   .pipe(sourcemaps.init({loadMaps: true}))
   .pipe(sourcemaps.write())
-  .pipe(gulp.dest(CLIENT_PATH_OUT))
+  .pipe(gulp.dest(DEV_CLIENT_OUT))
   .pipe(livereload());
 });
 gulp.task('rollup_client_prod', function () {
   return rollupClient('production')
   .pipe(buffer())
   .pipe(uglify())
-  .pipe(gulp.dest(CLIENT_PATH_OUT));
+  .pipe(gulp.dest(PROD_CLIENT_OUT));
 })
 
 gulp.task('rollup_server', function () {
@@ -108,12 +102,12 @@ gulp.task('rollup_server', function () {
 gulp.task('build_less_dev', function () {
   gulp.src(LESS_MAIN)
     .pipe(less())
-    .pipe(gulp.dest(LESS_OUT))
+    .pipe(gulp.dest(LESS_DEV_OUT))
     .pipe(livereload());
 });
 gulp.task('build_less_prod', function () {
   gulp.src(LESS_MAIN)
     .pipe(less())
     .pipe(uglifyCss())
-    .pipe(gulp.dest(LESS_OUT))
-})
+    .pipe(gulp.dest(LESS_PROD_OUT))
+});

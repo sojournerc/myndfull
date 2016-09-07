@@ -11,7 +11,8 @@ import api from './api/index';
 
 const PORT = 5000;
 const VIEW_PATH = `${__dirname}/../../views`;
-const CLIENT_PATH = `${__dirname}/../client`;
+const DEV_CLIENT_PATH = `${__dirname}/../client/dev`;
+const PROD_CLIENT_PATH = `${__dirname}/../client/prod`;
 const STATIC_PATH = `${__dirname}/../../public`;
 
 const router = Router();
@@ -27,7 +28,11 @@ app.use(hbs.middleware({
   viewPath: VIEW_PATH
 }));
 
-app.use(serve(CLIENT_PATH));
+if (process.env.NODE_ENV === 'development') {
+  app.use(serve(DEV_CLIENT_PATH));
+} else {
+  app.use(serve(PROD_CLIENT_PATH));
+}
 app.use(serve(STATIC_PATH));
 
 // only log requests that make it past static dirs

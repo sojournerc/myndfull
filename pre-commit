@@ -1,6 +1,6 @@
 ##!/bin/sh
 
-gulp bundleUglyCss
-gulp bundleUglyJs
+gulp rollup_client_prod
+gulp build_less_prod
 
-git add public/js/main.min.js public/css/main.min.css
+git add build/client/prod/.

@@ -15,6 +15,7 @@ var source = require('vinyl-source-stream');
 
 // plugins
 var buble = require('rollup-plugin-buble');
+var babel = require('rollup-plugin-babel');
 var nodeResolve = require('rollup-plugin-node-resolve');
 var commonJs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
@@ -59,11 +60,17 @@ function rollupClient(env) {
           generator: false
         }
       }),
+      // babel(),
       nodeResolve({
         module: true,
         jsnext: true,
         main: true,
-        browser: true
+        browser: true,
+        skip: [
+          // 'core-js',
+          // 'regenerator-runtime',
+          // 'symbol-observable'
+        ]
       }),
       replace({ 'process.env.NODE_ENV': JSON.stringify(env) })
     ]

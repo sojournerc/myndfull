@@ -1,0 +1,6 @@
+##!/bin/sh
+
+gulp bundleUglyCss
+gulp bundleUglyJs
+
+git add public/js/main.min.js public/css/main.min.css

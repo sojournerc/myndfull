@@ -65,6 +65,7 @@ const Goal = db.define('goal', {
 }, {
 
 });
+Goal.sync();
 
 const Task = db.define('task', {
   text: { type: Sequelize.TEXT, allowNull: false },
@@ -72,12 +73,14 @@ const Task = db.define('task', {
 }, {
 
 });
+Task.sync();
 
 const Entry = db.define('entry', {
   text: { type: Sequelize.TEXT, allowNull: false }
 }, {
 
 });
+Entry.sync();
 
 const app$1 = new Koa();
 const router$1 = Router()
@@ -89,7 +92,7 @@ restify(Entry, 'entries');
 
 function handleError(ctx, err) {
   ctx.status = 400;
-  ctx.body = err.stack || err;
+  ctx.body = { message: err.stack || err };
 }
 
 function restify(Model, path) {

@@ -17,7 +17,7 @@ restify(Entry, 'entries');
 
 function handleError(ctx, err) {
   ctx.status = 400;
-  ctx.body = err.stack || err;
+  ctx.body = { message: err.stack || err };
 }
 
 function restify(Model, path) {

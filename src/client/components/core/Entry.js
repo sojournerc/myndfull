@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import cn from 'classnames';
 import create from '../componentFactory';
 
+import Linkify from 'react-linkify';
 import TimeStamp from '../common/TimeStamp';
 
 export default create({
@@ -32,8 +33,8 @@ export default create({
         <div className="flex-item pr1 mid-color">
           <TimeStamp time={entry.createdAt} />
         </div>
-        <div className="flex-gs-item pl1">
-          {entry.text}
+        <div className="flex-gs-item pl1 prewrap">
+          <Linkify properties={{ target: '_blank' }}>{entry.text}</Linkify>
         </div>
       </div>
     </div>

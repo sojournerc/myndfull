@@ -24,7 +24,7 @@ export default create({
   render() {
     const { item, index, itemType, isLast } = this.props;
     const Item = ComponentMap[itemType];
-    return <div onMouseDown={this._handleMouseDown}>
+    return <div onClick={this._handleMouseDown}>
       <DroppableTarget path={`${itemType}.${index}`} />
       <Item item={item} index={index} />
       {isLast && <DroppableTarget path={`${itemType}.${index+1}`} />}

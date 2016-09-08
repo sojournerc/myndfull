@@ -10,7 +10,6 @@ export default create({
   },
   render() {
     return <div id="Main" className={cn(
-      'py2',
       {
         'flex-gs-60': true
       }

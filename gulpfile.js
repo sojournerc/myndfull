@@ -29,7 +29,7 @@ var LESS_PROD_OUT = './build/client/prod/css';
 gulp.task('default', ['develop']);
 gulp.task('develop', ['build_dev', 'watchClient', 'watchServer']);
 gulp.task('build_dev', ['rollup_server', 'rollup_client_dev', 'build_less_dev']);
-gulp.task('build_prod', ['rollup_server', 'rollup_client_prod', 'build_less_prod']);
+gulp.task('build_prod', ['rollup_server', 'rollup_migrate', 'rollup_client_prod', 'build_less_prod']);
 
 gulp.task('watchServer', function () {
   return nodemon({
@@ -69,35 +69,25 @@ function rollupClient(env) {
       replace({ 'process.env.NODE_ENV': JSON.stringify(env) })
     ]
   })
-  .pipe(source('main.js', CLIENT_PATH_IN))
 }
 gulp.task('rollup_client_dev', function () {
-  return rollupClient('development')
+  var stream = rollupClient('development')
   .on('error', function (err) { console.error(cliColor.red(err.stack)); stream.end(); })
+  .pipe(source('main.js', CLIENT_PATH_IN))
   .pipe(buffer())
   .pipe(sourcemaps.init({loadMaps: true}))
   .pipe(sourcemaps.write())
   .pipe(gulp.dest(DEV_CLIENT_OUT))
   .pipe(livereload());
+  return stream;
 });
 gulp.task('rollup_client_prod', function () {
   return rollupClient('production')
+  .pipe(source('main.js', CLIENT_PATH_IN))
   .pipe(buffer())
   .pipe(uglify())
   .pipe(gulp.dest(PROD_CLIENT_OUT));
 })
-
-gulp.task('rollup_server', function () {
-  var pathIn = './src/server';
-  var pathOut = './build/server';
-  return rollup({
-    format: 'cjs',
-    entry: pathIn + '/main.js'
-  })
-  .on('error', function (err) { console.error(cliColor.red(err.stack)); stream.end(); })
-  .pipe(source('main.js', pathIn))
-  .pipe(gulp.dest(pathOut))
-});
 
 gulp.task('build_less_dev', function () {
   gulp.src(LESS_MAIN)
@@ -110,4 +100,32 @@ gulp.task('build_less_prod', function () {
     .pipe(less())
     .pipe(uglifyCss())
     .pipe(gulp.dest(LESS_PROD_OUT))
+});
+
+gulp.task('rollup_server', function () {
+  var pathIn = './src/server';
+  var pathOut = './build/server';
+  var stream = rollup({
+    format: 'cjs',
+    entry: pathIn + '/main.js'
+  })
+  .on('error', function (err) { console.error(cliColor.red(err.stack)); stream.end(); })
+  .pipe(source('main.js', pathIn))
+  .pipe(gulp.dest(pathOut))
+  return stream;
+});
+gulp.task('rollup_migrate', function () {
+  var pathIn = './src/server/db';
+  var pathOut = './build/server';
+  var stream = rollup({
+    format: 'cjs',
+    entry: pathIn + '/migrate.js'
+  })
+  .on('error', function (err) { console.error(cliColor.red(err.stack)); stream.end(); })
+  .pipe(source('migrate.js', pathIn))
+  .pipe(gulp.dest(pathOut))
+  return stream;
+});
+gulp.task('watchMigrate', function () {
+  gulp.watch(['./src/server/db/migrate.js'], ['rollup_migrate']);
 });

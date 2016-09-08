@@ -3,10 +3,10 @@ import Sequelize from 'sequelize';
 import db from '../index';
 
 const Task = db.define('task', {
-  text: { type: Sequelize.TEXT, allowNull: false },
-  orderIndex: { type: Sequelize.INTEGER, allowNull: false, unique: true }
+  text: { type: Sequelize.STRING, allowNull: false },
+  notes: { type: Sequelize.TEXT },
+  orderIndex: { type: Sequelize.INTEGER, allowNull: false }
 }, {
 
 });
-Task.sync();
 export default Task;

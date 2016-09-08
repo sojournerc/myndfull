@@ -61,44 +61,151 @@ const db = new Sequelize(dbConnectString, {
 
 const Goal = db.define('goal', {
   text: { type: Sequelize.TEXT, allowNull: false },
-  orderIndex: { type: Sequelize.INTEGER, allowNull: false, unique: true }
+  orderIndex: { type: Sequelize.INTEGER, allowNull: false }
 }, {
 
 });
-Goal.sync();
+
+var goalProvider = {
+  create: function*(body) {
+    return Goal.create(body);
+  },
+  update: function*(body) {
+    // look up item to be updated
+    const updating = yield Goal.findById(body.id);
+    // if the new orderIndex doesn't match the old, we need to update some ordering
+    if (body.orderIndex !== updating.orderIndex) {
+      // first set the one we're updating to 0 to get it out of the way
+      yield Goal.update({ orderIndex: 0 }, { where: { id: body.id } });
+      // down in order
+      if (body.orderIndex > updating.orderIndex) {
+        // everything above the old order index and below the new order index increases one
+        body.orderIndex--;
+        yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
+      // up in order
+      } else if (body.orderIndex < updating.orderIndex) {
+        // everything above the old order index and below the new order index decreases one
+        yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
+      }
+    }
+    yield Goal.upsert(body);
+  },
+  get: function*(query) {
+    return Goal.findAll({
+      order: ['orderIndex']
+    });
+  },
+  remove: function*(id) {
+    // look up the item by id
+    const removing = yield Goal.findById(id);
+    const removingOrderIndex = removing.orderIndex;
+    // destroy the item
+    yield Goal.destroy({ where: { id: id }})
+    // update the other rows to have correct orderIdx
+    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
+    return;
+  }
+}
 
 const Task = db.define('task', {
-  text: { type: Sequelize.TEXT, allowNull: false },
-  orderIndex: { type: Sequelize.INTEGER, allowNull: false, unique: true }
+  text: { type: Sequelize.STRING, allowNull: false },
+  notes: { type: Sequelize.TEXT },
+  orderIndex: { type: Sequelize.INTEGER, allowNull: false }
 }, {
 
 });
-Task.sync();
+
+var taskProvider = {
+  create: function*(body) {
+    return Task.create(body);
+  },
+  update: function*(body) {
+    // look up item to be updated
+    const updating = yield Task.findById(body.id);
+    // if the new orderIndex doesn't match the old, we need to update some ordering
+    if (body.orderIndex !== updating.orderIndex) {
+      // first set the one we're updating to 0 to get it out of the way
+      yield Task.update({ orderIndex: 0 }, { where: { id: body.id } });
+      // down in order
+      if (body.orderIndex > updating.orderIndex) {
+        // everything above the old order index and below the new order index increases one
+        body.orderIndex--;
+        yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
+      // up in order
+      } else if (body.orderIndex < updating.orderIndex) {
+        // everything above the old order index and below the new order index decreases one
+        yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
+      }
+    }
+    yield Task.upsert(body);
+  },
+  get: function*(query) {
+    return Task.findAll({
+      order: ['orderIndex']
+    });
+  },
+  remove: function*(id) {
+    // look up the item by id
+    const removing = yield Task.findById(id);
+    const removingOrderIndex = removing.orderIndex;
+    // destroy the item
+    yield Task.destroy({ where: { id: id }})
+    // update the other rows to have correct orderIdx
+    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
+    return;
+  }
+}
+
+
+// To swap two items (4 and 7):
+// i.e. 0 is not used, so use a it as a dummy to avoid having an ambiguous item.
+// UPDATE myitems SET orderindex = 0 WHERE orderindex = 4;
+// UPDATE myitems SET orderindex = 4 WHERE orderindex = 7;
+// UPDATE myitems SET orderindex = 7 WHERE orderindex = 0;
+
+// To insert at 3:
+//  UPDATE myitems SET orderindex = (orderindex + 1) WHERE orderindex > 2;
+//  INSERT INTO myitems (Myitem,orderindex) values ("MytxtitemHere",3)
 
 const Entry = db.define('entry', {
   text: { type: Sequelize.TEXT, allowNull: false }
 }, {
 
 });
-Entry.sync();
+
+var entryProvider = {
+  create: function*(body) {
+    return Entry.create(body);
+  },
+  update: function*(body) {
+    return Entry.upsert(body);
+  },
+  get: function*(query) {
+    return Entry.findAll({
+    });
+  },
+  remove: function*(id) {
+    return Entry.destroy({ where: { id: id }});
+  }
+}
 
 const app$1 = new Koa();
 const router$1 = Router()
 const koaBody = KoaBody();
 
-restify(Goal, 'goals');
-restify(Task, 'tasks');
-restify(Entry, 'entries');
+restify(goalProvider, 'goals');
+restify(taskProvider, 'tasks');
+restify(entryProvider, 'entries');
 
 function handleError(ctx, err) {
   ctx.status = 400;
   ctx.body = { message: err.stack || err };
 }
 
-function restify(Model, path) {
+function restify(provider, path) {
   router$1.get(`/${path}`, function*(){
     try {
-      const response = yield Model.findAll();
+      const response = yield provider.get(this.query);
       this.status = 200;
       this.body = response;
     } catch (err) { handleError(this, err); }
@@ -106,7 +213,7 @@ function restify(Model, path) {
   router$1.post(`/${path}`, koaBody, function*() {
     try {
       const body = this.request.body;
-      const created = yield Model.create(body);
+      const created = yield provider.create(body);
       this.status = 201;
       this.body = created;
     } catch (err) { handleError(this, err); }
@@ -114,26 +221,16 @@ function restify(Model, path) {
   router$1.put(`/${path}`, koaBody, function*() {
     try {
       const body = this.request.body;
-      yield Model.upsert(body);
-      // TODO: if the DB moves off SQLite this can be removed as the upsert will return the row instead
-      const updated = yield Model.findOne({
-        where: {
-          id: body.id
-        }
-      })
+      const updated = yield provider.update(body);
       this.status = 200;
       this.body = updated;
-    } catch (err) { handleError(err) }
+    } catch (err) { handleError(this, err) }
   });
   router$1.delete(`/${path}/:id`, koaBody, function*() {
     try {
-      yield Model.destroy({
-        where: {
-          id: this.params.id
-        }
-      });
+      yield provider.remove(this.params.id);
       this.status = 204;
-    } catch (err) { handleError(err); }
+    } catch (err) { handleError(this, err); }
   });
 }
 

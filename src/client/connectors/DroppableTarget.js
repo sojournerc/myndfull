@@ -1,6 +1,6 @@
 
 import create from './connectorFactory';
-import Target from '../components/core/Target';
+import Target from '../components/common/Target';
 
 import {
   mapStateToProps,

@@ -1,4 +1,6 @@
 
+import R from 'ramda';
+
 import create from '../actionFactory';
 import createFetch from '../fetchFactory';
 import { store } from '../index';
@@ -10,7 +12,9 @@ import {
   ADD_TASK,
   ADD_TASK_SUCCESS,
   ADD_TASK_FAIL,
-  MOVE_TASK,
+  UPDATE_TASK,
+  UPDATE_TASK_SUCCESS,
+  UPDATE_TASK_FAIL,
   REMOVE_TASK,
   REMOVE_TASK_SUCCESS,
   REMOVE_TASK_FAIL,
@@ -20,8 +24,15 @@ import {
 export function changeTaskText(val) {
   return create(CHANGE_TASK_TEXT, val)
 }
-export function moveTask(prevIdx, newIdx) {
-  return create(MOVE_TASK, { prevIdx, newIdx });
+export function moveTask(path, task) {
+  return function(dispatch) {
+    // orderIndex starts at 0 to allow the backend to use 0 to move around elements
+    const clone = R.clone(task);
+    clone.orderIndex = (parseInt(path.split('.')[1])+1)
+    return dispatch(putTask(clone)).then(() => {
+      dispatch(fetchTasks());
+    });
+  }
 }
 
 /**
@@ -83,7 +94,7 @@ export function addTaskFail(res) {
 export function postNewTask(text) {
   const task = {
     text,
-    orderIndex: store.getState().tasks.taskList.length+1
+    orderIndex: store.getState().tasks.taskList.length + 1
   };
   return createFetch({
     url: `/api/tasks`,
@@ -92,5 +103,28 @@ export function postNewTask(text) {
     start: addTask,
     success: addTaskSuccess,
     fail: addTaskFail
+  });
+}
+
+/**
+ * TASK UPDATING
+ */
+export function updateTask() {
+  return create(UPDATE_TASK)
+}
+export function updateTaskSuccess(got) {
+  return create(UPDATE_TASK_SUCCESS, got);
+}
+export function updateTaskFail(res) {
+  return create(UPDATE_TASK_FAIL, res);
+}
+export function putTask(task) {
+  return createFetch({
+    url: `/api/tasks`,
+    method: 'PUT',
+    body: task,
+    start: updateTask,
+    success: updateTaskSuccess,
+    fail: updateTaskFail
   });
 }

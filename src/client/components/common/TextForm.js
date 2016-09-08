@@ -22,8 +22,6 @@ export default create({
     const val = R.trim(this.props.inputValue);
     if (val) {
       this.props.onAdd(val);
-    } else {
-
     }
   },
   _onTextAreaKeyUp(ev) {

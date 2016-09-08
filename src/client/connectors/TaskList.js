@@ -7,7 +7,6 @@ import { TASK } from '../constants/item-types';
 import {
   changeTaskText,
   postNewTask,
-  deleteTask,
   fetchTasks
 } from '../redux/tasks/actions';
 
@@ -20,11 +19,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onAddItem(val) {
     dispatch(postNewTask(val)).then(() => {
-      dispatch(fetchTasks());
-    });
-  },
-  onRemoveItem(id) {
-    dispatch(deleteTask(id)).then(() => {
       dispatch(fetchTasks());
     });
   },

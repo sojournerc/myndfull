@@ -8,7 +8,9 @@ import {
   ADD_GOAL,
   ADD_GOAL_SUCCESS,
   ADD_GOAL_FAIL,
-  MOVE_GOAL,
+  UPDATE_GOAL,
+  UPDATE_GOAL_SUCCESS,
+  UPDATE_GOAL_FAIL,
   REMOVE_GOAL,
   CHANGE_GOAL_TEXT
 } from '../../constants/action-types';
@@ -34,12 +36,12 @@ export default function goals(state = initialState, { type, payload }) {
     return Object.assign({}, state, { newGoalText: '', isSaving: false });
   case ADD_GOAL_FAIL:
     return Object.assign({}, state, { isSaving: false });
-  case MOVE_GOAL:
+  case UPDATE_GOAL:
     return state;
   case REMOVE_GOAL:
     return state;
   case CHANGE_GOAL_TEXT:
-    return Object.assign({}, state, { newGoalText: payload })
+    return Object.assign({}, state, { newGoalText: payload });
   default:
     return state;
   }

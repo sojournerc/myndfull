@@ -3,27 +3,27 @@ import Koa from 'koa';
 import KoaBody from 'koa-body';
 import Router from 'koa-router';
 
-import Goal from '../db/schema/goal';
-import Task from '../db/schema/task';
-import Entry from '../db/schema/entry';
+import goalProvider from '../db/providers/goal';
+import taskProvider from '../db/providers/task';
+import entryProvider from '../db/providers/entry';
 
 const app = new Koa();
 const router = Router()
 const koaBody = KoaBody();
 
-restify(Goal, 'goals');
-restify(Task, 'tasks');
-restify(Entry, 'entries');
+restify(goalProvider, 'goals');
+restify(taskProvider, 'tasks');
+restify(entryProvider, 'entries');
 
 function handleError(ctx, err) {
   ctx.status = 400;
   ctx.body = { message: err.stack || err };
 }
 
-function restify(Model, path) {
+function restify(provider, path) {
   router.get(`/${path}`, function*(){
     try {
-      const response = yield Model.findAll();
+      const response = yield provider.get(this.query);
       this.status = 200;
       this.body = response;
     } catch (err) { handleError(this, err); }
@@ -31,7 +31,7 @@ function restify(Model, path) {
   router.post(`/${path}`, koaBody, function*() {
     try {
       const body = this.request.body;
-      const created = yield Model.create(body);
+      const created = yield provider.create(body);
       this.status = 201;
       this.body = created;
     } catch (err) { handleError(this, err); }
@@ -39,26 +39,16 @@ function restify(Model, path) {
   router.put(`/${path}`, koaBody, function*() {
     try {
       const body = this.request.body;
-      yield Model.upsert(body);
-      // TODO: if the DB moves off SQLite this can be removed as the upsert will return the row instead
-      const updated = yield Model.findOne({
-        where: {
-          id: body.id
-        }
-      })
+      const updated = yield provider.update(body);
       this.status = 200;
       this.body = updated;
-    } catch (err) { handleError(err) }
+    } catch (err) { handleError(this, err) }
   });
   router.delete(`/${path}/:id`, koaBody, function*() {
     try {
-      yield Model.destroy({
-        where: {
-          id: this.params.id
-        }
-      });
+      yield provider.remove(this.params.id);
       this.status = 204;
-    } catch (err) { handleError(err); }
+    } catch (err) { handleError(this, err); }
   });
 }
 

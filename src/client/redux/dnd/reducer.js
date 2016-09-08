@@ -11,7 +11,9 @@ const initialState = {
   dragX: 0,
   dragY: 0,
   dragging: false,
+  draggingItem: undefined,
   draggingType: undefined,
+  draggingPath: undefined,
   dropTarget: undefined
 };
 

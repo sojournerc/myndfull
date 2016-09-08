@@ -7,30 +7,35 @@
   color: #efefef;
 }
 
+// borders are useful for debugging
 .droppable {
   height: 0;
+  margin: 0;
   position: relative;
-  border: 2px solid red;
-  margin: 0.5em 0;
-  .transition(height, 80ms);
+  // border: 2px solid red;
+  .transition(height, 100ms);
   .border-box;
   &.droppable-mouseover {
-    height: 6em;
-    border: 3px dashed red;
+    // border: 3px dashed red;
+    height: 4em;
+    .rounded;
+    .background-gradient;
     .droppable-inner {
+      // border: 1px dashed green;
       // to prevent jumpiness we keep the same ammount of
       // overlay outside the target
-      height: 10em;
+      height: 5em;
     }
   }
   // this is to give a larger target for mouseover
   .droppable-inner {
     position: absolute;
-    height: 4em;
-    margin-top: -2em;
+    height: 2em;
+    margin-top: -1em;
     top: 0;
     left: 0;
     right: 0;
-    .transition(height, 80ms);
+    // border: 1px solid green;
+    .transition(height, 100ms);
   }
 }

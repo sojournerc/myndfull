@@ -5,7 +5,8 @@ import create from '../componentFactory';
 
 import ITEM_TYPES from '../../constants/item-types';
 
-import ListItem from './ListItem';
+import DraggableItem from '../../connectors/DraggableItem';
+
 import TextForm from './TextForm';
 
 export default create({
@@ -13,7 +14,6 @@ export default create({
   propTypes: {
     items: React.PropTypes.array.isRequired,
     itemType: React.PropTypes.oneOf(ITEM_TYPES).isRequired,
-    onRemoveItem: React.PropTypes.func.isRequired,
     inputValue: React.PropTypes.string.isRequired,
     onAddItem: React.PropTypes.func.isRequired,
     onInputChange: React.PropTypes.func.isRequired
@@ -25,7 +25,7 @@ export default create({
     }
   },
   render() {
-    const { items, inputValue, onAddItem, onRemoveItem, onInputChange } = this.props;
+    const { items, itemType, inputValue, onAddItem, onRemoveItem, onInputChange } = this.props;
     return (
       <div
         className={cn(
@@ -34,11 +34,12 @@ export default create({
           <div className="mb2 list border-box">
             {!!items.length &&
             items.map((item, i) =>
-              <ListItem
+              <DraggableItem
                 index={i}
                 key={i}
                 item={item}
-                onRemoveItem={onRemoveItem}
+                itemType={itemType}
+                isLast={i === (items.length-1)}
               />
             )
             ||

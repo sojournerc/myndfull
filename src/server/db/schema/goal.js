@@ -4,9 +4,8 @@ import db from '../index';
 
 const Goal = db.define('goal', {
   text: { type: Sequelize.TEXT, allowNull: false },
-  orderIndex: { type: Sequelize.INTEGER, allowNull: false, unique: true }
+  orderIndex: { type: Sequelize.INTEGER, allowNull: false }
 }, {
 
 });
-Goal.sync();
 export default Goal;

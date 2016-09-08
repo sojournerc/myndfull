@@ -1,4 +1,6 @@
 
+import R from 'ramda';
+
 import create from '../actionFactory';
 import createFetch from '../fetchFactory';
 import { store } from '../index';
@@ -10,7 +12,9 @@ import {
   ADD_GOAL,
   ADD_GOAL_SUCCESS,
   ADD_GOAL_FAIL,
-  MOVE_GOAL,
+  UPDATE_GOAL,
+  UPDATE_GOAL_SUCCESS,
+  UPDATE_GOAL_FAIL,
   REMOVE_GOAL,
   REMOVE_GOAL_SUCCESS,
   REMOVE_GOAL_FAIL,
@@ -20,8 +24,15 @@ import {
 export function changeGoalText(val) {
   return create(CHANGE_GOAL_TEXT, val)
 }
-export function moveGoal(prevIdx, newIdx) {
-  return create(MOVE_GOAL, { prevIdx, newIdx });
+export function moveGoal(path, goal) {
+  return function(dispatch) {
+    // orderIndex starts at 0 to allow the backend to use 0 to move around elements
+    const clone = R.clone(goal);
+    clone.orderIndex = (parseInt(path.split('.')[1]) + 1)
+    return dispatch(putGoal(clone)).then(() => {
+      dispatch(fetchGoals());
+    });
+  }
 }
 
 /**
@@ -92,5 +103,32 @@ export function postNewGoal(text) {
     start: addGoal,
     success: addGoalSuccess,
     fail: addGoalFail
+  });
+}
+
+/**
+ * GOAL UPDATING
+ */
+export function updateGoal() {
+  return create(UPDATE_GOAL)
+}
+export function updateGoalSuccess(got) {
+  return create(UPDATE_GOAL_SUCCESS, got);
+}
+export function updateGoalFail(res) {
+  return create(UPDATE_GOAL_FAIL, res);
+}
+export function putGoal(goal) {
+  // const goal = {
+  //   text,
+  //   orderIndex: store.getState().goals.goalList.length+1
+  // };
+  return createFetch({
+    url: `/api/goals`,
+    method: 'PUT',
+    body: goal,
+    start: updateGoal,
+    success: updateGoalSuccess,
+    fail: updateGoalFail
   });
 }

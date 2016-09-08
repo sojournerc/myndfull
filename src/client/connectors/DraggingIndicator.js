@@ -1,6 +1,6 @@
 
 import create from './connectorFactory';
-import Dragging from '../components/core/Dragging'
+import Dragging from '../components/common/Dragging'
 
 const mapStateToProps = state => state.dnd;
 

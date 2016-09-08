@@ -1,49 +1,45 @@
 
 import React from 'react';
-import { store } from '../../../redux';
+import { store } from '../../redux';
 
 import {
   startDrag,
   endDrag,
   moveDrag
-} from '../../../redux/dnd/actions';
+} from '../../redux/dnd/actions';
 
 import {
-  addElement
-} from '../../../redux/pages/actions';
+  TargetActionMap
+} from '../../constants/item-types'
 
-export function mapStateToProps(state) {
-  return {
+export const mapStateToProps = (state) => ({})
 
-  };
-}
-
-export function mapDispatchToProps(dispatch) {
-  return {
-    onMouseDown(ev, type) {
-      // left button
-      if (ev.button === 0) {
-        ev.stopPropagation();
-        __addEvents();
-        dispatch(startDrag({
-          dragX: ev.pageX,
-          dragY: ev.pageY,
-          dragging: true,
-          draggingType: type
-        }));
-      }
+export const mapDispatchToProps = (dispatch) => ({
+  onMouseDown(ev, type, index, item) {
+    // left button
+    if (ev.button === 0) {
+      ev.stopPropagation();
+      __addEvents();
+      dispatch(startDrag({
+        dragX: ev.pageX,
+        dragY: ev.pageY,
+        dragging: true,
+        draggingItem: item,
+        draggingType: type,
+        draggingPath: `${type}.${index}`
+      }));
     }
-  };
-}
+  }
+});
 
 function _handleMouseUp(ev) {
   const dnd = store.getState().dnd;
-  const { dragging, dropTarget, draggingType } = dnd;
+  const { dragging, dropTarget, draggingType, draggingItem } = dnd;
   if (dragging) {
     ev.stopPropagation();
     __removeEvents();
     if (!!dropTarget) {
-      store.dispatch(addElement(draggingType, dropTarget));
+      store.dispatch(TargetActionMap[draggingType](dropTarget, draggingItem));
     }
     store.dispatch(endDrag());
   }

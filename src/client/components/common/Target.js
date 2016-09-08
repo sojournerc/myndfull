@@ -3,11 +3,13 @@ import React from 'react';
 import cn from 'classnames';
 import create from '../componentFactory';
 
+import ITEM_TYPES from '../../constants/item-types';
+
 export default create({
   displayName: 'Target',
   propTypes: {
-    path: React.PropTypes.array.isRequired,
     active: React.PropTypes.bool.isRequired,
+    path: React.PropTypes.string.isRequired,
     isTargeted: React.PropTypes.bool.isRequired,
     handleMouseEnter: React.PropTypes.func.isRequired,
     handleMouseLeave: React.PropTypes.func.isRequired,

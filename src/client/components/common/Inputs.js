@@ -9,7 +9,14 @@ const inputPropTypes = {
 export function TextInput(props) {
   const { value, onChange } = props;
   return (
-    <input type="text" className="input" onChange={onChange} value={value} />
+    <input
+      type="text"
+      // Matches MAXCHAR of STRING datatype in postgreSQL
+      maxLength="255"
+      className="input"
+      onChange={onChange}
+      value={value}
+    />
   );
 }
 TextInput.propTypes = inputPropTypes;

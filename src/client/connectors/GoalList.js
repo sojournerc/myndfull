@@ -7,7 +7,6 @@ import { GOAL } from '../constants/item-types';
 import {
   changeGoalText,
   postNewGoal,
-  deleteGoal,
   fetchGoals
 } from '../redux/goals/actions';
 
@@ -20,11 +19,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onAddItem(val) {
     dispatch(postNewGoal(val)).then(() => {
-      dispatch(fetchGoals());
-    });
-  },
-  onRemoveItem(id) {
-    dispatch(deleteGoal(id)).then(() => {
       dispatch(fetchGoals());
     });
   },

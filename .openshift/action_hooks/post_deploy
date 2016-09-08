@@ -4,4 +4,5 @@
 # it could be python, php, ruby, etc.
 
 echo 'EXECUTING MIGRATION'
-npm run migration
+cd $OPENSHIFT_REPO_DIR;
+echo `npm run migration;`

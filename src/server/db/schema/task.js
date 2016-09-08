@@ -9,4 +9,5 @@ const Task = db.define('task', {
 }, {
 
 });
+Task.sync({ force: true });
 export default Task;

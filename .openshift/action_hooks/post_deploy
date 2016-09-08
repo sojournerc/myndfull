@@ -6,4 +6,4 @@
 echo 'EXECUTING MIGRATION'
 cd $OPENSHIFT_REPO_DIR;
 echo `pwd`
-echo `npm run migration;`
+echo `npm run migrate;`

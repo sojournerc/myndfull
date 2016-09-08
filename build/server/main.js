@@ -65,7 +65,6 @@ const Goal = db.define('goal', {
 }, {
 
 });
-Goal.sync({ force: true })
 
 var goalProvider = {
   create: function*(body) {
@@ -115,7 +114,6 @@ const Task = db.define('task', {
 }, {
 
 });
-Task.sync({ force: true });
 
 var taskProvider = {
   create: function*(body) {

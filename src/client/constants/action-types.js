@@ -1,6 +1,7 @@
 
 // UI
-export const SET_MODE = 'SET_MODE';
+export const SHOW_FORM = 'SHOW_FORM';
+export const HIDE_FORM = 'HIDE_FORM';
 
 // goals
 export const GET_GOALS = 'GET_GOALS';

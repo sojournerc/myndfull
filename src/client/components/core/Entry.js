@@ -6,6 +6,8 @@ import create from '../componentFactory';
 
 import Linkify from 'react-linkify';
 import TimeStamp from '../common/TimeStamp';
+import { RemoveButton } from '../common/Buttons';
+import { scrollIntoView } from 'dom-util';
 
 export default create({
   displayName: 'Entry',
@@ -16,7 +18,7 @@ export default create({
   componentDidMount() {
     // show the latest entry (at the bottom of the pane)
     if (this.props.isLast) {
-      ReactDOM.findDOMNode(this).scrollIntoView(false);
+      scrollIntoView(this);
     }
   },
   render() {
@@ -30,6 +32,9 @@ export default create({
         'flex-row',
         'items-center'
       )}>
+        <div className="flex-item pr1">
+          <RemoveButton onClick={this._handleRemoveClick} />
+        </div>
         <div className="flex-item pr1 mid-color">
           <TimeStamp time={entry.createdAt} />
         </div>

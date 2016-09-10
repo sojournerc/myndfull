@@ -20,6 +20,7 @@ const initialState = {
 };
 
 export default function entries(state = initialState, { type, payload }) {
+
   switch (type) {
   case GET_ENTRIES:
     return Object.assign({}, state, { isFetching: true });

@@ -2,12 +2,17 @@
 .button {
   background-color: @buttonColor;
   border: 2px @theme1 solid;
+  padding: 2px 3px 3px;
   .rounded;
   .line-height-1;
   .truncate;
   font-size: 0.9rem;
   &:focus {
     outline: none;
+  }
+  &:focus,
+  &:active {
+    .box-shadow;
   }
   &:hover {
     opacity: 0.9;
@@ -24,7 +29,22 @@
     background-color: @theme5;
     color: @lighter;
   }
+  &.button-round {
+    border-radius: 50%;
+  }
   &.button-small {
     padding: 0;
+    font-size: 0.8rem;
+    & > * {
+      padding: 0.25rem
+    }
+  }
+  &.button-x-small {
+    padding: 0;
+    font-size: 0.6rem;
+    border-width: 1px;
+    & > * {
+      padding: 0.2rem
+    }
   }
 }

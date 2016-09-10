@@ -30,10 +30,6 @@ export default create({
       this._onSubmit(ev);
     }
   },
-  _onInputChange(ev) {
-    const val = ev.currentTarget.value;
-    this.props.onInputChange(val);
-  },
   render() {
     const { inputValue, onInputChange, textArea } = this.props;
     const Input = textArea ? TextArea : TextInput;
@@ -42,7 +38,7 @@ export default create({
       <form onSubmit={this._onSubmit}>
         <div className="flex items-center w100 my2">
           <span className="flex-gs-item mr1">
-            <Input onChange={this._onInputChange} value={inputValue} onKeyUp={textArea && this._onTextAreaKeyUp} />
+            <Input onChange={onInputChange} value={inputValue} onKeyUp={textArea && this._onTextAreaKeyUp} />
           </span>
           <span className="flex-item">
             <SubmitButton />

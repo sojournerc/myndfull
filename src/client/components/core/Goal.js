@@ -23,7 +23,7 @@ export default create({
       'flex',
       'flex-row',
       'items-center',
-      'p1'
+      'p2'
     )}>
       <span className="flex-gs-item">{item.text}</span>
       <span className="flex-item pl1">

@@ -6,6 +6,13 @@ const inputPropTypes = {
   onChange: React.PropTypes.func.isRequired,
 }
 
+function _passInputValue(handler) {
+  return function(ev) {
+    const val = ev.currentTarget.value;
+    handler(val);
+  }
+}
+
 export function TextInput(props) {
   const { value, onChange } = props;
   return (
@@ -14,7 +21,7 @@ export function TextInput(props) {
       // Matches MAXCHAR of STRING datatype in postgreSQL
       maxLength="255"
       className="input"
-      onChange={onChange}
+      onChange={_passInputValue(onChange)}
       value={value}
     />
   );
@@ -24,12 +31,13 @@ TextInput.propTypes = inputPropTypes;
 export function TextArea(props) {
   const { value, onChange, onKeyUp } = props;
   return (
-    <textarea type="text" className="input" onChange={onChange} value={value} onKeyUp={onKeyUp} />
+    <textarea type="text" className="input" onChange={_passInputValue(onChange)} value={value} onKeyUp={onKeyUp} />
   );
 }
 TextArea.propTypes = Object.assign({}, inputPropTypes, {
   onKeyUp: React.PropTypes.func
 });
+
 
 // export all buttons on default
 export default {

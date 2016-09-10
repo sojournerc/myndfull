@@ -2,9 +2,13 @@
 import create from '../actionFactory';
 
 import {
-  SET_MODE
+  SHOW_FORM,
+  HIDE_FORM
 } from '../../constants/action-types';
 
-export function setMode(mode) {
-  return create(SET_MODE, mode);
+export function showForm(itemType) {
+  return create(SHOW_FORM, itemType);
+}
+export function hideForm() {
+  return create(HIDE_FORM);
 }

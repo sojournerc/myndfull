@@ -10,7 +10,7 @@ export default create({
   propTypes: {
     index: React.PropTypes.number.isRequired,
     item: React.PropTypes.object.isRequired,
-    onRemoveItem: React.PropTypes.func.isRequired
+  onRemoveItem: React.PropTypes.func.isRequired
   },
   _handleRemoveClick(ev) {
     ev.preventDefault()
@@ -23,7 +23,7 @@ export default create({
       'flex',
       'flex-row',
       'items-center',
-      'p1'
+      'p2'
     )}>
       <span className="flex-gs-item">{item.text}</span>
       <span className="flex-item pl1">

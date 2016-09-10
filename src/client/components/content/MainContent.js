@@ -7,7 +7,7 @@ import { store } from '../../redux';
 
 import { fetchEntries } from '../../redux/entries/actions';
 
-import EntryListConnect from '../../connectors/EntryListConnector';
+import EntryListConnect from '../../connectors/EntryPaneConnector';
 
 export default create({
   displayName: 'MainContent',

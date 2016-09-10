@@ -1,23 +1,19 @@
 
-import DEFAULT_MODE, {
-  PAGE,
-  SLIDE,
-  TIMELINE,
-  FORM
-} from '../../constants/modes';
-
 import {
-  SET_MODE
+  SHOW_FORM,
+  HIDE_FORM
 } from '../../constants/action-types';
 
 const initialState = {
-  mode: DEFAULT_MODE
+  showingForm: false
 };
 
 export default function ui(state = initialState, { type, payload }) {
   switch (type) {
-  case SET_MODE:
-    return Object.assign({}, state, { mode: payload });
+  case SHOW_FORM:
+    return Object.assign({}, state, { showingForm: payload });
+  case HIDE_FORM:
+    return Object.assign({}, state, { showingForm: null });
   default:
     return state;
   }

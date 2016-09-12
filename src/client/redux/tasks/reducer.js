@@ -12,12 +12,15 @@ import {
   UPDATE_TASK_SUCCESS,
   UPDATE_TASK_FAIL,
   REMOVE_TASK,
-  CHANGE_TASK_TEXT
+  TASK_FORM_CHANGE
 } from '../../constants/action-types';
 
 const initialState = {
   taskList: [],
-  newTaskText: '',
+  formValues: {
+    text: '',
+    notes: ''
+  },
   isFetching: false,
   isSaving: false
 };
@@ -40,8 +43,11 @@ export default function pages(state = initialState, { type, payload }) {
     return state;
   case REMOVE_TASK:
     return state;
-  case CHANGE_TASK_TEXT:
-    return Object.assign({}, state, { newTaskText: payload });
+  case TASK_FORM_CHANGE:
+    // TODO: validate!!!
+    // merge formValues with payload
+    const values = Object.assign({}, state.formValues, { [payload.property]: payload.value });
+    return Object.assign({}, state, { formValues: values });
   default:
     return state;
   }

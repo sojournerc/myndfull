@@ -18,11 +18,11 @@ import {
   REMOVE_GOAL,
   REMOVE_GOAL_SUCCESS,
   REMOVE_GOAL_FAIL,
-  CHANGE_GOAL_TEXT
+  GOAL_FORM_CHANGE
 } from '../../constants/action-types';
 
-export function changeGoalText(val) {
-  return create(CHANGE_GOAL_TEXT, val)
+export function onFormChange(payload) {
+  return create(GOAL_FORM_CHANGE, payload)
 }
 export function moveGoal(path, goal) {
   return function(dispatch) {
@@ -91,15 +91,11 @@ export function addGoalSuccess(got) {
 export function addGoalFail(res) {
   return create(ADD_GOAL_FAIL, res);
 }
-export function postNewGoal(text) {
-  const goal = {
-    text,
-    orderIndex: store.getState().goals.goalList.length+1
-  };
+export function postNewGoal(goal) {
   return createFetch({
     url: `/api/goals`,
     method: 'POST',
-    body: goal,
+    body: Object.assign({}, goal, { orderIndex: store.getState().goals.goalList.length + 1 }),
     start: addGoal,
     success: addGoalSuccess,
     fail: addGoalFail

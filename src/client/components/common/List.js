@@ -19,7 +19,7 @@ export default create({
       <div
         className={cn(
         )}>
-          <div className="mb2 list border-box">
+          <div className="list border-box">
             {!!items.length &&
             items.map((item, i) =>
               <DraggableItem

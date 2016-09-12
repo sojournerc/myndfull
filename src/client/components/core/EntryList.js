@@ -3,7 +3,7 @@ import React from 'react';
 import cn from 'classnames';
 import create from '../componentFactory';
 
-import Entry from './Entry';
+import EntryConnector from '../../connectors/EntryConnector';
 
 export default create({
   displayName: 'EntryList',
@@ -12,11 +12,12 @@ export default create({
   },
   render() {
     const { entries } = this.props;
-    return <div id={'EntryList'} className={cn(
+    return <div className={cn(
       'mh100',
-      'overflow-auto'
+      'overflow-auto',
+      'list'
     )}>
-      {entries.map((entry, i) => <Entry key={i} entry={entry} isLast={(i === entries.length - 1)} />)}
+      {entries.map((entry, i) => <EntryConnector key={i} entry={entry} isLast={(i === entries.length - 1)} />)}
     </div>
   }
 });

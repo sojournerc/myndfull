@@ -21,9 +21,14 @@ export default create({
   render() {
     const { showingForm, onShowForm, onHideForm } = this.props;
     return <div className={cn(
+      'flex',
+      'flex-column',
+      'h100',
+      'border-box',
+      'pb1'
     )}>
       <div className="mb1 flex-item">
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center px2">
           <span className="h4 flex-item">{'TASKS'}</span>
           <span className="flex-item">
             {showingForm &&
@@ -34,7 +39,7 @@ export default create({
           </span>
         </div>
       </div>
-      <div className="flex-s-50 overflow-auto">
+      <div className="flex-s-50 overflow-auto px2">
         {showingForm &&
         <TaskCreator />
         ||

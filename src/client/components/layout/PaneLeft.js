@@ -10,7 +10,7 @@ export default create({
   },
   render() {
     return <div id="PaneLeft" className={cn(
-      'p2',
+      'py2',
       'border-right',
       'border-box',
       'h100',

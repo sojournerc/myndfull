@@ -7,3 +7,16 @@
     }
   }
 }
+
+.list-item {
+  .item-controls {
+    opacity: 0;
+    click-events: none;
+    .transition(opacity 200ms);
+  }
+  &:hover {
+    .item-controls {
+      opacity: 1;
+    }
+  }
+}

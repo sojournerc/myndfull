@@ -13,7 +13,8 @@ export default create({
   displayName: 'Entry',
   propTypes: {
     entry: React.PropTypes.object.isRequired,
-    isLast: React.PropTypes.bool.isRequired
+    isLast: React.PropTypes.bool.isRequired,
+    onRemoveItem: React.PropTypes.func.isRequired
   },
   componentDidMount() {
     // show the latest entry (at the bottom of the pane)
@@ -21,9 +22,13 @@ export default create({
       scrollIntoView(this);
     }
   },
+  _handleRemoveClick() {
+    this.props.onRemoveItem(this.props.entry.id);
+  },
   render() {
     const { entry } = this.props;
     return <div className={cn(
+      'list-item',
       'flex-item',
       'p2'
     )}>
@@ -32,14 +37,14 @@ export default create({
         'flex-row',
         'items-center'
       )}>
-        <div className="flex-item pr1">
-          <RemoveButton onClick={this._handleRemoveClick} />
-        </div>
         <div className="flex-item pr1 mid-color">
           <TimeStamp time={entry.createdAt} />
         </div>
         <div className="flex-gs-item pl1 prewrap">
           <Linkify properties={{ target: '_blank' }}>{entry.text}</Linkify>
+        </div>
+        <div className="flex-item item-controls">
+          <RemoveButton onClick={this._handleRemoveClick} />
         </div>
       </div>
     </div>

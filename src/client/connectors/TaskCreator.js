@@ -4,7 +4,7 @@ import create from './connectorFactory';
 import TaskForm from '../components/core/TaskForm';
 
 import {
-  changeTaskText,
+  onFormChange,
   postNewTask,
   fetchTasks
 } from '../redux/tasks/actions';
@@ -14,7 +14,7 @@ import {
 } from '../redux/ui/actions';
 
 const mapStateToProps = (state) => ({
-  inputValue: state.tasks.newTaskText
+  formValues: state.tasks.formValues
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -24,8 +24,8 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(fetchTasks());
     });
   },
-  onInputChange(val) {
-    dispatch(changeTaskText(val))
+  onFormChange(val) {
+    dispatch(onFormChange(val))
   }
 });
 

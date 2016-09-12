@@ -12,12 +12,14 @@ import {
   UPDATE_GOAL_SUCCESS,
   UPDATE_GOAL_FAIL,
   REMOVE_GOAL,
-  CHANGE_GOAL_TEXT
+  GOAL_FORM_CHANGE
 } from '../../constants/action-types';
 
 const initialState = {
   goalList: [],
-  newGoalText: '',
+  formValues: {
+    text: ''
+  },
   isFetching: false,
   isSaving: false
 };
@@ -40,8 +42,11 @@ export default function goals(state = initialState, { type, payload }) {
     return state;
   case REMOVE_GOAL:
     return state;
-  case CHANGE_GOAL_TEXT:
-    return Object.assign({}, state, { newGoalText: payload });
+  case GOAL_FORM_CHANGE:
+    // TODO: validate!!!
+    // merge formValues with payload
+    const values = Object.assign({}, state.formValues, { [payload.property]: payload.value });
+    return Object.assign({}, state, { formValues: values });
   default:
     return state;
   }

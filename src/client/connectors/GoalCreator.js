@@ -3,7 +3,7 @@ import create from './connectorFactory';
 import GoalForm from '../components/core/GoalForm';
 
 import {
-  changeGoalText,
+  onFormChange,
   postNewGoal,
   fetchGoals
 } from '../redux/goals/actions';
@@ -13,18 +13,18 @@ import {
 } from '../redux/ui/actions';
 
 const mapStateToProps = (state) => ({
-  inputValue: state.goals.newGoalText
+  formValues: state.goals.formValues
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddItem(val) {
-    dispatch(postNewGoal(val)).then(() => {
+  onAddItem(item) {
+    dispatch(postNewGoal(item)).then(() => {
       dispatch(hideForm());
       dispatch(fetchGoals());
     });
   },
-  onInputChange(val) {
-    dispatch(changeGoalText(val))
+  onFormChange(val) {
+    dispatch(onFormChange(val))
   }
 });
 

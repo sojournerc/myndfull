@@ -18,11 +18,11 @@ import {
   REMOVE_TASK,
   REMOVE_TASK_SUCCESS,
   REMOVE_TASK_FAIL,
-  CHANGE_TASK_TEXT
+  TASK_FORM_CHANGE
 } from '../../constants/action-types';
 
-export function changeTaskText(val) {
-  return create(CHANGE_TASK_TEXT, val)
+export function onFormChange(payload) {
+  return create(TASK_FORM_CHANGE, payload);
 }
 export function moveTask(path, task) {
   return function(dispatch) {
@@ -91,15 +91,11 @@ export function addTaskSuccess(got) {
 export function addTaskFail(res) {
   return create(ADD_TASK_FAIL, res);
 }
-export function postNewTask(text) {
-  const task = {
-    text,
-    orderIndex: store.getState().tasks.taskList.length + 1
-  };
+export function postNewTask(task) {
   return createFetch({
     url: `/api/tasks`,
     method: 'POST',
-    body: task,
+    body: Object.assign({}, task, { orderIndex: store.getState().tasks.taskList.length + 1 }),
     start: addTask,
     success: addTaskSuccess,
     fail: addTaskFail

@@ -16,7 +16,7 @@ export const UPDATE_GOAL_FAIL = 'UPDATE_GOAL_FAIL';
 export const REMOVE_GOAL = 'REMOVE_GOAL';
 export const REMOVE_GOAL_SUCCESS = 'REMOVE_GOAL_SUCCESS';
 export const REMOVE_GOAL_FAIL = 'REMOVE_GOAL_FAIL';
-export const CHANGE_GOAL_TEXT = 'CHANGE_GOAL_TEXT';
+export const GOAL_FORM_CHANGE = 'GOAL_FORM_CHANGE';
 
 // tasks
 export const GET_TASKS = 'GET_TASKS';
@@ -31,7 +31,7 @@ export const UPDATE_TASK_FAIL = 'UPDATE_TASK_FAIL';
 export const REMOVE_TASK = 'REMOVE_TASK';
 export const REMOVE_TASK_SUCCESS = 'REMOVE_TASK_SUCCESS';
 export const REMOVE_TASK_FAIL = 'REMOVE_TASK_FAIL';
-export const CHANGE_TASK_TEXT = 'CHANGE_TASK_TEXT';
+export const TASK_FORM_CHANGE = 'TASK_FORM_CHANGE';
 
 // entries
 export const GET_ENTRIES = 'GET_ENTRIES';

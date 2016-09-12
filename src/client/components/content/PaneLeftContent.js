@@ -12,15 +12,13 @@ export default create({
   },
   render() {
     return <div id="PaneLeftContent" className={cn(
-      'flex',
-      'flex-column',
-      'justify-between',
+      'relative',
       'h100'
     )}>
-      <div className="flex-s-50">
+      <div className="absolute top-0 left-0 right-0 bottom-50">
         <GoalPaneConnector />
       </div>
-      <div className="flex-s-50">
+      <div className="absolute top-50 left-0 right-0 bottom-0">
         <TaskPaneConnector />
       </div>
     </div>

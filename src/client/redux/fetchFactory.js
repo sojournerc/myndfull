@@ -31,10 +31,15 @@ export default function createFetch({ url, method, start, success, fail, body })
       body: body && JSON.stringify(body),
       method
     })
+    // http error codes handled here
     .then(handleResponse)
     .then(res =>
       dispatch(success(res))
     )
-    .catch(fail)
+    // app logic errors here
+    .catch((err) => {
+      console && console.error(err);
+      fail(err);
+    })
   }
 }

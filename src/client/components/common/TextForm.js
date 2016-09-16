@@ -1,6 +1,6 @@
 
 import React from 'react';
-import R from 'ramda';
+
 import cn from 'classnames';
 import create from '../componentFactory';
 
@@ -19,7 +19,7 @@ export default create({
     ev.preventDefault();
     ev.stopPropagation();
     // trim whitespace on submit
-    const val = R.trim(this.props.inputValue);
+    const val = this.props.inputValue;
     if (val) {
       this.props.onAdd(val);
     }

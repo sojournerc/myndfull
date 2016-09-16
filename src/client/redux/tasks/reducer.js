@@ -1,5 +1,5 @@
 
-import R from 'ramda';
+import Immutable from 'seamless-immutable';
 
 import {
   GET_TASKS,
@@ -15,7 +15,7 @@ import {
   TASK_FORM_CHANGE
 } from '../../constants/action-types';
 
-const initialState = {
+const initialState = Immutable({
   taskList: [],
   formValues: {
     text: '',
@@ -23,31 +23,28 @@ const initialState = {
   },
   isFetching: false,
   isSaving: false
-};
+});
 
 export default function pages(state = initialState, { type, payload }) {
   switch (type) {
   case GET_TASKS:
-    return Object.assign({}, state, { isFetching: true });
+    return state.merge({ isFetching: true });
   case GET_TASKS_SUCCESS:
-    return Object.assign({}, state, { isFetching: false, taskList: payload });
+    return state.merge({ isFetching: false, taskList: payload });
   case GET_TASKS_FAIL:
-    return Object.assign({}, state, { isFetching: false });
+    return state.merge({ isFetching: false });
   case ADD_TASK:
-    return Object.assign({}, state, { isSaving: true });
+    return state.merge({ isSaving: true });
   case ADD_TASK_SUCCESS:
-    return Object.assign({}, state, { newTaskText: '', isSaving: false });
+    return state.merge({ formValues: Object.assign(initialState.formValues), isSaving: false });
   case ADD_TASK_FAIL:
-    return Object.assign({}, state, { isSaving: false });
+    return state.merge({ isSaving: false });
   case UPDATE_TASK:
     return state;
   case REMOVE_TASK:
     return state;
   case TASK_FORM_CHANGE:
-    // TODO: validate!!!
-    // merge formValues with payload
-    const values = Object.assign({}, state.formValues, { [payload.property]: payload.value });
-    return Object.assign({}, state, { formValues: values });
+    return state.setIn(['formValues', payload.property], payload.value);
   default:
     return state;
   }

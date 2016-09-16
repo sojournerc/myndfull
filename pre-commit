@@ -1,6 +1,7 @@
+
 ##!/bin/sh
 
-gulp build_prod
+npm run buildProd;
 
-git add build/client/prod/.
-git add build/server/.
+git add dist/client/prod/.
+git add dist/server/.

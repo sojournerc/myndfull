@@ -1,5 +1,5 @@
 
-import R from 'ramda';
+import clone from 'lodash/fp/clone';
 
 import create from '../actionFactory';
 import createFetch from '../fetchFactory';
@@ -27,9 +27,9 @@ export function onFormChange(payload) {
 export function moveGoal(path, goal) {
   return function(dispatch) {
     // orderIndex starts at 0 to allow the backend to use 0 to move around elements
-    const clone = R.clone(goal);
-    clone.orderIndex = (parseInt(path.split('.')[1]) + 1)
-    return dispatch(putGoal(clone)).then(() => {
+    const goalClone = clone(goal);
+    goalClone.orderIndex = (parseInt(path.split('.')[1]) + 1)
+    return dispatch(putGoal(goalClone)).then(() => {
       dispatch(fetchGoals());
     });
   }

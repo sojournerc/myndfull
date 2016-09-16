@@ -1,5 +1,5 @@
 
-import R from 'ramda';
+import Immutable from 'seamless-immutable';
 
 import {
   GET_ENTRIES,
@@ -12,32 +12,31 @@ import {
   CHANGE_ENTRY_TEXT
 } from '../../constants/action-types';
 
-const initialState = {
+const initialState = Immutable({
   entryList: [],
   newEntryText: '',
   isFetching: false,
   isSaving: false
-};
+});
 
 export default function entries(state = initialState, { type, payload }) {
-
   switch (type) {
   case GET_ENTRIES:
-    return Object.assign({}, state, { isFetching: true });
+    return state.set('isFetching', true);
   case GET_ENTRIES_SUCCESS:
-    return Object.assign({}, state, { isFetching: false, entryList: payload });
+    return state.merge({ isFetching: false, entryList: payload });
   case GET_ENTRIES_FAIL:
-    return Object.assign({}, state, { isFetching: false });
+    return state.set('isFetching', false);
   case ADD_ENTRY:
-    return Object.assign({}, state, { isSaving: true });
+    return state.set('isSaving', true );
   case ADD_ENTRY_SUCCESS:
-    return Object.assign({}, state, { newEntryText: '', isSaving: false });
+    return state.merge({ newEntryText: '', isSaving: false });
   case ADD_ENTRY_FAIL:
-    return Object.assign({}, state, { isSaving: false });
+    return state.set('isSaving', false);
   case REMOVE_ENTRY:
     return state;
   case CHANGE_ENTRY_TEXT:
-    return Object.assign({}, state, { newEntryText: payload })
+    return state.set('newEntryText', payload)
   default:
     return state;
   }

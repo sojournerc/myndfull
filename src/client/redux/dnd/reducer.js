@@ -1,4 +1,6 @@
 
+import Immutable from 'seamless-immutable';
+
 import {
   START_DRAG,
   END_DRAG,
@@ -7,7 +9,7 @@ import {
   CLEAR_DROP_TARGET
 } from '../../constants/action-types';
 
-const initialState = {
+const initialState = Immutable({
   dragX: 0,
   dragY: 0,
   dragging: false,
@@ -15,20 +17,20 @@ const initialState = {
   draggingType: undefined,
   draggingPath: undefined,
   dropTarget: undefined
-};
+});
 
 export default function dnd(state = initialState, { type, payload }) {
   switch (type) {
   case START_DRAG:
-    return Object.assign({}, state, payload);
+    return state.merge(payload);
   case END_DRAG:
-    return Object.assign({}, initialState);
+    return state.merge(initialState);
   case MOVE_DRAG:
-    return Object.assign({}, state, payload);
+    return state.merge(payload);
   case SET_DROP_TARGET:
-    return Object.assign({}, state, { dropTarget: payload });
+    return state.merge({ dropTarget: payload });
   case CLEAR_DROP_TARGET:
-    return Object.assign({}, state, { dropTarget: undefined })
+    return state.merge({ dropTarget: undefined })
   default:
     return state;
   }

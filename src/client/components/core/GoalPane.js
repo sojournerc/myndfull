@@ -24,12 +24,11 @@ export default create({
       'flex',
       'flex-column',
       'h100',
-      'border-box',
-      'pb1'
+      'w100'
     )}>
-      <div className="mb1 flex-item">
+      <div className="py2 flex-item">
         <div className="flex flex-row justify-between items-center px2">
-          <span className="h4 flex-item">{'GOALS'}</span>
+          <span className="h4 flex-item bold">{'GOALS'}</span>
           <span className="flex-item">
             {showingForm &&
             <CloseButton onClick={onHideForm} />
@@ -39,7 +38,7 @@ export default create({
           </span>
         </div>
       </div>
-      <div className="flex-s-50 overflow-auto px2">
+      <div className="flex-s-50 overflow-auto px2 mb2">
         {showingForm &&
         <GoalCreator />
         ||

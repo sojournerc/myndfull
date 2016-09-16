@@ -7,7 +7,9 @@ import {
   fetchEntries
 } from '../redux/entries/actions';
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  isMobile: state.ui.clientInfo.isMobile()
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onRemoveItem(id) {

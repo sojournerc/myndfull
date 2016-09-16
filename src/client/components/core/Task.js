@@ -20,15 +20,14 @@ export default create({
   render() {
     const { item } = this.props;
     return <div className={cn(
-      'list-item',
       'flex',
       'flex-row',
       'items-center',
       'p2',
       'break-word'
     )}>
-      <span className="flex-gs-item">{item.text}</span>
-      <span className="flex-item pl1 item-controls">
+      <span className="flex-gs-item break-word line-height-4" style={{ minWidth: 0 }}>{item.text}</span>
+      <span className="flex-item pl1">
         <RemoveButton onClick={this._handleRemoveClick} />
       </span>
     </div>

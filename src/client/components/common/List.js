@@ -16,24 +16,20 @@ export default create({
   render() {
     const { items, itemType } = this.props;
     return (
-      <div
-        className={cn(
-        )}>
-          <div className="list border-box">
-            {!!items.length &&
-            items.map((item, i) =>
-              <DraggableItem
-                index={i}
-                key={i}
-                item={item}
-                itemType={itemType}
-                isLast={i === (items.length-1)}
-              />
-            )
-            ||
-            <div className="p2 center mid-color">{'-------- no items --------'}</div>
-            }
-          </div>
+      <div className="list border-box lighter-bg">
+        {!!items.length &&
+        items.map((item, i) =>
+          <DraggableItem
+            index={i}
+            key={i}
+            item={item}
+            itemType={itemType}
+            isLast={i === (items.length-1)}
+          />
+        )
+        ||
+        <div className="p2 center mid-color">{'-------- no items --------'}</div>
+        }
       </div>
     )
   }

@@ -30,14 +30,14 @@ export default create({
     return <div className={cn(
     )}>
       <form onSubmit={this._onSubmit}>
-        <div className="my2">
-          <div className="flex-gs-item mr1">
+        <div className="flex flex-column w100">
+          <div className="flex-gs-item mb1">
             <TextInput onChange={handleInputChange('text', onFormChange)} value={formValues.text} />
           </div>
-          <div className="">
-
+          <div className="flex-gs-item mb1">
+            <TextArea onChange={handleInputChange('notes', onFormChange)} value={formValues.notes} />
           </div>
-          <span className="flex-item">
+          <span className="flex-item right-align">
             <SubmitButton />
           </span>
         </div>

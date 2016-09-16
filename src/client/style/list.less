@@ -1,22 +1,8 @@
 
 .list {
-  background-color: @lighter;
   & > * {
     &:nth-child(odd) {
       background-color: @lightest;
-    }
-  }
-}
-
-.list-item {
-  .item-controls {
-    opacity: 0;
-    click-events: none;
-    .transition(opacity 200ms);
-  }
-  &:hover {
-    .item-controls {
-      opacity: 1;
     }
   }
 }

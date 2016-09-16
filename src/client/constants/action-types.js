@@ -2,6 +2,8 @@
 // UI
 export const SHOW_FORM = 'SHOW_FORM';
 export const HIDE_FORM = 'HIDE_FORM';
+export const VIEWPORT_CHANGE = 'VIEWPORT_CHANGE';
+export const ACTIVE_VIEW_CHANGE = 'ACTIVE_VIEW_CHANGE';
 
 // goals
 export const GET_GOALS = 'GET_GOALS';

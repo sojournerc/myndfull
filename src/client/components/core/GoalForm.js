@@ -30,7 +30,7 @@ export default create({
     return <div className={cn(
     )}>
       <form onSubmit={this._onSubmit}>
-        <div className="flex items-center w100 my2">
+        <div className="flex items-center w100">
           <span className="flex-gs-item mr1">
             <TextInput onChange={handleInputChange('text', onFormChange)} value={formValues.text} />
           </span>

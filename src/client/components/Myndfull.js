@@ -3,73 +3,46 @@ import React from 'react';
 import create from './componentFactory';
 import cn from 'classnames';
 
-/** Layout Elements */
-import Header from './layout/Header';
-import Footer from './layout/Footer';
-import PaneLeft from './layout/PaneLeft';
-import Main from './layout/Main';
-import PaneRight from './layout/PaneRight';
 
-/** Content Elements */
-import HeaderContent from './content/HeaderContent';
-import PaneLeftContent from './content/PaneLeftContent';
-import PaneRightContent from './content/PaneRightContent';
-import MainContent from './content/MainContent';
-import FooterContent from './content/FooterContent';
+import { getViewport } from 'dom-util';
 
 import DraggingIndicator from '../connectors/DraggingIndicator';
+
+/** Layout Elements */
+import MobileLayoutConnector from '../connectors/MobileLayoutConnector';
+import DesktopLayout from './desktop-layout/DesktopLayout';
+
+function _handleViewportChange(onViewportChange) {
+  return (ev) => {
+    onViewportChange(getViewport());
+  }
+}
 
 const App = create({
   displayName: 'MyndfullApp',
   propTypes: {
+    onViewportChange: React.PropTypes.func.isRequired
+  },
+  componentWillMount() {
+    global.addEventListener('resize', _handleViewportChange(this.props.onViewportChange));
   },
   render() {
-    const { dragging } = this.props;
-
-    const showPaneRight = false;
-    const showPaneLeft = true;
-    const showFooter = true;
-    const showHeader = true;
-
-    return <div className={cn(
-      'vh100',
-      {
-        'dragging-element': dragging
-      }
-    )}>
-      {showHeader &&
-      <Header>
-        <HeaderContent />
-      </Header>
-      }
-      <div id="BodyInner">
-        <div className={cn(
-          'h100',
-          'flex',
-          'flex-row'
-        )}>
-          {showPaneLeft &&
-          <PaneLeft>
-            <PaneLeftContent />
-          </PaneLeft>
-          }
-          <Main>
-            <MainContent />
-          </Main>
-          {showPaneRight &&
-          <PaneRight>
-            <PaneRightContent />
-          </PaneRight>
-          }
-        </div>
+    const { dragging, clientInfo, activeView } = this.props;
+    return (
+      <div className={cn(
+        'vh100',
+        {
+          'dragging-element': dragging
+        }
+      )}>
+        {!clientInfo.isMobile() &&
+        <DesktopLayout />
+        ||
+        <MobileLayoutConnector />
+        }
+        <DraggingIndicator />
       </div>
-      {showFooter &&
-      <Footer>
-        <FooterContent />
-      </Footer>
-      }
-      <DraggingIndicator />
-    </div>
+    );
   }
 });
 

@@ -1,5 +1,5 @@
 
-import R from 'ramda';
+import Immutable from 'seamless-immutable';
 
 import {
   GET_GOALS,
@@ -15,38 +15,36 @@ import {
   GOAL_FORM_CHANGE
 } from '../../constants/action-types';
 
-const initialState = {
+const initialState = Immutable({
   goalList: [],
   formValues: {
     text: ''
   },
   isFetching: false,
   isSaving: false
-};
+});
 
 export default function goals(state = initialState, { type, payload }) {
   switch (type) {
   case GET_GOALS:
-    return Object.assign({}, state, { isFetching: true });
+    return state.set('isFetching', true);
   case GET_GOALS_SUCCESS:
-    return Object.assign({}, state, { isFetching: false, goalList: payload });
+    return state.merge({ isFetching: false, goalList: payload });
   case GET_GOALS_FAIL:
-    return Object.assign({}, state, { isFetching: false });
+    return state.set('isFetching', false);
   case ADD_GOAL:
-    return Object.assign({}, state, { isSaving: true });
+    return state.set('isSaving', true );
   case ADD_GOAL_SUCCESS:
-    return Object.assign({}, state, { newGoalText: '', isSaving: false });
+    return state.merge({ formValues: Object.assign(initialState.formValues), isSaving: false });
   case ADD_GOAL_FAIL:
-    return Object.assign({}, state, { isSaving: false });
+    return state.set('isSaving', false);
   case UPDATE_GOAL:
     return state;
   case REMOVE_GOAL:
     return state;
   case GOAL_FORM_CHANGE:
     // TODO: validate!!!
-    // merge formValues with payload
-    const values = Object.assign({}, state.formValues, { [payload.property]: payload.value });
-    return Object.assign({}, state, { formValues: values });
+    return state.setIn(['formValues', payload.property], payload.value);
   default:
     return state;
   }

@@ -14,7 +14,8 @@ export default create({
   propTypes: {
     entry: React.PropTypes.object.isRequired,
     isLast: React.PropTypes.bool.isRequired,
-    onRemoveItem: React.PropTypes.func.isRequired
+    onRemoveItem: React.PropTypes.func.isRequired,
+    isMobile: React.PropTypes.bool.isRequired
   },
   componentDidMount() {
     // show the latest entry (at the bottom of the pane)
@@ -26,24 +27,37 @@ export default create({
     this.props.onRemoveItem(this.props.entry.id);
   },
   render() {
-    const { entry } = this.props;
+    const { entry, isMobile } = this.props;
     return <div className={cn(
-      'list-item',
       'flex-item',
       'p2'
     )}>
-      <div className={cn(
-        'flex',
-        'flex-row',
-        'items-center'
-      )}>
-        <div className="flex-item pr1 mid-color">
+      <div className={cn('flex', 'flex-row', 'items-center', { 'flex-wrap': isMobile })}>
+        <div className={cn(
+          'pr1',
+          'mid-color',
+          {
+            'flex-item': !isMobile,
+            'flex-gs-100': isMobile
+          }
+        )}>
           <TimeStamp time={entry.createdAt} />
         </div>
-        <div className="flex-gs-item pl1 prewrap">
+        <div className={cn(
+          'flex-gs-item',
+          'prewrap',
+          'break-word',
+          'pr1',
+          'line-height-4',
+          {
+            pl1: !isMobile,
+            mt1: isMobile
+          })}
+          style={{ minWidth: 0 }}
+        >
           <Linkify properties={{ target: '_blank' }}>{entry.text}</Linkify>
         </div>
-        <div className="flex-item item-controls">
+        <div className="flex-item">
           <RemoveButton onClick={this._handleRemoveClick} />
         </div>
       </div>

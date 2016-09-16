@@ -22,10 +22,9 @@ export default create({
     return <div className={cn(
       'flex',
       'flex-row',
-      'items-center',
-      'p2'
+      'items-center'
     )}>
-      <span className="flex-gs-item break-word line-height-4" style={{ minWidth: 0 }}>{item.text}</span>
+      <span className="flex-gs-item line-height-4 truncate" style={{ minWidth: 0 }}>{item.text}</span>
       <span className="flex-item pl1">
         <RemoveButton onClick={this._handleRemoveClick} />
       </span>

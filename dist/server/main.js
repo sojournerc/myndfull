@@ -80,7 +80,6 @@ var goalProvider = {
       // down in order
       if (body.orderIndex > updating.orderIndex) {
         // everything above the old order index and below the new order index increases one
-        body.orderIndex--;
         yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
       // up in order
       } else if (body.orderIndex < updating.orderIndex) {
@@ -129,7 +128,6 @@ var taskProvider = {
       // down in order
       if (body.orderIndex > updating.orderIndex) {
         // everything above the old order index and below the new order index increases one
-        body.orderIndex--;
         yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
       // up in order
       } else if (body.orderIndex < updating.orderIndex) {

@@ -10,7 +10,7 @@ export default create({
   propTypes: {
     index: React.PropTypes.number.isRequired,
     item: React.PropTypes.object.isRequired,
-  onRemoveItem: React.PropTypes.func.isRequired
+    onRemoveItem: React.PropTypes.func.isRequired
   },
   _handleRemoveClick(ev) {
     ev.preventDefault()
@@ -22,11 +22,9 @@ export default create({
     return <div className={cn(
       'flex',
       'flex-row',
-      'items-center',
-      'p2',
-      'break-word'
+      'items-center'
     )}>
-      <span className="flex-gs-item break-word line-height-4" style={{ minWidth: 0 }}>{item.text}</span>
+      <span className="flex-gs-item line-height-4 truncate" style={{ minWidth: 0 }}>{item.text}</span>
       <span className="flex-item pl1">
         <RemoveButton onClick={this._handleRemoveClick} />
       </span>

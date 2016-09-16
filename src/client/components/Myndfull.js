@@ -3,10 +3,7 @@ import React from 'react';
 import create from './componentFactory';
 import cn from 'classnames';
 
-
 import { getViewport } from 'dom-util';
-
-import DraggingIndicator from '../connectors/DraggingIndicator';
 
 /** Layout Elements */
 import MobileLayoutConnector from '../connectors/MobileLayoutConnector';
@@ -40,7 +37,6 @@ const App = create({
         ||
         <MobileLayoutConnector />
         }
-        <DraggingIndicator />
       </div>
     );
   }

@@ -24,11 +24,11 @@ import {
 export function onFormChange(payload) {
   return create(GOAL_FORM_CHANGE, payload)
 }
-export function moveGoal(path, goal) {
+export function moveGoal(idx, goal) {
   return function(dispatch) {
-    // orderIndex starts at 0 to allow the backend to use 0 to move around elements
     const goalClone = clone(goal);
-    goalClone.orderIndex = (parseInt(path.split('.')[1]) + 1)
+    // if moving up in the list, actually going to index + 1
+    taskClone.orderIndex = ((idx > goalClone.orderIndex) ? idx : (idx + 1));
     return dispatch(putGoal(goalClone)).then(() => {
       dispatch(fetchGoals());
     });

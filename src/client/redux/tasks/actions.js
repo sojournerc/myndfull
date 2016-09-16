@@ -24,11 +24,11 @@ import {
 export function onFormChange(payload) {
   return create(TASK_FORM_CHANGE, payload);
 }
-export function moveTask(path, task) {
+export function moveTask(idx, task) {
   return function(dispatch) {
-    // orderIndex starts at 0 to allow the backend to use 0 to move around elements
     const taskClone = clone(task);
-    taskClone.orderIndex = (parseInt(path.split('.')[1])+1)
+    // if moving up in the list, actually going to index + 1
+    taskClone.orderIndex = ((idx > taskClone.orderIndex) ? idx : (idx + 1));
     return dispatch(putTask(taskClone)).then(() => {
       dispatch(fetchTasks());
     });

@@ -1180,6 +1180,7 @@ textarea.input {
   -moz-transition: height, 100ms;
   -ms-transition: height, 100ms;
   transition: height, 100ms;
+  z-index: 4;
 }
 html {
   font-size: 13px;

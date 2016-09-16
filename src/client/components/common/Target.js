@@ -9,18 +9,25 @@ export default create({
   displayName: 'Target',
   propTypes: {
     active: React.PropTypes.bool.isRequired,
-    path: React.PropTypes.string.isRequired,
+    type: React.PropTypes.string.isRequired,
+    index: React.PropTypes.number.isRequired,
     isTargeted: React.PropTypes.bool.isRequired,
-    handleMouseEnter: React.PropTypes.func.isRequired,
-    handleMouseLeave: React.PropTypes.func.isRequired,
+    onDragOver: React.PropTypes.func.isRequired,
+    onDragLeave: React.PropTypes.func.isRequired,
+    onDragDrop: React.PropTypes.func.isRequired,
     children: React.PropTypes.node
   },
-
-  _handleMouseEnter() {
-    this.props.handleMouseEnter(this.props.path);
+  _handleDragOver(ev) {
+    ev.preventDefault();
+    if (!this.props.isTargeted) {
+      this.props.onDragOver({ type: this.props.type, index: this.props.index });
+    }
   },
-  _handleMouseLeave() {
-    this.props.handleMouseLeave();
+  _handleDragLeave() {
+    this.props.onDragLeave();
+  },
+  _handleDragDrop() {
+    this.props.onDragDrop(this.props.index);
   },
   render() {
     const { active, children, isTargeted } = this.props;
@@ -28,8 +35,9 @@ export default create({
       return <span />
     }
     return <div
-      onMouseEnter={this._handleMouseEnter}
-      onMouseLeave={this._handleMouseLeave}
+      onDragOver={this._handleDragOver}
+      onDragLeave={this._handleDragLeave}
+      onDrop={this._handleDragDrop}
       className={cn(
         'droppable',
         {

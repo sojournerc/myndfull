@@ -2,9 +2,9 @@
   "name": "myndfull",
   "version": "0.0.1",
   "scripts": {
-    "start": "node build/server/main",
+    "start": "node dist/server/main",
     "newMigration": "node_modules/.bin/sequelize --config config.custom.json migration:create",
-    "migrate": "node build/server/migrate",
+    "migrate": "node dist/server/migrate",
     "buildProd": "gulp build_prod & webpack -p --progress --config webpack.config.prod.js;",
     "runBuildDev": "webpack --watch --progress --config webpack.config.dev.js & gulp develop"
   },

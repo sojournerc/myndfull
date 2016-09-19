@@ -28,7 +28,7 @@ export function moveGoal(idx, goal) {
   return function(dispatch) {
     const goalClone = clone(goal);
     // if moving up in the list, actually going to index + 1
-    taskClone.orderIndex = ((idx > goalClone.orderIndex) ? idx : (idx + 1));
+    goalClone.orderIndex = ((idx > goalClone.orderIndex) ? idx : (idx + 1));
     return dispatch(putGoal(goalClone)).then(() => {
       dispatch(fetchGoals());
     });

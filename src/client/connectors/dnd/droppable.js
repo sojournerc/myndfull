@@ -13,11 +13,12 @@ import {
 
 export const mapStateToProps = (state, props) => {
   const { dragging, draggingType, draggingIndex, dropTarget } = state.dnd;
-  const active = true/*!!dragging && (draggingType === props.type)*/;
+  const active =  !!dragging && (draggingType === props.type) &&
+                  // targets next to the item being dragged would do nothing.
+                  (props.index !== draggingIndex && props.index !== (draggingIndex+1));
+
   const isTargeted =  (active && !!dropTarget) &&
-                      (props.type === dropTarget.type && props.index === dropTarget.index) &&
-                      // targets next to the item being dragged would do nothing.
-                      (active && props.index !== draggingIndex && props.index !== (draggingIndex+1));
+                      (props.type === dropTarget.type && props.index === dropTarget.index);
 
   return { active, isTargeted };
 };

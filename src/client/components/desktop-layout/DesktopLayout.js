@@ -14,7 +14,7 @@ export default create({
   render() {
     return <div id="DesktopLayout" className={cn(
     )}>
-      <Header isMobile={false} />
+      <Header isMobile={false} onViewChange={() => undefined} />
       <div id="BodyInner">
         <div className={cn(
           'h100',

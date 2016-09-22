@@ -20,7 +20,7 @@ const umzug = new Umzug({
 console.log('RUNNING MIGRATIONS')
 umzug.up().then(function (migrations) {
   migrations.forEach(mig => {
-    console.log('RAN: ', mig.file);
+    console.log('RAN: ', mig.file, '\n');
   });
   console.log('MIGRATIONS COMPLETE')
 });

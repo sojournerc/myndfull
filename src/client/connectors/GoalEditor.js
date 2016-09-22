@@ -3,7 +3,7 @@ import create from './connectorFactory';
 import GoalForm from '../components/core/GoalForm';
 
 import {
-  onFormChange,
+  onPropChange,
   postNewGoal,
   fetchGoals
 } from '../redux/goals/actions';
@@ -23,8 +23,8 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(fetchGoals());
     });
   },
-  onFormChange(val) {
-    dispatch(onFormChange(val))
+  onPropChange(val) {
+    dispatch(onPropChange(val))
   }
 });
 

@@ -1,5 +1,5 @@
 
-import clone from 'lodash/fp/clone';
+import clone from 'lodash/clone';
 
 import create from '../actionFactory';
 import createFetch from '../fetchFactory';
@@ -21,7 +21,7 @@ import {
   TASK_FORM_CHANGE
 } from '../../constants/action-types';
 
-export function onFormChange(payload) {
+export function onPropChange(payload) {
   return create(TASK_FORM_CHANGE, payload);
 }
 export function moveTask(idx, task) {

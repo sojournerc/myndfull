@@ -11,6 +11,7 @@ export default create({
   displayName: 'List',
   propTypes: {
     items: React.PropTypes.array.isRequired,
+    itemLoading: React.PropTypes.bool.isRequired,
     itemType: React.PropTypes.oneOf(ITEM_TYPES).isRequired
   },
   render() {

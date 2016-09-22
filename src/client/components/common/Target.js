@@ -5,6 +5,14 @@ import create from '../componentFactory';
 
 import ITEM_TYPES from '../../constants/item-types';
 
+function __isDragWithin(pos, el) {
+  const boundRect = el.getBoundingClientRect();
+  if ((pos.y <= boundRect.bottom && pos.y >= boundRect.top) &&
+      (pos.x <= boundRect.right && pos.x >= boundRect.left)) {
+    return true;
+  }
+}
+
 export default create({
   displayName: 'Target',
   propTypes: {
@@ -15,7 +23,19 @@ export default create({
     onDragOver: React.PropTypes.func.isRequired,
     onDragLeave: React.PropTypes.func.isRequired,
     onDragDrop: React.PropTypes.func.isRequired,
+    isTouch: React.PropTypes.bool.isRequired,
+    dragPos: React.PropTypes.object,
     children: React.PropTypes.node
+  },
+  // if we're a touch device we need to detect whether
+  // the dragPosition is going to be within the container of
+  componentWillUpdate(props) {
+    const { active, isTouch, isTargeted, dragPos, type, index } = props;
+    if (this.props.active && isTouch && (!isTargeted && __isDragWithin(dragPos, this._droppableInner))) {
+      this.props.onDragOver({ type, index });
+    } else if (isTouch && isTargeted && !__isDragWithin(dragPos, this._droppableInner)) {
+      this.props.onDragLeave();
+    }
   },
   _handleDragOver(ev) {
     ev.preventDefault();
@@ -45,7 +65,12 @@ export default create({
         }
       )}
     >
-      <div className='droppable-inner'>{children}</div>
+      <div
+        className='droppable-inner'
+        ref={(el) => { this._droppableInner = el; }}
+      >
+        {children}
+      </div>
     </div>
   }
 });

@@ -1,6 +1,16 @@
 
 import React from 'react';
 
+import {
+  STRING,
+  TEXT
+} from '../../constants/field-types.js';
+
+export const FIELD_MAP = {
+  [STRING]: TextInput,
+  [TEXT]: TextArea
+}
+
 const inputPropTypes = {
   value: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func.isRequired,
@@ -28,6 +38,9 @@ export function TextInput(props) {
 }
 TextInput.propTypes = inputPropTypes;
 
+/**
+ * Text Area Component
+ */
 export function TextArea(props) {
   const { value, onChange, onKeyUp } = props;
   return (
@@ -38,8 +51,6 @@ TextArea.propTypes = Object.assign({}, inputPropTypes, {
   onKeyUp: React.PropTypes.func
 });
 
-
-// export all buttons on default
 export default {
   TextInput,
   TextArea

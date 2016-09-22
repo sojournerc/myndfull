@@ -1,5 +1,5 @@
 
-import isEqual from 'lodash/fp/isEqual';
+import isEqual from 'lodash/isEqual';
 
 import React from 'react';
 

@@ -1,5 +1,5 @@
 
-import Immutable from 'seamless-immutable';
+import TaskModel, { create } from '../../models/TaskModel';
 
 import {
   GET_TASKS,
@@ -15,12 +15,9 @@ import {
   TASK_FORM_CHANGE
 } from '../../constants/action-types';
 
-const initialState = Immutable({
+const initialState = Object.freeze({
   taskList: [],
-  formValues: {
-    text: '',
-    notes: ''
-  },
+  workingTask: new TaskModel(),
   isFetching: false,
   isSaving: false
 });
@@ -28,23 +25,27 @@ const initialState = Immutable({
 export default function pages(state = initialState, { type, payload }) {
   switch (type) {
   case GET_TASKS:
-    return state.merge({ isFetching: true });
+    return Object.assign({}, state, { isFetching: true });
   case GET_TASKS_SUCCESS:
-    return state.merge({ isFetching: false, taskList: payload });
+    return Object.assign({}, state, { isFetching: false, taskList: payload.map(create) });
   case GET_TASKS_FAIL:
-    return state.merge({ isFetching: false });
+    return Object.assign({}, state, { isFetching: false });
   case ADD_TASK:
-    return state.merge({ isSaving: true });
+    return Object.assign({}, state, { isSaving: true });
   case ADD_TASK_SUCCESS:
-    return state.merge({ formValues: Object.assign(initialState.formValues), isSaving: false });
+    return Object.assign({}, state, { workingTask: new TaskModel(), isSaving: false });
   case ADD_TASK_FAIL:
-    return state.merge({ isSaving: false });
+    return Object.assign({}, state, { isSaving: false });
   case UPDATE_TASK:
     return state;
   case REMOVE_TASK:
     return state;
   case TASK_FORM_CHANGE:
-    return state.setIn(['formValues', payload.property], payload.value);
+    return Object.assign(
+      {},
+      state,
+      { workingTask: TaskModel.set(state.workingTask, payload.prop, payload.value) }
+    )
   default:
     return state;
   }

@@ -13,7 +13,7 @@ export default create({
   propTypes: {
     onAddItem: React.PropTypes.func.isRequired,
     formValues: React.PropTypes.object.isRequired,
-    onFormChange: React.PropTypes.func.isRequired
+    onPropChange: React.PropTypes.func.isRequired
   },
   _onSubmit(ev) {
     ev.preventDefault();
@@ -26,13 +26,13 @@ export default create({
     focusFirst(this);
   },
   render() {
-    const { formValues, onFormChange, onAddItem, onRemoveItem } = this.props;
+    const { formValues, onPropChange, onAddItem, onRemoveItem } = this.props;
     return <div className={cn(
     )}>
       <form onSubmit={this._onSubmit}>
         <div className="flex items-center w100">
           <span className="flex-gs-item mr1">
-            <TextInput onChange={handleInputChange('text', onFormChange)} value={formValues.text} />
+            <TextInput onChange={handleInputChange('text', onPropChange)} value={formValues.text} />
           </span>
           <span className="flex-item">
             <SubmitButton />

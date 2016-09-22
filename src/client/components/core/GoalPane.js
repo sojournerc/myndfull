@@ -7,7 +7,7 @@ import { fetchGoals } from '../../redux/goals/actions';
 
 import { AddButton, CloseButton } from '../common/Buttons';
 import GoalList from '../../connectors/GoalList';
-import GoalCreator from '../../connectors/GoalCreator';
+import GoalEditor from '../../connectors/GoalEditor';
 
 export default create({
   displayName: 'GoalPane',
@@ -40,7 +40,7 @@ export default create({
       </div>
       <div className="flex-s-50 overflow-auto px2 mb2">
         {showingForm &&
-        <GoalCreator />
+        <GoalEditor />
         ||
         <GoalList />
         }

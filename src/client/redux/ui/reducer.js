@@ -1,6 +1,4 @@
 
-import Immutable from 'seamless-immutable';
-
 import { MOBILE_BREAKPOINT } from '../../constants/misc';
 
 import {
@@ -17,11 +15,13 @@ import {
 import { getViewport } from 'dom-util';
 
 const viewport =  getViewport();
-const initialState = Immutable({
+const initialState = Object.freeze({
   activeView: LOG_VIEW, // used in mobile
   showingForm: false,
   clientInfo: {
     viewport: getViewport(),
+    // http://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript#4819886
+    isTouch: !!('ontouchstart' in window) || !!('msmaxtouchpoints' in window.navigator),
     isMobile() { return this.viewport.width <= MOBILE_BREAKPOINT; }
   }
 });
@@ -29,13 +29,14 @@ const initialState = Immutable({
 export default function ui(state = initialState, { type, payload }) {
   switch (type) {
   case SHOW_FORM:
-    return state.set('showingForm', payload);
+    return Object.assign({}, state, { 'showingForm': payload });
   case HIDE_FORM:
-    return state.set('showingForm', null);
+    return Object.assign({}, state, { 'showingForm': null });
   case VIEWPORT_CHANGE:
+    debugger;
     return state.setIn(['clientInfo', 'viewport'], payload);
   case ACTIVE_VIEW_CHANGE:
-    return state.set('activeView', payload);
+    return Object.assign({}, state, { 'activeView': payload });
   default:
     return state;
   }

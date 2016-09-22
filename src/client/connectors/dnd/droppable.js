@@ -20,7 +20,15 @@ export const mapStateToProps = (state, props) => {
   const isTargeted =  (active && !!dropTarget) &&
                       (props.type === dropTarget.type && props.index === dropTarget.index);
 
-  return { active, isTargeted };
+  return {
+    active,
+    isTargeted,
+    isTouch: state.ui.clientInfo.isTouch,
+    dragPos: {
+      x: state.dnd.dragX,
+      y: state.dnd.dragY
+    }
+  };
 };
 
 export const mapDispatchToProps = (dispatch) => ({

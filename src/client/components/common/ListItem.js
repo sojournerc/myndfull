@@ -17,8 +17,11 @@ export default create({
     itemType: React.PropTypes.oneOf(ITEM_TYPES).isRequired,
     isLast: React.PropTypes.bool.isRequired,
     isMobile: React.PropTypes.bool.isRequired,
+    isTouch: React.PropTypes.bool.isRequired,
     onDragStart: React.PropTypes.func,
-    onDragEnd: React.PropTypes.func
+    onDragEnd: React.PropTypes.func,
+    onTouchMove: React.PropTypes.func,
+    onTouchEnd: React.PropTypes.func
   },
   _handleDragStart(ev) {
     const { itemType, index, item } = this.props;
@@ -27,20 +30,31 @@ export default create({
   _handleDragEnd(ev) {
     this.props.onDragEnd()
   },
+  _handleTouchMove(ev) {
+    const { itemType, index, item } = this.props;
+    this.props.onTouchMove(ev, itemType, index, item);
+  },
+  _handleTouchEnd() {
+    this.props.onTouchEnd();
+  },
   render() {
-    const { item, index, itemType, isLast, isMobile } = this.props;
+    const { item, index, itemType, isLast, isMobile, isTouch } = this.props;
     const Item = ComponentMap[itemType];
     return <div>
       <DroppableTarget  type={itemType} index={index} />
       <MenuItem
-        draggable
         onTouchTap={(e) => { console.log('touchTap') }}
 
-        // desktop
-        onDragStart={this._handleDragStart}
-        onDragEnd={this._handleDragEnd}
-
         desktop={!isMobile}
+
+        // desktop
+        draggable={!isTouch}
+        onDragStart={!isTouch && this._handleDragStart}
+        onDragEnd={!isTouch && this._handleDragEnd}
+
+        // touch devices
+        onTouchMove={this._handleTouchMove}
+        onTouchEnd={this._handleTouchEnd}
       >
         <div className={cn({py2: !isMobile})} >
           <Item item={item} index={index} />

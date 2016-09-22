@@ -50,7 +50,7 @@ export const CHANGE_ENTRY_TEXT = 'CHANGE_ENTRY_TEXT';
 // dnd
 export const START_DRAG = 'START_DRAG';
 export const END_DRAG = 'END_DRAG';
-// export const MOVE_DRAG = 'MOVE_DRAG';
+export const MOVE_DRAG = 'MOVE_DRAG';
 export const SET_DROP_TARGET = 'SET_DROP_TARGET';
 export const CLEAR_DROP_TARGET = 'CLEAR_DROP_TARGET';
 export const HIT_TARGET = 'HIT_TARGET';

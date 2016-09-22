@@ -7,7 +7,7 @@ import { fetchTasks } from '../../redux/tasks/actions';
 
 import { AddButton, CloseButton } from '../common/Buttons';
 import TaskList from '../../connectors/TaskList';
-import TaskCreator from '../../connectors/TaskCreator';
+import TaskEditor from '../../connectors/TaskEditor';
 
 export default create({
   displayName: 'TaskPane',
@@ -40,7 +40,7 @@ export default create({
       </div>
       <div className="flex-s-50 overflow-auto px2 mb2">
         {showingForm &&
-        <TaskCreator />
+        <TaskEditor />
         ||
         <TaskList />
         }

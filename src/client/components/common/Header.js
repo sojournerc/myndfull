@@ -38,7 +38,7 @@ export default create({
               onChange={this._handleNavChange}
               labelStyle={{ paddingRight: '24px', color: 'inherit' }}
               underlineStyle={{ borderTop: 'none' }}
-              style={{ fontSize: '1.3rem' }}
+              style={{ fontSize: '1.3rem', height: 'auto' }}
               iconStyle={{ 'right': 0 }}
             >
               {MAIN_VIEWS.map(view => <MenuItem value={view.slug} primaryText={view.label} key={view.slug} />)}

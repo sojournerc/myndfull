@@ -1,6 +1,4 @@
 
-import Immutable from 'seamless-immutable';
-
 import {
   GET_GOALS,
   GET_GOALS_SUCCESS,
@@ -15,7 +13,9 @@ import {
   GOAL_FORM_CHANGE
 } from '../../constants/action-types';
 
-const initialState = Immutable({
+import GoalModel, { create } from '../../models/GoalModel';
+
+const initialState = Object.freeze({
   goalList: [],
   formValues: {
     text: ''
@@ -27,24 +27,24 @@ const initialState = Immutable({
 export default function goals(state = initialState, { type, payload }) {
   switch (type) {
   case GET_GOALS:
-    return state.set('isFetching', true);
+    return Object.assign({}, state, {'isFetching': true});
   case GET_GOALS_SUCCESS:
-    return state.merge({ isFetching: false, goalList: payload });
+    return Object.assign({}, state, { isFetching: false, goalList: payload });
   case GET_GOALS_FAIL:
-    return state.set('isFetching', false);
+    return Object.assign({}, state, {'isFetching': false});
   case ADD_GOAL:
-    return state.set('isSaving', true );
+    return Object.assign({}, state, {'isSaving': true});
   case ADD_GOAL_SUCCESS:
-    return state.merge({ formValues: Object.assign(initialState.formValues), isSaving: false });
+    return Object.assign({}, state, { formValues: Object.assign(initialState.formValues), isSaving: false });
   case ADD_GOAL_FAIL:
-    return state.set('isSaving', false);
+    return Object.assign({}, state, {'isSaving': false});
   case UPDATE_GOAL:
     return state;
   case REMOVE_GOAL:
     return state;
   case GOAL_FORM_CHANGE:
-    // TODO: validate!!!
-    return state.setIn(['formValues', payload.property], payload.value);
+    debugger;
+    // https://www.npmjs.com/package/immutable-setter
   default:
     return state;
   }

@@ -43,6 +43,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^2.0.0",
     "gulp-uglifycss": "^1.0.6",
+    "immutable-setter": "^1.1.1",
     "isomorphic-fetch": "^2.2.1",
     "material-ui": "^0.15.4",
     "react": "^15.3.0",
@@ -55,7 +56,6 @@
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.1.0",
     "rollup-stream": "^1.11.0",
-    "seamless-immutable": "^6.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^2.1.0-beta.22"

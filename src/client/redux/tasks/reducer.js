@@ -12,7 +12,7 @@ import {
   UPDATE_TASK_SUCCESS,
   UPDATE_TASK_FAIL,
   REMOVE_TASK,
-  TASK_FORM_CHANGE
+  TASK_PROP_CHANGE
 } from '../../constants/action-types';
 
 const initialState = Object.freeze({
@@ -38,9 +38,13 @@ export default function pages(state = initialState, { type, payload }) {
     return Object.assign({}, state, { isSaving: false });
   case UPDATE_TASK:
     return state;
+  case UPDATE_TASK_SUCCESS:
+    return state;
+  case UPDATE_TASK_FAIL:
+    return state;
   case REMOVE_TASK:
     return state;
-  case TASK_FORM_CHANGE:
+  case TASK_PROP_CHANGE:
     return Object.assign(
       {},
       state,

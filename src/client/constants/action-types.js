@@ -33,7 +33,7 @@ export const UPDATE_TASK_FAIL = 'UPDATE_TASK_FAIL';
 export const REMOVE_TASK = 'REMOVE_TASK';
 export const REMOVE_TASK_SUCCESS = 'REMOVE_TASK_SUCCESS';
 export const REMOVE_TASK_FAIL = 'REMOVE_TASK_FAIL';
-export const TASK_FORM_CHANGE = 'TASK_FORM_CHANGE';
+export const TASK_PROP_CHANGE = 'TASK_PROP_CHANGE';
 
 // entries
 export const GET_ENTRIES = 'GET_ENTRIES';

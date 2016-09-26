@@ -1,4 +1,5 @@
 
+
 import { store } from '../redux';
 
 import mapValues from 'lodash/mapValues';
@@ -16,6 +17,10 @@ export default class BaseModel {
     );
   }
 
+  get type() {
+    return this.constructor.TYPE;
+  }
+
   // instance methods
   get isNew() {
     return !this.id
@@ -27,6 +32,11 @@ export default class BaseModel {
   }
 
   // actions
+  static move() {}
+  static add() {}
+  static update() {}
+  static remove() {}
+
   static propChange(instance, prop, value) {
     store.dispatch(createAction(instance.constructor.PROP_CHANGE, { prop, value }));
   }

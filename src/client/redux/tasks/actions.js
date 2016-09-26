@@ -18,12 +18,13 @@ import {
   REMOVE_TASK,
   REMOVE_TASK_SUCCESS,
   REMOVE_TASK_FAIL,
-  TASK_FORM_CHANGE
+  TASK_PROP_CHANGE
 } from '../../constants/action-types';
 
-export function onPropChange(payload) {
-  return create(TASK_FORM_CHANGE, payload);
-}
+// export function onPropChange(payload) {
+//   return create(TASK_PROP_CHANGE, payload);
+// }
+
 export function moveTask(idx, task) {
   return function(dispatch) {
     const taskClone = clone(task);

@@ -5,8 +5,8 @@
     "start": "node dist/server/main",
     "newMigration": "node_modules/.bin/sequelize --config config.custom.json migration:create",
     "migrate": "node dist/server/migrate",
-    "buildProd": "gulp build_prod & webpack -p --progress --config webpack.config.prod.js;",
-    "runBuildDev": "webpack --watch --progress --config webpack.config.dev.js & gulp develop"
+    "prod": "gulp build_prod & webpack -p --progress --config webpack.config.prod.js;",
+    "dev": "webpack --watch --progress --config webpack.config.dev.js & gulp develop"
   },
   "dependencies": {
     "koa": "^1.2.1",

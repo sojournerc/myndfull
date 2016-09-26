@@ -1,10 +1,6 @@
 
 import BaseModel from './BaseModel';
 
-const FIELDS =  Object.freeze({
-  text: ''
-});
-
 export function create(dat) {
   return new GoalModel(dat);
 }
@@ -14,7 +10,15 @@ class GoalModel extends BaseModel {
     super(args);
   }
 
-  static get FIELDS() { return FIELDS }
+  static get FIELDS() { 
+    return Object.freeze({
+      text: ''
+    })
+  }
+  
+  static get TYPE() { return 'GOAL'; } 
+  
+  static get API_PATH() { return 'goals'; }
 }
 
 export default GoalModel;

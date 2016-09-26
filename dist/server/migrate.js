@@ -52,6 +52,8 @@ const db = new Sequelize(dbConnectString, {
   }
 });
 
+db.sync();
+
 const umzug = new Umzug({
   storage: 'sequelize',
   storageOptions: {

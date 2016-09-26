@@ -59,6 +59,8 @@ const db = new Sequelize(dbConnectString, {
   }
 });
 
+db.sync();
+
 const Goal = db.define('goal', {
   text: { type: Sequelize.TEXT, allowNull: false },
   orderIndex: { type: Sequelize.INTEGER, allowNull: false }

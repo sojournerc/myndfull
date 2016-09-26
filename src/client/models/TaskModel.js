@@ -5,6 +5,7 @@ import { TASK } from  '../constants/item-types';
 
 import { STRING, TEXT } from '../constants/field-types';
 
+
 export function create(dat) {
   return new TaskModel(dat);
 }

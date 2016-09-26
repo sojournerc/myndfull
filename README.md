@@ -14,6 +14,7 @@ Similarly by being able to capture thoughts immediatly the cognitive load of try
 2. Presents a challenge
 3. Counteracts fear / Faces fear
 4. Has actionable tasks
+5. Should be able to track when progress is made on a goal, or a goal is served by an action, as a reminder of successes (gold star)
 
 ###What makes a good task?
 1. Furthers a goal

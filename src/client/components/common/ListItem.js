@@ -7,7 +7,7 @@ import MenuItem from 'material-ui/MenuItem';
 import DroppableTarget from '../../connectors/DroppableTarget';
 import { RemoveButton } from './Buttons';
 
-import ITEM_TYPES, { ComponentMap } from '../../constants/item-types';
+// import ITEM_TYPES, { ComponentMap } from '../../constants/item-types';
 
 export default create({
   displayName: 'ListItem',
@@ -57,7 +57,16 @@ export default create({
         onTouchEnd={this._handleTouchEnd}
       >
         <div className={cn({py2: !isMobile})} >
-          <Item item={item} index={index} />
+          <div className={cn(
+            'flex',
+            'flex-row',
+            'items-center'
+          )}>
+            <span className="flex-gs-item line-height-4 truncate" style={{ minWidth: 0 }}>{item.text}</span>
+            <span className="flex-item pl1">
+              <RemoveButton onClick={this._handleRemoveClick} />
+            </span>
+          </div>
         </div>
       </MenuItem>
       {isLast && <DroppableTarget type={itemType} index={index+1} />}

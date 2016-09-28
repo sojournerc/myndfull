@@ -1,22 +1,24 @@
 
 import create from './connectorFactory';
-import GoalPane from '../components/core/GoalPane';
+import Pane from '../components/common/Pane';
 
-import { GOAL } from '../constants/item-types';
+import GoalModel from '../models/GoalModel';
 
 import { showForm, hideForm } from '../redux/ui/actions';
 
 const mapStateToProps = (state) => ({
-  showingForm: state.ui.showingForm === GOAL
+  showingForm: state.ui.showingForm === GoalModel.TYPE,
+  items: state.api.goals.itemList,
+  ItemClass: GoalModel
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onShowForm() {
-    dispatch(showForm(GOAL));
+    dispatch(showForm(GoalModel.TYPE));
   },
   onHideForm() {
     dispatch(hideForm());
   }
 });
 
-export default create(GoalPane, mapStateToProps, mapDispatchToProps);
+export default create(Pane, mapStateToProps, mapDispatchToProps);

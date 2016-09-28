@@ -1,6 +1,7 @@
 
 import GoalModel from './GoalModel';
 import TaskModel from './TaskModel';
+import EntryModel from './EntryModel';
 
 export const TYPE_LIST = [];
 const Models = {};
@@ -13,7 +14,8 @@ const register = ((Class) => {
 
 [
   GoalModel,
-  TaskModel
+  TaskModel,
+  EntryModel
 ].forEach(register);
 
 export default Object.freeze(Models);  

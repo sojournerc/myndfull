@@ -5,47 +5,20 @@ export const HIDE_FORM = 'HIDE_FORM';
 export const VIEWPORT_CHANGE = 'VIEWPORT_CHANGE';
 export const ACTIVE_VIEW_CHANGE = 'ACTIVE_VIEW_CHANGE';
 
-// goals
-export const GET_GOALS = 'GET_GOALS';
-export const GET_GOALS_SUCCESS = 'GET_GOALS_SUCCESS';
-export const GET_GOALS_FAIL = 'GET_GOALS_FAIL';
-export const ADD_GOAL = 'ADD_GOAL';
-export const ADD_GOAL_SUCCESS = 'ADD_GOAL_SUCCESS';
-export const ADD_GOAL_FAIL = 'ADD_GOAL_FAIL';
-export const UPDATE_GOAL = 'UPDATE_GOAL';
-export const UPDATE_GOAL_SUCCESS = 'UPDATE_GOAL_SUCCESS';
-export const UPDATE_GOAL_FAIL = 'UPDATE_GOAL_FAIL';
-export const REMOVE_GOAL = 'REMOVE_GOAL';
-export const REMOVE_GOAL_SUCCESS = 'REMOVE_GOAL_SUCCESS';
-export const REMOVE_GOAL_FAIL = 'REMOVE_GOAL_FAIL';
-export const GOAL_FORM_CHANGE = 'GOAL_FORM_CHANGE';
-
-// tasks
-export const GET_TASKS = 'GET_TASKS';
-export const GET_TASKS_SUCCESS = 'GET_TASKS_SUCCESS';
-export const GET_TASKS_FAIL = 'GET_TASKS_FAIL';
-export const ADD_TASK = 'ADD_TASK';
-export const ADD_TASK_SUCCESS = 'ADD_TASK_SUCCESS';
-export const ADD_TASK_FAIL = 'ADD_TASK_FAIL';
-export const UPDATE_TASK = 'UPDATE_TASK';
-export const UPDATE_TASK_SUCCESS = 'UPDATE_TASK_SUCCESS';
-export const UPDATE_TASK_FAIL = 'UPDATE_TASK_FAIL';
-export const REMOVE_TASK = 'REMOVE_TASK';
-export const REMOVE_TASK_SUCCESS = 'REMOVE_TASK_SUCCESS';
-export const REMOVE_TASK_FAIL = 'REMOVE_TASK_FAIL';
-export const TASK_PROP_CHANGE = 'TASK_PROP_CHANGE';
-
-// entries
-export const GET_ENTRIES = 'GET_ENTRIES';
-export const GET_ENTRIES_SUCCESS = 'GET_ENTRIES_SUCCESS';
-export const GET_ENTRIES_FAIL = 'GET_ENTRIES_FAIL';
-export const ADD_ENTRY = 'ADD_ENTRY';
-export const ADD_ENTRY_SUCCESS = 'ADD_ENTRY_SUCCESS';
-export const ADD_ENTRY_FAIL = 'ADD_ENTRY_FAIL';
-export const REMOVE_ENTRY = 'REMOVE_ENTRY';
-export const REMOVE_ENTRY_SUCCESS = 'REMOVE_ENTRY_SUCCESS';
-export const REMOVE_ENTRY_FAIL = 'REMOVE_ENTRY_FAIL';
-export const CHANGE_ENTRY_TEXT = 'CHANGE_ENTRY_TEXT';
+// API 
+export const GET = 'GET';
+export const GET_SUCCESS = 'GET_SUCCESS';
+export const GET_FAIL = 'GET_FAIL';
+export const ADD = 'ADD';
+export const ADD_SUCCESS = 'ADD_SUCCESS';
+export const ADD_FAIL = 'ADD_FAIL';
+export const UPDATE = 'UPDATE';
+export const UPDATE_SUCCESS = 'UPDATE_SUCCESS';
+export const UPDATE_FAIL = 'UPDATE_FAIL';
+export const REMOVE = 'REMOVE';
+export const REMOVE_SUCCESS = 'REMOVE_SUCCESS';
+export const REMOVE_FAIL = 'REMOVE_FAIL';
+export const PROP_CHANGE = 'PROP_CHANGE'
 
 // dnd
 export const START_DRAG = 'START_DRAG';

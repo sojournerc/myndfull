@@ -9,7 +9,7 @@ import { SubmitButton } from '../common/Buttons';
 import { FIELD_MAP } from '../common/Inputs';
 
 export default create({
-  displayName: 'TaskForm',
+  displayName: 'Form',
   propTypes: {
     ModelClass: React.PropTypes.func.isRequired,
     workingItem: React.PropTypes.object.isRequired

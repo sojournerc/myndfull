@@ -1,13 +1,13 @@
 
 import BaseModel from './BaseModel';
 
-import { STRING, TEXT } from '../constants/field-types';
+import { TEXT } from '../constants/field-types';
 
 export function create(dat) {
-  return new TaskModel(dat);
+  return new EntryModel(dat);
 }
 
-class TaskModel extends BaseModel {
+class EntryModel extends BaseModel {
   
   constructor(args) { super(args); }
 
@@ -18,19 +18,15 @@ class TaskModel extends BaseModel {
         required: true,
         type: STRING,
         default: ''
-      }),
-      notes: Object.freeze({
-        type: TEXT,
-        default: ''
       })
     }; 
   }
 
-  static get TYPE() { return 'TASK'; } 
+  static get TYPE() { return 'ENTRY'; } 
 
-  static get API_PATH() { return 'tasks'; }
+  static get API_PATH() { return 'entries'; }
 
 
 }
 
-export default TaskModel;
+export default EntryModel;

@@ -7,10 +7,6 @@ import {
   clearDropTarget
 } from '../../redux/dnd/actions';
 
-import {
-  TargetActionMap
-} from '../../constants/item-types'
-
 export const mapStateToProps = (state, props) => {
   const { dragging, draggingType, draggingIndex, dropTarget } = state.dnd;
   const active =  !!dragging && (draggingType === props.type) &&
@@ -41,6 +37,6 @@ export const mapDispatchToProps = (dispatch) => ({
   onDragDrop(idx) {
     const dnd = store.getState().dnd;
     const { draggingItem, draggingType } = dnd;
-    store.dispatch(TargetActionMap[draggingType](idx, draggingItem));
+    debugger;
   }
 });

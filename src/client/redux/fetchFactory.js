@@ -19,7 +19,10 @@ function handleResponse(response) {
   }
 }
 
-export default function createFetch({ url, method, start, success, fail, body }) {
+export default function createFetch({ url, method, start, success, fail, body, params }) {
+  if (params) {
+    throw new Error('TODO something with params');
+  }
   return function(dispatch) {
     dispatch(start())
     return fetch(url, {

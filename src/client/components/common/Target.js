@@ -3,8 +3,6 @@ import React from 'react';
 import cn from 'classnames';
 import create from '../componentFactory';
 
-import ITEM_TYPES from '../../constants/item-types';
-
 function __isDragWithin(pos, el) {
   const boundRect = el.getBoundingClientRect();
   if ((pos.y <= boundRect.bottom && pos.y >= boundRect.top) &&

@@ -1,22 +1,24 @@
 
 import create from './connectorFactory';
-import TaskPane from '../components/core/TaskPane';
-import { store } from '../redux';
-import { TASK } from '../constants/item-types';
+import Pane from '../components/common/Pane';
+
+import TaskModel from '../models/TaskModel';
 
 import { showForm, hideForm } from '../redux/ui/actions';
 
 const mapStateToProps = (state) => ({
-  showingForm: state.ui.showingForm === TASK
+  showingForm: state.ui.showingForm === TaskModel.TYPE,
+  items: state.api.tasks.itemList,
+  ItemClass: TaskModel
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onShowForm() {
-    dispatch(showForm(TASK));
+    dispatch(showForm(TaskModel.TYPE));
   },
   onHideForm() {
     dispatch(hideForm());
   }
 });
 
-export default create(TaskPane, mapStateToProps, mapDispatchToProps);
+export default create(Pane, mapStateToProps, mapDispatchToProps);

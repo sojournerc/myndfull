@@ -17,7 +17,6 @@ class GoalModel extends BaseModel {
   }
   
   static get TYPE() { return 'GOAL'; } 
-  
   static get API_PATH() { return 'goals'; }
 }
 

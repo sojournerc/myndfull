@@ -3,7 +3,7 @@ import React from 'react';
 import cn from 'classnames';
 import create from '../componentFactory';
 
-import ITEM_TYPES from '../../constants/item-types';
+import { TYPE_LIST } from '../../models';
 
 import DraggableItem from '../../connectors/DraggableItem';
 
@@ -12,7 +12,7 @@ export default create({
   propTypes: {
     items: React.PropTypes.array.isRequired,
     itemLoading: React.PropTypes.bool.isRequired,
-    itemType: React.PropTypes.oneOf(ITEM_TYPES).isRequired
+    itemType: React.PropTypes.oneOf(TYPE_LIST).isRequired
   },
   render() {
     const { items, itemType } = this.props;

@@ -9,10 +9,6 @@ import {
   moveDrag
 } from '../../redux/dnd/actions';
 
-import {
-  TargetActionMap
-} from '../../constants/item-types'
-
 export const mapStateToProps = (state) => ({
   isTouch: state.ui.clientInfo.isTouch,
   isMobile: state.ui.clientInfo.isMobile()
@@ -54,7 +50,7 @@ export const mapDispatchToProps = (dispatch) => ({
     // if we are touch then we need to add the element here
     // otherwise this happens in droppable on the onDrop event
     if (dragging && !!dropTarget) {
-      dispatch(TargetActionMap[draggingType](dropTarget.index, draggingItem));
+      debugger;
     }
     dispatch(endDrag());
   }

@@ -71,12 +71,12 @@ export default class BaseModel {
 
   static fetch(params) {
     return createFetch({
-      url: __getUrl(instance.constructor.API_PATH),
+      url: __getUrl(this.API_PATH),
       method: 'GET',
       params,
-      start: get,
-      success: getSuccess,
-      fail: getFail
+      start: __wrapAction(this, get),
+      success: __wrapAction(this, getSuccess),
+      fail: __wrapAction(this, getFail)
     });
   }
   
@@ -86,9 +86,9 @@ export default class BaseModel {
       url: __getUrl(instance.constructor.API_PATH),
       method: 'POST',
       body: itemJSON,
-      start: add,
-      success: addSuccess,
-      fail: addFail
+      start: __wrapAction(this, add),
+      success: __wrapAction(this, addSuccess),
+      fail: __wrapAction(this, addFail)
     });
   }
 
@@ -98,9 +98,9 @@ export default class BaseModel {
       url: __getUrl(instance.constructor.API_PATH),
       method: 'PUT',
       body: itemJSON,
-      start: update,
-      success: updateSuccess,
-      fail: updateFail
+      start: __wrapAction(this, update),
+      success: __wrapAction(this, updateSuccess),
+      fail: __wrapAction(this, updateFail)
     });
   }
 
@@ -109,11 +109,14 @@ export default class BaseModel {
       url: __getUrl(instance.constructor.API_PATH),
       method: 'DELETE',
       body: itemJSON,
-      start: remove,
-      success: removeSuccess,
-      fail: removeFail
+      start: __wrapAction(this, remove),
+      success: __wrapAction(this, removeSuccess),
+      fail: __wrapAction(this, removeFail)
     });
   }
 }
 
 const __getUrl = (apiPath, pathParam) => (`/api/${apiPath}${pathParam ? `/${pathParam}` : ''}`);
+const __wrapAction = (Class, action) => { return (pl) => {
+  return action(pl, { Class });
+}} 

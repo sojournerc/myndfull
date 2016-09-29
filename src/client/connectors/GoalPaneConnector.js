@@ -8,7 +8,6 @@ import { showForm, hideForm } from '../redux/ui/actions';
 
 const mapStateToProps = (state) => ({
   showingForm: state.ui.showingForm === GoalModel.TYPE,
-  items: state.api.goals.itemList,
   ItemClass: GoalModel
 });
 

@@ -2,10 +2,10 @@
 import create from './connectorFactory';
 import Entry from '../components/core/Entry';
 
-import {
-  deleteEntry,
-  fetchEntries
-} from '../redux/entries/actions';
+// import {
+//   deleteEntry,
+//   fetchEntries
+// } from '../redux/entries/actions';
 
 const mapStateToProps = (state) => ({
   isMobile: state.ui.clientInfo.isMobile()
@@ -13,9 +13,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   onRemoveItem(id) {
-    dispatch(deleteEntry(id)).then(() => {
-      dispatch(fetchEntries());
-    });
+    // dispatch(deleteEntry(id)).then(() => {
+    //   dispatch(fetchEntries());
+    // });
   }
 });
 

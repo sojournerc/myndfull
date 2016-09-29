@@ -16,16 +16,14 @@ class EntryModel extends BaseModel {
     return {
       text: Object.freeze({
         required: true,
-        type: STRING,
+        type: TEXT,
         default: ''
       })
     }; 
   }
 
   static get TYPE() { return 'ENTRY'; } 
-
   static get API_PATH() { return 'entries'; }
-
 
 }
 

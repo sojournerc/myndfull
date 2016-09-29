@@ -2,15 +2,9 @@
 import create from './connectorFactory';
 import TextForm from '../components/common/TextForm';
 
-import {
-  changeEntryText,
-  postNewEntry,
-  fetchEntries
-} from '../redux/entries/actions';
-
 const mapStateToProps = (state) => ({
   textArea: true,
-  inputValue: state.entries.newEntryText
+  inputValue: state.api.entries.workingItem.text
 });
 
 const mapDispatchToProps = (dispatch) => ({

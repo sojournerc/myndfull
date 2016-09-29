@@ -1,6 +1,8 @@
 
 import BaseModel from './BaseModel';
 
+import { STRING } from '../constants/field-types';
+
 export function create(dat) {
   return new GoalModel(dat);
 }
@@ -12,7 +14,10 @@ class GoalModel extends BaseModel {
 
   static get FIELDS() { 
     return Object.freeze({
-      text: ''
+      text: Object.freeze({
+        type: STRING,
+        default: ''
+      })
     })
   }
   

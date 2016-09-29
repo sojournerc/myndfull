@@ -13,7 +13,7 @@ class TaskModel extends BaseModel {
 
   // properties mapped to field types
   static get FIELDS() { 
-    return {
+    return Object.freeze({
       text: Object.freeze({
         required: true,
         type: STRING,
@@ -23,13 +23,11 @@ class TaskModel extends BaseModel {
         type: TEXT,
         default: ''
       })
-    }; 
+    }); 
   }
 
   static get TYPE() { return 'TASK'; } 
-
   static get API_PATH() { return 'tasks'; }
-
 
 }
 

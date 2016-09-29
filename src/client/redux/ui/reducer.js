@@ -1,5 +1,6 @@
 
 import { MOBILE_BREAKPOINT } from '../../constants/misc';
+import { setIn } from 'immutable-setter';
 
 import {
   SHOW_FORM,
@@ -33,11 +34,11 @@ export default function ui(state = initialState, { type, payload }) {
   case HIDE_FORM:
     return Object.assign({}, state, { 'showingForm': null });
   case VIEWPORT_CHANGE:
-    debugger;
-    return state.setIn(['clientInfo', 'viewport'], payload);
+    return setIn(state, ['clientInfo', 'viewport'], payload);
   case ACTIVE_VIEW_CHANGE:
     return Object.assign({}, state, { 'activeView': payload });
   default:
     return state;
   }
 }
+;

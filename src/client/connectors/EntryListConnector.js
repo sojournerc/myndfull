@@ -3,7 +3,7 @@ import create from './connectorFactory';
 import EntryList from '../components/core/EntryList';
 
 const mapStateToProps = (state) => ({
-  entries: state.entries.entryList
+  entries: state.api.entries.items
 });
 
 const mapDispatchToProps = (dispatch) => ({});

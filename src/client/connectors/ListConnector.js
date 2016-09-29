@@ -2,11 +2,9 @@
 import create from './connectorFactory';
 import List from '../components/common/List';
 
-import { GOAL } from '../constants/item-types';
-
-const mapStateToProps = (state) => ({
-  itemType: GOAL,
-  items: state.goals.goalList
+const mapStateToProps = (state, props) => ({
+  items: state.api[props.ItemClass.API_PATH].items,
+  itemsLoading: state.api[props.ItemClass.API_PATH].isFetching
 });
 
 const mapDispatchToProps = (dispatch) => ({});

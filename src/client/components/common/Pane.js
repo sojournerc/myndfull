@@ -7,24 +7,21 @@ import { store } from '../../redux';
 import { AddButton, CloseButton } from '../common/Buttons';
 
 import Editor from '../../connectors/Editor';
+import List from '../../connectors/ListConnector';
 
-import List from './List';
 
 export default create({
   displayName: 'Pane',
   propTypes: {
     onShowForm: React.PropTypes.func.isRequired,
     onHideForm: React.PropTypes.func.isRequired,
-    items: React.PropTypes.array.isRequired,
     ItemClass: React.PropTypes.func.isRequired
   },
   componentWillMount() {
-    debugger;
-    
-    // store.dispatch(fetchTasks());
+    store.dispatch(this.props.ItemClass.fetch());
   },
   render() {
-    const { showingForm, onShowForm, onHideForm, ItemClass, items } = this.props;
+    const { showingForm, onShowForm, onHideForm, ItemClass, items, itemLoading } = this.props;
     return <div className={cn(
       'flex',
       'flex-column',
@@ -47,7 +44,7 @@ export default create({
         {showingForm &&
         <Editor ItemClass={ItemClass} />
         ||
-        <List items={items} />
+        <List ItemClass={ItemClass} />
         }
       </div>
     </div>

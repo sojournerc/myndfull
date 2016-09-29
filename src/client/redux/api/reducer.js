@@ -1,16 +1,33 @@
 
 import Models from '../../models';
+import { setIn } from 'immutable-setter';
+
+import {
+  GET,
+  GET_SUCCESS,
+  GET_FAIL,
+  ADD,
+  ADD_SUCCESS,
+  ADD_FAIL,
+  UPDATE,
+  UPDATE_SUCCESS,
+  UPDATE_FAIL,
+  REMOVE,
+  REMOVE_SUCCESS,
+  REMOVE_FAIL,
+  PROP_CHANGE
+} from '../../constants/action-types';
 
 const initialState = {};
 const initiateApiState = ((Classes) => {
   for (const TYPE in Classes) {
     if (Classes.hasOwnProperty(TYPE)) {
-      initialState[TYPE] = Object.freeze(
+      initialState[Classes[TYPE].API_PATH] = Object.freeze(
         // Initial state for each api item
         {
           items: [],
           workingItem: new Classes[TYPE](),
-          isFetcing: false,
+          isFetching: false,
           isSaving: false
         }
       );
@@ -20,14 +37,17 @@ const initiateApiState = ((Classes) => {
 
 Object.freeze(initialState);
 
-export default function api(state = initialState, { action, type, payload }) {
-  switch (action) {
+export default function api(state = initialState, { type, payload, meta }) {
+  const Class = meta && meta.Class;
+  let temp;
+  switch (type) {
   case GET:
-    break; 
+    return setIn(state, [Class.API_PATH, 'isFetching'], true);
   case GET_FAIL:
-    break;
+    return setIn(state, [Class.API_PATH, 'isFetching'], false);
   case GET_SUCCESS:
-    break;
+    temp = setIn(state, [Class.API_PATH, 'isFetching'], false);
+    return setIn(temp, [Class.API_PATH, 'items'], payload);
   // // fetching
   // static get GET() { return GET_TASKS; }
   // static get GET_SUCCESS() { return GET_TASKS_SUCCESS; }

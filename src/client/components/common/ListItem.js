@@ -7,14 +7,14 @@ import MenuItem from 'material-ui/MenuItem';
 import DroppableTarget from '../../connectors/DroppableTarget';
 import { RemoveButton } from './Buttons';
 
-// import ITEM_TYPES, { ComponentMap } from '../../constants/item-types';
+import { TYPE_LIST } from '../../models'
 
 export default create({
   displayName: 'ListItem',
   propTypes: {
     index: React.PropTypes.number.isRequired,
     item: React.PropTypes.object.isRequired,
-    itemType: React.PropTypes.oneOf(ITEM_TYPES).isRequired,
+    ItemClass: React.PropTypes.func.isRequired,
     isLast: React.PropTypes.bool.isRequired,
     isMobile: React.PropTypes.bool.isRequired,
     isTouch: React.PropTypes.bool.isRequired,

@@ -8,7 +8,6 @@ import { showForm, hideForm } from '../redux/ui/actions';
 
 const mapStateToProps = (state) => ({
   showingForm: state.ui.showingForm === TaskModel.TYPE,
-  items: state.api.tasks.itemList,
   ItemClass: TaskModel
 });
 

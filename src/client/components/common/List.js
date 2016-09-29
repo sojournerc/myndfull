@@ -11,11 +11,11 @@ export default create({
   displayName: 'List',
   propTypes: {
     items: React.PropTypes.array.isRequired,
-    itemLoading: React.PropTypes.bool.isRequired,
-    itemType: React.PropTypes.oneOf(TYPE_LIST).isRequired
+    itemsLoading: React.PropTypes.bool.isRequired,
+    ItemClass: React.PropTypes.func.isRequired
   },
   render() {
-    const { items, itemType } = this.props;
+    const { items, ItemClass } = this.props;
     return (
       <div className="list border-box lighter-bg">
         {!!items.length &&
@@ -24,7 +24,7 @@ export default create({
             index={i}
             key={i}
             item={item}
-            itemType={itemType}
+            ItemClass={ItemClass}
             isLast={i === (items.length-1)}
           />
         )

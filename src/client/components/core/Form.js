@@ -11,20 +11,20 @@ import { FIELD_MAP } from '../common/Inputs';
 export default create({
   displayName: 'Form',
   propTypes: {
-    ModelClass: React.PropTypes.func.isRequired,
+    ItemClass: React.PropTypes.func.isRequired,
     workingItem: React.PropTypes.object.isRequired
+  },
+  componentDidMount() {
+    focusFirst(this);
   },
   _onSubmit(ev) {
     ev.preventDefault();
     // TODO: validate!!!
     this.props.onSubmitItem(this.props.formValues);
   },
-  componentDidMount() {
-    focusFirst(this);
-  },
   render() {
-    const { ModelClass, workingItem } = this.props;
-    const fields = ModelClass.FIELDS;
+    const { ItemClass, workingItem } = this.props;
+    const fields = ItemClass.FIELDS;
     return <div className={cn(
     )}>
       <form onSubmit={this._onSubmit}>
@@ -34,7 +34,7 @@ export default create({
             return (
               <div className="flex-gs-item mb1" key={key}>
                 <Field
-                  onChange={handleInputChange(ModelClass.propChange, workingItem, key)}
+                  onChange={handleInputChange(ItemClass.propChange, workingItem, key)}
                   value={workingItem[key]}
                 />
               </div>

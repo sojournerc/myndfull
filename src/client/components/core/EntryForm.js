@@ -4,24 +4,23 @@ import React from 'react';
 import cn from 'classnames';
 import create from '../componentFactory';
 
-import { SubmitButton } from './Buttons';
-import { TextInput, TextArea } from './Inputs';
+import { handleInputChange } from 'form-util';
+
+import { SubmitButton } from '../common/Buttons';
+import { TextInput, TextArea } from '../common/Inputs';
 
 export default create({
   displayName: 'TextForm',
   propTypes: {
-    inputValue: React.PropTypes.string.isRequired,
-    onAdd: React.PropTypes.func.isRequired,
-    onInputChange: React.PropTypes.func.isRequired,
-    textArea: React.PropTypes.bool
+    workingItem: React.PropTypes.object.isRequired
   },
   _onSubmit(ev) {
     ev.preventDefault();
     ev.stopPropagation();
     // trim whitespace on submit
-    const val = this.props.inputValue;
+    const val = this.props.workingItem.text;
     if (val) {
-      this.props.onAdd(val);
+      this.props.workingItem.save();
     }
   },
   _onTextAreaKeyUp(ev) {
@@ -31,14 +30,17 @@ export default create({
     }
   },
   render() {
-    const { inputValue, onInputChange, textArea } = this.props;
-    const Input = textArea ? TextArea : TextInput;
+    const { workingItem } = this.props;
     return <div className={cn(
     )}>
       <form onSubmit={this._onSubmit}>
         <div className="flex items-center w100 my2">
           <span className="flex-gs-item mr1">
-            <Input onChange={onInputChange} value={inputValue} onKeyUp={textArea && this._onTextAreaKeyUp} />
+            <TextArea 
+              onChange={handleInputChange(workingItem, 'text')} 
+              value={workingItem.text} 
+              onKeyUp={this._onTextAreaKeyUp} 
+            />
           </span>
           <span className="flex-item">
             <SubmitButton />

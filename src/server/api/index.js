@@ -44,7 +44,7 @@ function restify(provider, path) {
       this.body = updated;
     } catch (err) { handleError(this, err) }
   });
-  router.delete(`/${path}/:id`, koaBody, function*() {
+  router.delete(`/${path}/:id`, function*() {
     try {
       yield provider.remove(this.params.id);
       this.status = 204;

@@ -1,5 +1,6 @@
 
 import fetch from 'isomorphic-fetch'
+import url from 'url';
 
 const _2XX = /^2\d\d$/;
 const _4XX = /^4\d\d$/;
@@ -19,13 +20,13 @@ function handleResponse(response) {
   }
 }
 
-export default function createFetch({ url, method, start, success, fail, body, params }) {
-  if (params) {
-    throw new Error('TODO something with params');
-  }
+export default function createFetch({ path, method, start, success, fail, body, params }) {
   return function(dispatch) {
     dispatch(start())
-    return fetch(url, {
+    return fetch(url.format({
+      pathname: path,
+      query: params
+    }), {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'

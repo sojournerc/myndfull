@@ -14,6 +14,9 @@ export default create({
     itemsLoading: React.PropTypes.bool.isRequired,
     ItemClass: React.PropTypes.func.isRequired
   },
+  componentWillMount() {
+    this.props.ItemClass.fetch();
+  },
   render() {
     const { items, ItemClass } = this.props;
     return (

@@ -70,7 +70,9 @@ const Goal = db.define('goal', {
 
 var goalProvider = {
   create: function*(body) {
-    return Goal.create(body);
+    // add the new goal to the top of the list
+    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1)`);
+    return Goal.create(Object.assign({}, body, { orderIndex: 1 }));
   },
   update: function*(body) {
     // look up item to be updated
@@ -89,7 +91,7 @@ var goalProvider = {
         yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
       }
     }
-    yield Goal.upsert(body);
+    return Goal.upsert(body);
   },
   get: function*(query) {
     return Goal.findAll({
@@ -97,11 +99,10 @@ var goalProvider = {
     });
   },
   remove: function*(id) {
-    // look up the item by id
-    const removing = yield Goal.findById(id);
-    const removingOrderIndex = removing.orderIndex;
+    const goal = yield Goal.findById(id);
+    const removingOrderIndex = goal.orderIndex;
     // destroy the item
-    yield Goal.destroy({ where: { id: id }})
+    yield Goal.destroy({ where: { id }})
     // update the other rows to have correct orderIdx
     yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
     return;
@@ -118,7 +119,9 @@ const Task = db.define('task', {
 
 var taskProvider = {
   create: function*(body) {
-    return Task.create(body);
+    // add the new goal to the top of the list
+    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" + 1)`);
+    return Task.create(Object.assign({}, body, { orderIndex: 1 }));
   },
   update: function*(body) {
     // look up item to be updated
@@ -137,7 +140,7 @@ var taskProvider = {
         yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
       }
     }
-    yield Task.upsert(body);
+    return Task.upsert(body);
   },
   get: function*(query) {
     return Task.findAll({
@@ -145,11 +148,10 @@ var taskProvider = {
     });
   },
   remove: function*(id) {
-    // look up the item by id
-    const removing = yield Task.findById(id);
-    const removingOrderIndex = removing.orderIndex;
+    const task = yield Task.findById(id);
+    const removingOrderIndex = task.orderIndex;
     // destroy the item
-    yield Task.destroy({ where: { id: id }})
+    yield Task.destroy({ where: { id }})
     // update the other rows to have correct orderIdx
     yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
     return;
@@ -184,8 +186,8 @@ var entryProvider = {
     return Entry.findAll({
     });
   },
-  remove: function*(id) {
-    return Entry.destroy({ where: { id: id }});
+  remove: function*(entry) {
+    return Entry.destroy({ where: { id: entry.id }});
   }
 }
 
@@ -226,7 +228,7 @@ function restify(provider, path) {
       this.body = updated;
     } catch (err) { handleError(this, err) }
   });
-  router$1.delete(`/${path}/:id`, koaBody, function*() {
+  router$1.delete(`/${path}/:id`, function*() {
     try {
       yield provider.remove(this.params.id);
       this.status = 204;

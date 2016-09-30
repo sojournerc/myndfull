@@ -9,10 +9,10 @@ export default create({
     dragX: React.PropTypes.number.isRequired,
     dragY: React.PropTypes.number.isRequired,
     dragging: React.PropTypes.bool.isRequired,
-    draggingType: React.PropTypes.string
+    draggingItem: React.PropTypes.string
   },
   render() {
-    const { dragging, dragX, dragY, draggingType } = this.props;
+    const { dragging, dragX, dragY, draggingItem } = this.props;
     if (!dragging) {
       return <span />;
     }
@@ -31,7 +31,7 @@ export default create({
       }}
     >
       <span className="dragging-arrow pr1">⤪</span>
-      <span className="dragging-label pl1">{draggingType}</span>
+      <span className="dragging-label pl1">{draggingItem.type}</span>
     </div>
   }
 });

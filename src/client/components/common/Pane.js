@@ -17,9 +17,6 @@ export default create({
     onHideForm: React.PropTypes.func.isRequired,
     ItemClass: React.PropTypes.func.isRequired
   },
-  componentWillMount() {
-    store.dispatch(this.props.ItemClass.fetch());
-  },
   render() {
     const { showingForm, onShowForm, onHideForm, ItemClass, items, itemLoading } = this.props;
     return <div className={cn(

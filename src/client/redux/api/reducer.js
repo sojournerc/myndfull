@@ -41,35 +41,40 @@ export default function api(state = initialState, { type, payload, meta }) {
   const Class = meta && meta.Class;
   let temp;
   switch (type) {
+  case PROP_CHANGE:
+    return setIn(
+      state, 
+      [Class.API_PATH, 'workingItem'], 
+      state[Class.API_PATH].workingItem.set(payload.prop, payload.value)
+    );
   case GET:
     return setIn(state, [Class.API_PATH, 'isFetching'], true);
   case GET_FAIL:
     return setIn(state, [Class.API_PATH, 'isFetching'], false);
   case GET_SUCCESS:
     temp = setIn(state, [Class.API_PATH, 'isFetching'], false);
-    return setIn(temp, [Class.API_PATH, 'items'], payload);
-  // // fetching
-  // static get GET() { return GET_TASKS; }
-  // static get GET_SUCCESS() { return GET_TASKS_SUCCESS; }
-  // static get GET_FAIL() { return GET_TASKS_FAIL; }
-
-  // // add
-  // static get ADD() { return ADD_TASK; }
-  // static get ADD_SUCCESS() { return ADD_TASK_SUCCESS; }
-  // static get ADD_FAIL() { return ADD_TASK_FAIL; }
-
-  // // updating
-  // static get UPDATE() { return UPDATE_TASK; }
-  // static get UPDATE_SUCCESS() { return UPDATE_TASK_SUCCESS; }
-  // static get UPDATE_FAIL() { return UPDATE_TASK_FAIL; }
-
-  // // removal
-  // static get REMOVE() { return REMOVE_TASK; }
-  // static get REMOVE_SUCCESS() { return REMOVE_TASK_SUCCESS; }
-  // static get REMOVE_FAIL() { return REMOVE_TASK_FAIL; }
-
-  // // instance prop change
-  // static get PROP_CHANGE() { return TASK_PROP_CHANGE; }
+    return setIn(temp, [Class.API_PATH, 'items'], payload.map((res) => {
+      return new Class(res);
+    }));
+  case ADD:
+    return setIn(state, [Class.API_PATH, 'isSaving'], true);
+  case ADD_SUCCESS:
+    temp = setIn(state, [Class.API_PATH, 'isSaving'], false);
+    return setIn(temp, [Class.API_PATH, 'workingItem'], new Class());
+  case ADD_FAIL:
+    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+  case UPDATE:
+    return setIn(state, [Class.API_PATH, 'isSaving'], true);
+  case UPDATE_SUCCESS:
+    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+  case UPDATE_FAIL:
+    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+  case REMOVE:
+    return setIn(state, [Class.API_PATH, 'isSaving'], true);
+  case REMOVE_SUCCESS:
+    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+  case REMOVE_FAIL:
+    return setIn(state, [Class.API_PATH, 'isSaving'], false);
   default: 
     return state;
   }

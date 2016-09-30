@@ -15,10 +15,9 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  onDragStart(type, index, item) {
+  onDragStart(index, item) {
     dispatch(startDrag({
       dragging: true,
-      draggingType: type,
       draggingIndex: index,
       draggingItem: item
     }));
@@ -26,7 +25,7 @@ export const mapDispatchToProps = (dispatch) => ({
   onDragEnd() {
     dispatch(endDrag());
   },
-  onTouchMove(ev, type, index, item) {
+  onTouchMove(ev, index, item) {
     const touch = ev.targetTouches[0];
     if (store.getState().dnd.dragging) {
       dispatch(moveDrag({
@@ -38,7 +37,6 @@ export const mapDispatchToProps = (dispatch) => ({
         dragX: touch.pageX,
         dragY: touch.pageY,
         dragging: true,
-        draggingType: type,
         draggingIndex: index,
         draggingItem: item
       }))
@@ -46,7 +44,7 @@ export const mapDispatchToProps = (dispatch) => ({
   },
   onTouchEnd() {
     const state = store.getState();
-    const { dragging, dropTarget, draggingType, draggingItem } = state.dnd;
+    const { dragging, dropTarget, draggingItem } = state.dnd;
     // if we are touch then we need to add the element here
     // otherwise this happens in droppable on the onDrop event
     if (dragging && !!dropTarget) {

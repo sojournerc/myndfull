@@ -4,11 +4,12 @@ import cn from 'classnames';
 import create from '../componentFactory';
 
 import EntryListConnector from '../../connectors/EntryListConnector';
-import LogInput from '../../connectors/LogInput';
+import EntryFormConnector from '../../connectors/EntryFormConnector';
 
 export default create({
   displayName: 'EntryPane',
   propTypes: {
+
   },
   render() {
     return <div className={cn(
@@ -22,7 +23,7 @@ export default create({
         <EntryListConnector />
       </div>
       <div className="theme5-bg px2 flex-item">
-        <LogInput />
+        <EntryFormConnector />
       </div>
     </div>
   }

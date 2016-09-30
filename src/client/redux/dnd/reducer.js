@@ -12,7 +12,6 @@ const initialState = Object.freeze({
   dragY: 0,
   dragging: false,
   draggingItem: undefined,
-  draggingType: undefined,
   draggingPath: undefined,
   dropTarget: undefined
 });

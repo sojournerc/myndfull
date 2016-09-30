@@ -8,8 +8,8 @@ import {
 } from '../../redux/dnd/actions';
 
 export const mapStateToProps = (state, props) => {
-  const { dragging, draggingType, draggingIndex, dropTarget } = state.dnd;
-  const active =  !!dragging && (draggingType === props.type) &&
+  const { dragging, draggingItem, draggingIndex, dropTarget } = state.dnd;
+  const active =  !!dragging && (draggingItem.type === props.type) &&
                   // targets next to the item being dragged would do nothing.
                   (props.index !== draggingIndex && props.index !== (draggingIndex+1));
 
@@ -36,7 +36,7 @@ export const mapDispatchToProps = (dispatch) => ({
   },
   onDragDrop(idx) {
     const dnd = store.getState().dnd;
-    const { draggingItem, draggingType } = dnd;
-    debugger;
+    const { draggingItem } = dnd;
+    draggingItem.reorder(idx);
   }
 });

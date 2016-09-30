@@ -13,7 +13,7 @@ export default {
     return Entry.findAll({
     });
   },
-  remove: function*(id) {
-    return Entry.destroy({ where: { id: id }});
+  remove: function*(entry) {
+    return Entry.destroy({ where: { id: entry.id }});
   }
 }

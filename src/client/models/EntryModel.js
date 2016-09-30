@@ -13,13 +13,13 @@ class EntryModel extends BaseModel {
 
   // properties mapped to field types
   static get FIELDS() { 
-    return {
+    return Object.assign({
       text: Object.freeze({
         required: true,
         type: TEXT,
         default: ''
       })
-    }; 
+    }); 
   }
 
   static get TYPE() { return 'ENTRY'; } 

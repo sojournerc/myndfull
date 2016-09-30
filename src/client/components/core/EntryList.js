@@ -14,7 +14,7 @@ export default create({
     entries: React.PropTypes.array.isRequired
   },
   componentWillMount() {
-    store.dispatch(EntryModel.fetch());
+    EntryModel.fetch();
   },
   render() {
     const { entries } = this.props;

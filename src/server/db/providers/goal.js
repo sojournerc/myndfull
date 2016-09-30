@@ -4,7 +4,9 @@ import db from '../index'
 
 export default {
   create: function*(body) {
-    return Goal.create(body);
+    // add the new goal to the top of the list
+    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1)`);
+    return Goal.create(Object.assign({}, body, { orderIndex: 1 }));
   },
   update: function*(body) {
     // look up item to be updated
@@ -23,7 +25,7 @@ export default {
         yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
       }
     }
-    yield Goal.upsert(body);
+    return Goal.upsert(body);
   },
   get: function*(query) {
     return Goal.findAll({
@@ -31,11 +33,10 @@ export default {
     });
   },
   remove: function*(id) {
-    // look up the item by id
-    const removing = yield Goal.findById(id);
-    const removingOrderIndex = removing.orderIndex;
+    const goal = yield Goal.findById(id);
+    const removingOrderIndex = goal.orderIndex;
     // destroy the item
-    yield Goal.destroy({ where: { id: id }})
+    yield Goal.destroy({ where: { id }})
     // update the other rows to have correct orderIdx
     yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
     return;

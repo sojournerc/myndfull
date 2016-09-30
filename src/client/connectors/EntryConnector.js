@@ -8,6 +8,7 @@ import Entry from '../components/core/Entry';
 // } from '../redux/entries/actions';
 
 const mapStateToProps = (state) => ({
+  // TODO -> use this.context instead - since it is pervasive
   isMobile: state.ui.clientInfo.isMobile()
 });
 

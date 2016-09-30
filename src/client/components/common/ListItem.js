@@ -24,24 +24,26 @@ export default create({
     onTouchEnd: React.PropTypes.func
   },
   _handleDragStart(ev) {
-    const { itemType, index, item } = this.props;
-    this.props.onDragStart(itemType, index, item);
+    const { index, item } = this.props;
+    this.props.onDragStart(index, item);
   },
   _handleDragEnd(ev) {
     this.props.onDragEnd()
   },
   _handleTouchMove(ev) {
-    const { itemType, index, item } = this.props;
-    this.props.onTouchMove(ev, itemType, index, item);
+    const { index, item } = this.props;
+    this.props.onTouchMove(ev, index, item);
   },
   _handleTouchEnd() {
     this.props.onTouchEnd();
   },
+  _handleRemoveClick() {
+    this.props.item.remove();
+  },
   render() {
-    const { item, index, itemType, isLast, isMobile, isTouch } = this.props;
-    const Item = ComponentMap[itemType];
+    const { item, index, isLast, isMobile, isTouch } = this.props;
     return <div>
-      <DroppableTarget  type={itemType} index={index} />
+      <DroppableTarget  type={item.type} index={index} />
       <MenuItem
         onTouchTap={(e) => { console.log('touchTap') }}
 
@@ -69,7 +71,7 @@ export default create({
           </div>
         </div>
       </MenuItem>
-      {isLast && <DroppableTarget type={itemType} index={index+1} />}
+      {isLast && <DroppableTarget type={item.type} index={index+1} />}
     </div>
   }
 });

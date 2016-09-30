@@ -4,6 +4,9 @@ import cn from 'classnames';
 import map from 'lodash/map';
 import create from '../componentFactory';
 import { focusFirst, handleInputChange } from 'form-util';
+import { store } from '../../redux';
+
+import { hideForm } from '../../redux/ui/actions'; 
 
 import { SubmitButton } from '../common/Buttons';
 import { FIELD_MAP } from '../common/Inputs';
@@ -19,8 +22,9 @@ export default create({
   },
   _onSubmit(ev) {
     ev.preventDefault();
-    // TODO: validate!!!
-    this.props.onSubmitItem(this.props.formValues);
+    this.props.workingItem.save().then(() => {
+      store.dispatch(hideForm());
+    });
   },
   render() {
     const { ItemClass, workingItem } = this.props;
@@ -34,7 +38,7 @@ export default create({
             return (
               <div className="flex-gs-item mb1" key={key}>
                 <Field
-                  onChange={handleInputChange(ItemClass.propChange, workingItem, key)}
+                  onChange={handleInputChange(workingItem, key)}
                   value={workingItem[key]}
                 />
               </div>
@@ -48,8 +52,3 @@ export default create({
     </div>
   }
 });
-          //   <TextInput onChange={handleInputChange('text', onPropChange)} value={workingTask.text} />
-          // </div>
-          // <div className="flex-gs-item mb1">
-          //   <TextArea onChange={handleInputChange('notes', onPropChange)} value={workingTask.notes} />
-          // </div>

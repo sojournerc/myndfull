@@ -186,8 +186,8 @@ var entryProvider = {
     return Entry.findAll({
     });
   },
-  remove: function*(entry) {
-    return Entry.destroy({ where: { id: entry.id }});
+  remove: function*(id) {
+    return Entry.destroy({ where: { id }});
   }
 }
 

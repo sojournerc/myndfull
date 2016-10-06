@@ -12,12 +12,6 @@ const mapStateToProps = (state) => ({
   isMobile: state.ui.clientInfo.isMobile()
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  onRemoveItem(id) {
-    // dispatch(deleteEntry(id)).then(() => {
-    //   dispatch(fetchEntries());
-    // });
-  }
-});
+const mapDispatchToProps = (dispatch) => ({});
 
 export default create(Entry, mapStateToProps, mapDispatchToProps);

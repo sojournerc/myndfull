@@ -54,10 +54,36 @@ export default class BaseModel {
 
   /**************
   
-  Proxy these methods on each instance for convenience
+  * Instance Async (persistence)
   
   ***************/
 
+  /**
+   * @return a thunk that will persist the working item
+   */
+  save() {
+    if (this.isNew) {
+      return this.constructor._add(this);
+    }
+    return this.constructor._update(this);
+  }
+
+  /**
+   * @return a thunk that will delete the specified item from persistence
+   */
+  remove() { return this.constructor._remove(this); }
+
+  /**
+   * @return thunk that will reorder the instance to the given index
+   */
+  reorder(idx) { return this.constructor._reorder(this, idx); }
+  
+  /****************
+
+   * Instance Mutators
+  
+   ************/
+  
   /**
    * @return action that will update the workingItem in
    *  the respective part of the state tree. 
@@ -70,46 +96,24 @@ export default class BaseModel {
   set(...args) { return this.constructor._set(this, ...args); }
 
   /**
-   * @return a thunk that will persist the working item
-   */
-  save() {
-    if (this.isNew) {
-      return this.constructor._add(this).then(this.constructor.fetch(this.params));
-    }
-    return this.constructor._update(this).then(this.constructor.fetch(this.params));
-  }
-
-  /**
-   * @return thunk that will reorder the instance to the given index
-   */
-  reorder(idx) { return this.constructor._reorder(this, idx).then(this.constructor.fetch(this.params)); }
-
-  /**
-   * @return a thunk that will delete the specified item from persistence
-   */
-  remove() { return this.constructor._remove(this).then(this.constructor.fetch(this.params)); }
-
-  /**
    * @return JSON representation of this object
    */
   toJSON() { return this.constructor._serialize(this); }
 
-  
   /***************
 
-  Getters
+  * Getters
 
   ****************/
   get type() { return this.constructor.TYPE; }
-  get isNew() { return !this.id }
+  get isNew() { return !this.id; }
 
 
   /***************
 
-  Static
+  * Class Static
 
   ****************/
-
   // update prop on instance
   static _propChange(instance, prop, value) {
     store.dispatch(createAction(PROP_CHANGE, { prop, value }, { Class: this }));
@@ -133,10 +137,13 @@ export default class BaseModel {
       path: __getPath(this.API_PATH),
       method: 'POST',
       body: instance.toJSON(),
-      start: __wrapAction(this, add),
+        start: __wrapAction(this, add),
       success: __wrapAction(this, addSuccess),
       fail: __wrapAction(this, addFail)
-    }));
+    }))
+    .then(() => {
+      this.fetch(instance.params);
+    });
   }
 
   static _update(instance) {
@@ -147,7 +154,10 @@ export default class BaseModel {
       start: __wrapAction(this, update),
       success: __wrapAction(this, updateSuccess),
       fail: __wrapAction(this, updateFail)
-    }));
+    }))
+    .then(() => {
+      this.fetch(instance.params);
+    });
   }
 
   static _remove(instance) {
@@ -157,19 +167,21 @@ export default class BaseModel {
       start: __wrapAction(this, remove),
       success: __wrapAction(this, removeSuccess),
       fail: __wrapAction(this, removeFail)
-    }));
+    }))
+    .then(() => {
+      this.fetch(instance.params);
+    });
   }
 
   static _reorder(instance, idx) {
     // order is stored starting at 1 to allow for resorting using 0 index 
-    return this._update(instance.set('orderIndex', idx + 1))
+    return this._update(instance.set('orderIndex', (idx + 1)));
   }
 
   // immutable mutator
   static _set(instance, prop, value) {
     return new instance.constructor(Object.assign({}, instance, { [prop]: value }));
   }
-
 
   static _serialize(instance) {
     const values = {};

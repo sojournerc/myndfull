@@ -1,4 +1,4 @@
-
+q
 import Goal from '../schema/goal';
 import db from '../index'
 

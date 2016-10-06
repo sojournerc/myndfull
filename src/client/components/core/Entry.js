@@ -14,7 +14,6 @@ export default create({
   propTypes: {
     entry: React.PropTypes.object.isRequired,
     isLast: React.PropTypes.bool.isRequired,
-    onRemoveItem: React.PropTypes.func.isRequired,
     isMobile: React.PropTypes.bool.isRequired
   },
   componentDidMount() {
@@ -24,7 +23,7 @@ export default create({
     }
   },
   _handleRemoveClick() {
-    this.props.onRemoveItem(this.props.entry.id);
+    this.props.entry.remove();
   },
   render() {
     const { entry, isMobile } = this.props;

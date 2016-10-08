@@ -8,7 +8,7 @@ import { store } from '../../redux';
 
 import { hideForm } from '../../redux/ui/actions'; 
 
-import { SubmitButton } from '../common/Buttons';
+import { SubmitButton, RemoveButton } from '../common/Buttons';
 import { FIELD_MAP } from '../common/Inputs';
 
 export default create({
@@ -23,6 +23,11 @@ export default create({
   _onSubmit(ev) {
     ev.preventDefault();
     this.props.workingItem.save().then(() => {
+      store.dispatch(hideForm());
+    });
+  },
+  _onRemove(ev) {
+    this.props.workingItem.remove().then(() => {
       store.dispatch(hideForm());
     });
   },
@@ -44,9 +49,17 @@ export default create({
               </div>
             );
           })}
-          <span className="flex-item right-align">
-            <SubmitButton />
-          </span>
+          <div className="flex-item">
+            <div className="flex flex-row justify-around">
+              {!workingItem.isNew &&
+              <div className="flex-item">
+                <RemoveButton onClick={this._onRemove} text={'remove'} />
+              </div>}
+              <div className="flex-item self-end">
+                <SubmitButton text={(workingItem.isNew) ? 'create' : 'update'} />
+              </div> 
+            </div>
+          </div>
         </div>
       </form>
     </div>

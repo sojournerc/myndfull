@@ -43,7 +43,7 @@ export default create({
             />
           </span>
           <span className="flex-item">
-            <SubmitButton />
+            <SubmitButton text="submit" />
           </span>
         </div>
       </form>

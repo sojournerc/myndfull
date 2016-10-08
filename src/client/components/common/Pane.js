@@ -20,6 +20,10 @@ export default create({
   componentWillMount() {
     this.props.ItemClass.fetch();
   },
+  _handleAddItem() {
+    new this.props.ItemClass().makeWorkingItem();
+    this.props.onShowForm();
+  },
   render() {
     const { showingForm, onShowForm, onHideForm, ItemClass, items, itemLoading } = this.props;
     return <div className={cn(
@@ -35,7 +39,7 @@ export default create({
             {showingForm &&
             <CloseButton onClick={onHideForm} />
             ||
-            <AddButton onClick={onShowForm} />
+            <AddButton onClick={this._handleAddItem} text="new" />
             }
           </span>
         </div>

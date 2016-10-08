@@ -56,9 +56,6 @@ export default create({
         >
           <Linkify properties={{ target: '_blank' }}>{entry.text}</Linkify>
         </div>
-        <div className="flex-item">
-          <RemoveButton onClick={this._handleRemoveClick} />
-        </div>
       </div>
     </div>
   }

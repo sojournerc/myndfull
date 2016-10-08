@@ -74,9 +74,6 @@ export default create({
             'items-center'
           )}>
             <span className="flex-gs-item line-height-4 truncate" style={{ minWidth: 0 }}>{item.text}</span>
-            <span className="flex-item pl1">
-              <RemoveButton onClick={this._handleRemoveClick} />
-            </span>
           </div>
         </div>
       </MenuItem>

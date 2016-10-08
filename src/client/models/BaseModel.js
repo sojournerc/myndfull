@@ -18,7 +18,8 @@ import {
   removeFail,
   update,
   updateSuccess,
-  updateFail
+  updateFail,
+  setWorkingItem
 } from '../redux/api/actions';
 
 import {
@@ -95,10 +96,31 @@ export default class BaseModel {
    */
   set(...args) { return this.constructor._set(this, ...args); }
 
+
+  /**
+   *
+   * Utility
+   * 
+   */
+  
+  /**
+   * @return a new instance that is a clone of this 
+   */
+  clone() { return new this.constructor(this.toJSON()); }
+
   /**
    * @return JSON representation of this object
    */
   toJSON() { return this.constructor._serialize(this); }
+
+  /**
+   * Dispatches an action to make this item 
+   * the working item
+   */
+  makeWorkingItem() { 
+    store.dispatch(setWorkingItem(this.clone(), { Class: this.constructor }))
+  }
+
 
   /***************
 
@@ -121,6 +143,11 @@ export default class BaseModel {
 
   // CRUD actions
   static fetch(params) {
+    // if state is valid for this path, then we don't need to fetch
+    if (store.getState().api[this.API_PATH].cacheValid) { 
+      console.info(`cache is valid not fetching ${this.API_PATH}`)
+      return; 
+    }
     return store.dispatch(createFetch({
       path: __getPath(this.API_PATH),
       method: 'GET',
@@ -174,8 +201,14 @@ export default class BaseModel {
   }
 
   static _reorder(instance, idx) {
-    // order is stored starting at 1 to allow for resorting using 0 index 
-    return this._update(instance.set('orderIndex', (idx + 1)));
+    // order is stored starting at 1 to allow for resorting using 0 index,
+    // but if we are moving towards the bottom of the list (orderIndex is increasing)
+    // we would be subtracting 1 from the new index because everything moves up 
+    // into the vacated spot, thus we only add one if the orderIndex is decreasing
+    if ((idx+1) < instance.orderIndex) {
+      idx++;      
+    } 
+    return this._update(instance.set('orderIndex', (idx)));
   }
 
   // immutable mutator

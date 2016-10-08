@@ -18,7 +18,8 @@ export const UPDATE_FAIL = 'UPDATE_FAIL';
 export const REMOVE = 'REMOVE';
 export const REMOVE_SUCCESS = 'REMOVE_SUCCESS';
 export const REMOVE_FAIL = 'REMOVE_FAIL';
-export const PROP_CHANGE = 'PROP_CHANGE'
+export const PROP_CHANGE = 'PROP_CHANGE';
+export const SET_WORKING_ITEM = 'SET_WORKING_ITEM';
 
 // dnd
 export const START_DRAG = 'START_DRAG';

@@ -3,6 +3,8 @@ import React from 'react';
 import cn from 'classnames';
 import create from '../componentFactory';
 
+import { showForm } from '../../redux/ui/actions';
+
 import MenuItem from 'material-ui/MenuItem';
 import DroppableTarget from '../../connectors/DroppableTarget';
 import { RemoveButton } from './Buttons';
@@ -18,6 +20,7 @@ export default create({
     isLast: React.PropTypes.bool.isRequired,
     isMobile: React.PropTypes.bool.isRequired,
     isTouch: React.PropTypes.bool.isRequired,
+    onShowForm: React.PropTypes.func.isRequired,
     onDragStart: React.PropTypes.func,
     onDragEnd: React.PropTypes.func,
     onTouchMove: React.PropTypes.func,
@@ -37,7 +40,13 @@ export default create({
   _handleTouchEnd() {
     this.props.onTouchEnd();
   },
-  _handleRemoveClick() {
+  _handleTouchTap() {
+    this.props.item.makeWorkingItem();
+    this.props.onShowForm();
+  },
+  _handleRemoveClick(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
     this.props.item.remove();
   },
   render() {
@@ -45,7 +54,7 @@ export default create({
     return <div>
       <DroppableTarget  type={item.type} index={index} />
       <MenuItem
-        onTouchTap={(e) => { console.log('touchTap') }}
+        onTouchTap={this._handleTouchTap}
 
         desktop={!isMobile}
 

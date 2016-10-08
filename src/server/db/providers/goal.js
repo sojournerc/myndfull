@@ -1,6 +1,7 @@
-q
+
 import Goal from '../schema/goal';
-import db from '../index'
+import db from '../index';
+import { reorder } from '../db-util';
 
 export default {
   create: function*(body) {
@@ -13,19 +14,11 @@ export default {
     const updating = yield Goal.findById(body.id);
     // if the new orderIndex doesn't match the old, we need to update some ordering
     if (body.orderIndex !== updating.orderIndex) {
-      // first set the one we're updating to 0 to get it out of the way
-      yield Goal.update({ orderIndex: 0 }, { where: { id: body.id } });
-      // down in order
-      if (body.orderIndex > updating.orderIndex) {
-        // everything above the old order index and below the new order index increases one
-        yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
-      // up in order
-      } else if (body.orderIndex < updating.orderIndex) {
-        // everything above the old order index and below the new order index decreases one
-        yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
-      }
+      yield reorder(db, Goal, body, updating);
     }
-    return Goal.upsert(body);
+    yield Goal.upsert(body);
+    // upsert doesn't return the updated record
+    return Goal.findById(body.id);
   },
   get: function*(query) {
     return Goal.findAll({

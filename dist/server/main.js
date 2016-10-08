@@ -68,6 +68,21 @@ const Goal = db.define('goal', {
 
 });
 
+function* reorder(db, Schema, body, updating) {
+  const table = Schema.getTableName();
+  // first set the one we're updating to 0 to get it out of the way
+  yield Schema.update({ orderIndex: 0 }, { where: { id: body.id } });
+  // down in order
+  if (body.orderIndex > updating.orderIndex) {
+    // everything above the old order index and below the new order index decreases one
+    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
+  // up in order
+  } else if (body.orderIndex < updating.orderIndex) {
+    // everything above the old order index and below the new order index increases one
+    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
+  }
+}
+
 var goalProvider = {
   create: function*(body) {
     // add the new goal to the top of the list
@@ -79,19 +94,11 @@ var goalProvider = {
     const updating = yield Goal.findById(body.id);
     // if the new orderIndex doesn't match the old, we need to update some ordering
     if (body.orderIndex !== updating.orderIndex) {
-      // first set the one we're updating to 0 to get it out of the way
-      yield Goal.update({ orderIndex: 0 }, { where: { id: body.id } });
-      // down in order
-      if (body.orderIndex > updating.orderIndex) {
-        // everything above the old order index and below the new order index increases one
-        yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
-      // up in order
-      } else if (body.orderIndex < updating.orderIndex) {
-        // everything above the old order index and below the new order index decreases one
-        yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
-      }
+      yield reorder(db, Goal, body, updating);
     }
-    return Goal.upsert(body);
+    yield Goal.upsert(body);
+    // upsert doesn't return the updated record
+    return Goal.findById(body.id);
   },
   get: function*(query) {
     return Goal.findAll({
@@ -119,7 +126,7 @@ const Task = db.define('task', {
 
 var taskProvider = {
   create: function*(body) {
-    // add the new goal to the top of the list
+    // add the new task to the top of the list
     yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" + 1)`);
     return Task.create(Object.assign({}, body, { orderIndex: 1 }));
   },
@@ -128,19 +135,11 @@ var taskProvider = {
     const updating = yield Task.findById(body.id);
     // if the new orderIndex doesn't match the old, we need to update some ordering
     if (body.orderIndex !== updating.orderIndex) {
-      // first set the one we're updating to 0 to get it out of the way
-      yield Task.update({ orderIndex: 0 }, { where: { id: body.id } });
-      // down in order
-      if (body.orderIndex > updating.orderIndex) {
-        // everything above the old order index and below the new order index increases one
-        yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
-      // up in order
-      } else if (body.orderIndex < updating.orderIndex) {
-        // everything above the old order index and below the new order index decreases one
-        yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
-      }
+      yield reorder(db, Task, body, updating);
     }
-    return Task.upsert(body);
+    yield Task.upsert(body);
+    // upsert doesn't return the updated record
+    return Task.findById(body.id);
   },
   get: function*(query) {
     return Task.findAll({
@@ -157,17 +156,6 @@ var taskProvider = {
     return;
   }
 }
-
-
-// To swap two items (4 and 7):
-// i.e. 0 is not used, so use a it as a dummy to avoid having an ambiguous item.
-// UPDATE myitems SET orderindex = 0 WHERE orderindex = 4;
-// UPDATE myitems SET orderindex = 4 WHERE orderindex = 7;
-// UPDATE myitems SET orderindex = 7 WHERE orderindex = 0;
-
-// To insert at 3:
-//  UPDATE myitems SET orderindex = (orderindex + 1) WHERE orderindex > 2;
-//  INSERT INTO myitems (Myitem,orderindex) values ("MytxtitemHere",3)
 
 const Entry = db.define('entry', {
   text: { type: Sequelize.TEXT, allowNull: false }

@@ -15,7 +15,10 @@ export default create({
   propTypes: {
     onShowForm: React.PropTypes.func.isRequired,
     onHideForm: React.PropTypes.func.isRequired,
-    ItemClass: React.PropTypes.func.isRequired
+    ItemClass: React.PropTypes.func.isRequired,
+  },
+  componentWillMount() {
+    this.props.ItemClass.fetch();
   },
   render() {
     const { showingForm, onShowForm, onHideForm, ItemClass, items, itemLoading } = this.props;
@@ -41,7 +44,7 @@ export default create({
         {showingForm &&
         <Editor ItemClass={ItemClass} />
         ||
-        <List ItemClass={ItemClass} />
+        <List ItemClass={ItemClass} onShowForm={this.props.onShowForm} />
         }
       </div>
     </div>

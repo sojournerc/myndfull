@@ -19,7 +19,7 @@ export default create({
       'flex-column',
       'justify-end'
     )}>
-      <div className="flex-s-50 overflow-auto">
+      <div className="overflow-auto">
         <EntryListConnector />
       </div>
       <div className="theme5-bg px2 flex-item">

@@ -15,7 +15,8 @@ import {
   REMOVE,
   REMOVE_SUCCESS,
   REMOVE_FAIL,
-  PROP_CHANGE
+  PROP_CHANGE,
+  SET_WORKING_ITEM
 } from '../../constants/action-types';
 
 const initialState = {};
@@ -26,6 +27,7 @@ const initiateApiState = ((Classes) => {
         // Initial state for each api item
         {
           items: [],
+          cacheValid: false,
           workingItem: new Classes[TYPE](),
           isFetching: false,
           isSaving: false
@@ -39,7 +41,7 @@ Object.freeze(initialState);
 
 export default function api(state = initialState, { type, payload, meta }) {
   const Class = meta && meta.Class;
-  let temp;
+  let temp = state;
   switch (type) {
   case PROP_CHANGE:
     return setIn(
@@ -47,34 +49,40 @@ export default function api(state = initialState, { type, payload, meta }) {
       [Class.API_PATH, 'workingItem'], 
       state[Class.API_PATH].workingItem.set(payload.prop, payload.value)
     );
+  case SET_WORKING_ITEM:
+    return setIn(temp, [Class.API_PATH, 'workingItem'], payload);
   case GET:
-    return setIn(state, [Class.API_PATH, 'isFetching'], true);
+    return setIn(temp, [Class.API_PATH, 'isFetching'], true);
   case GET_FAIL:
-    return setIn(state, [Class.API_PATH, 'isFetching'], false);
+    return setIn(temp, [Class.API_PATH, 'isFetching'], false);
   case GET_SUCCESS:
-    temp = setIn(state, [Class.API_PATH, 'isFetching'], false);
+    temp = setIn(temp, [Class.API_PATH, 'cacheValid'], true);
+    temp = setIn(temp, [Class.API_PATH, 'isFetching'], false);
     return setIn(temp, [Class.API_PATH, 'items'], payload.map((res) => {
       return new Class(res);
     }));
   case ADD:
-    return setIn(state, [Class.API_PATH, 'isSaving'], true);
+    temp = setIn(temp, [Class.API_PATH, 'cacheValid'], false);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], true);
   case ADD_SUCCESS:
-    temp = setIn(state, [Class.API_PATH, 'isSaving'], false);
+    temp = setIn(temp, [Class.API_PATH, 'isSaving'], false);
     return setIn(temp, [Class.API_PATH, 'workingItem'], new Class());
   case ADD_FAIL:
-    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], false);
   case UPDATE:
-    return setIn(state, [Class.API_PATH, 'isSaving'], true);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], true);
   case UPDATE_SUCCESS:
-    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+    temp = setIn(temp, [Class.API_PATH, 'cacheValid'], false);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], false);
   case UPDATE_FAIL:
-    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], false);
   case REMOVE:
-    return setIn(state, [Class.API_PATH, 'isSaving'], true);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], true);
   case REMOVE_SUCCESS:
-    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+    temp = setIn(temp, [Class.API_PATH, 'cacheValid'], false);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], false);
   case REMOVE_FAIL:
-    return setIn(state, [Class.API_PATH, 'isSaving'], false);
+    return setIn(temp, [Class.API_PATH, 'isSaving'], false);
   default: 
     return state;
   }

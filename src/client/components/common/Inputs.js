@@ -14,6 +14,7 @@ export const FIELD_MAP = {
 const inputPropTypes = {
   value: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func.isRequired,
+  disabled: React.PropTypes.bool
 }
 
 function _passInputValue(handler) {
@@ -24,7 +25,7 @@ function _passInputValue(handler) {
 }
 
 export function TextInput(props) {
-  const { value, onChange } = props;
+  const { value, onChange, disabled } = props;
   return (
     <input
       type="text"
@@ -33,6 +34,7 @@ export function TextInput(props) {
       className="input"
       onChange={_passInputValue(onChange)}
       value={value}
+      disabled={disabled}
     />
   );
 }
@@ -42,13 +44,20 @@ TextInput.propTypes = inputPropTypes;
  * Text Area Component
  */
 export function TextArea(props) {
-  const { value, onChange, onKeyUp } = props;
+  const { value, onChange, onKeyDown, disabled } = props;
   return (
-    <textarea type="text" className="input" onChange={_passInputValue(onChange)} value={value} onKeyUp={onKeyUp} />
+    <textarea 
+      type="text" 
+      className="input" 
+      onChange={_passInputValue(onChange)} 
+      value={value} 
+      onKeyDown={onKeyDown}
+      disabled={disabled}
+    />
   );
 }
 TextArea.propTypes = Object.assign({}, inputPropTypes, {
-  onKeyUp: React.PropTypes.func
+  onKeyDown: React.PropTypes.func
 });
 
 export default {

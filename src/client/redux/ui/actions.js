@@ -12,8 +12,8 @@ export function showForm(itemType) {
   return create(SHOW_FORM, itemType);
 }
 
-export function hideForm() {
-  return create(HIDE_FORM);
+export function hideForm(payload) {
+  return create(HIDE_FORM, payload);
 }
 
 export function viewportChange(payload) {

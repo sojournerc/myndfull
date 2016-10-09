@@ -8,29 +8,29 @@ import { handleInputChange } from 'form-util';
 
 import { SubmitButton } from '../common/Buttons';
 import { TextInput, TextArea } from '../common/Inputs';
+import Loading from '../common/Loading';
 
 export default create({
   displayName: 'TextForm',
   propTypes: {
-    workingItem: React.PropTypes.object.isRequired
+    workingItem: React.PropTypes.object.isRequired,
+    isSaving: React.PropTypes.bool.isRequired
   },
   _onSubmit(ev) {
     ev.preventDefault();
     ev.stopPropagation();
-    // trim whitespace on submit
-    const val = this.props.workingItem.text;
-    if (val) {
-      this.props.workingItem.save();
-    }
+    const { workingItem } = this.props;
+    if (!workingItem.valid) { return; }
+    workingItem.save();
   },
-  _onTextAreaKeyUp(ev) {
+  _handleKeyDown(ev) {
     // submit the form on TextArea enter, unless shift is pressed
     if (ev.keyCode === 13 && !ev.shiftKey) {
       this._onSubmit(ev);
     }
   },
   render() {
-    const { workingItem } = this.props;
+    const { workingItem, isSaving } = this.props;
     return <div className={cn(
     )}>
       <form onSubmit={this._onSubmit}>
@@ -39,11 +39,15 @@ export default create({
             <TextArea 
               onChange={handleInputChange(workingItem, 'text')} 
               value={workingItem.text} 
-              onKeyUp={this._onTextAreaKeyUp} 
+              onKeyDown={this._handleKeyDown} 
+              disabled={isSaving}
             />
           </span>
           <span className="flex-item">
-            <SubmitButton text="submit" />
+            {isSaving &&
+            <Loading />
+            ||
+            <SubmitButton text="submit" />}
           </span>
         </div>
       </form>

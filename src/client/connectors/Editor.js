@@ -6,6 +6,7 @@ import TaskModel from '../models/TaskModel';
 
 const mapStateToProps = (state, props) => ({
   workingItem: state.api[props.ItemClass.API_PATH].workingItem,
+  isSaving: state.api[props.ItemClass.API_PATH].isSaving,
   ItemClass: props.ItemClass
 });
 

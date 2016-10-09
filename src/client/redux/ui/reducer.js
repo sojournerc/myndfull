@@ -18,7 +18,7 @@ import { getViewport } from 'dom-util';
 const viewport =  getViewport();
 const initialState = Object.freeze({
   activeView: LOG_VIEW, // used in mobile
-  showingForm: false,
+  showingForm: {},
   clientInfo: {
     viewport: getViewport(),
     // http://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript#4819886
@@ -28,15 +28,17 @@ const initialState = Object.freeze({
 });
 
 export default function ui(state = initialState, { type, payload }) {
+  let temp = state;
   switch (type) {
   case SHOW_FORM:
-    return Object.assign({}, state, { 'showingForm': payload });
+    return setIn(temp, ['showingForm', payload], true);
   case HIDE_FORM:
-    return Object.assign({}, state, { 'showingForm': null });
+    return setIn(temp, ['showingForm', payload], false);
   case VIEWPORT_CHANGE:
-    return setIn(state, ['clientInfo', 'viewport'], payload);
+    return setIn(temp, ['clientInfo', 'viewport'], payload);
   case ACTIVE_VIEW_CHANGE:
-    return Object.assign({}, state, { 'activeView': payload });
+    // Store this in local storage for consistency
+    return Object.assign({}, temp, { 'activeView': payload });
   default:
     return state;
   }

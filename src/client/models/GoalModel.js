@@ -15,6 +15,7 @@ class GoalModel extends BaseModel {
   static get FIELDS() { 
     return Object.freeze({
       text: Object.freeze({
+        required: true,
         type: STRING,
         default: ''
       })

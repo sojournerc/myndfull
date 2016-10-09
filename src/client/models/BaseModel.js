@@ -127,6 +127,7 @@ export default class BaseModel {
   * Getters
 
   ****************/
+  get valid() { return this.constructor._validate(this); }
   get type() { return this.constructor.TYPE; }
   get isNew() { return !this.id; }
 
@@ -225,6 +226,15 @@ export default class BaseModel {
       id: instance.id,
       orderIndex: instance.orderIndex
     }, values);
+  }
+
+  static _validate(instance) {
+    let valid = true;
+    for (const field in this.FIELDS) {
+      // check for required fields
+      if (this.FIELDS[field].required && !instance[field]) { valid = false; }
+    } 
+    return valid
   }
 }
 

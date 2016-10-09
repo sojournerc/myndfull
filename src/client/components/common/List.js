@@ -6,6 +6,7 @@ import create from '../componentFactory';
 import { TYPE_LIST } from '../../models';
 
 import DraggableItem from '../../connectors/DraggableItem';
+import Loading from './Loading.js'
 
 export default create({
   displayName: 'List',
@@ -16,7 +17,14 @@ export default create({
     onShowForm: React.PropTypes.func.isRequired
   },
   render() {
-    const { items, ItemClass } = this.props;
+    const { items, ItemClass, itemsLoading } = this.props;
+
+    if (itemsLoading) {
+      return <div className="h100 flex items-start justify-center pb3 border-box">
+        <Loading />
+      </div>
+    }
+
     return (
       <div className="list border-box lighter-bg">
         {!!items.length &&

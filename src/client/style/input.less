@@ -1,5 +1,6 @@
 
 .input {
+  font-family: sans-serif;
   &textarea,
   &[type=text] {
     .border-box;
@@ -10,11 +11,13 @@
     font-size: 0.9em;
     resize: none;
   }
-
+  &:disabled {
+    background-color: @light;
+  }
 }
 
 textarea.input {
-  height: 6rem;
+  min-height: 6rem;
   .line-height-4
 }
 

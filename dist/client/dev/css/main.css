@@ -1406,7 +1406,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  top: 4rem;
+  top: 2rem;
 }
 #Header {
   position: fixed;
@@ -1416,7 +1416,7 @@ body {
   border-top-style: solid;
   border-top-width: 1px;
   box-sizing: border-box;
-  height: 4rem;
+  height: 2rem;
   color: #cdcdcd;
   background-color: #4d5d53;
 }

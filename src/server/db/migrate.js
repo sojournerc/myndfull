@@ -11,7 +11,7 @@ const umzug = new Umzug({
   },
   migrations: {
     // params that get passed to the migrations
-    params: [db.getQueryInterface(), Sequelize],
+    params: [db.getQueryInterface(), Sequelize]
   }
 });
 

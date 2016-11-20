@@ -3,6 +3,8 @@ import React from 'react';
 import cn from 'classnames';
 import map from 'lodash/map';
 import create from '../componentFactory';
+import createConnector from '../../connectors/connectorFactory';
+
 import { focusFirst, handleInputChange } from 'form-util';
 import { store } from '../../redux';
 
@@ -12,12 +14,30 @@ import { SubmitButton, RemoveButton } from '../common/Buttons';
 import Loading from '../common/Loading';
 import { FIELD_MAP } from '../common/Inputs';
 
-export default create({
+
+const mapStateToProps = (state, props) => ({
+  workingItem: state.api[props.ItemClass.API_PATH].workingItem,
+  isSaving: state.api[props.ItemClass.API_PATH].isSaving,
+  ItemClass: props.ItemClass,
+  foreignItems: (({ ItemClass }) => {
+    const foreign = {};
+    for (const f in ItemClass.FIELDS) {
+      const field = ItemClass.FIELDS[f];
+      if (field.foreign) {
+        foreign[field.foreign.API_PATH] = state.api[field.foreign.API_PATH].items;
+      }
+    }
+    return foreign;
+  })(props)
+});
+
+const Editor = create({
   displayName: 'Form',
   propTypes: {
     ItemClass: React.PropTypes.func.isRequired,
     workingItem: React.PropTypes.object.isRequired,
-    isSaving: React.PropTypes.bool.isRequired
+    isSaving: React.PropTypes.bool.isRequired,
+    foreignItems: React.PropTypes.object.isRequired
   },
   componentDidMount() {
     focusFirst(this);
@@ -37,7 +57,7 @@ export default create({
     });
   },
   render() {
-    const { ItemClass, workingItem, isSaving } = this.props;
+    const { ItemClass, workingItem, isSaving, foreignItems } = this.props;
     const fields = ItemClass.FIELDS;
     return <div className={cn(
     )}>
@@ -51,7 +71,8 @@ export default create({
                   onChange={handleInputChange(workingItem, key)}
                   value={workingItem[key]}
                   disabled={isSaving}
-                />
+                  options={field.foreign && foreignItems[field.foreign.API_PATH]}
+                />  
               </div>
             );
           })}
@@ -76,3 +97,5 @@ export default create({
     </div>
   }
 });
+
+export default createConnector(Editor, mapStateToProps, () => ({}));

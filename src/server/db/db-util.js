@@ -6,10 +6,10 @@ export function* reorder(db, Schema, body, updating) {
   // down in order
   if (body.orderIndex > updating.orderIndex) {
     // everything above the old order index and below the new order index decreases one
-    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
+    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex} AND "deletedAt" IS NULL`);
   // up in order
   } else if (body.orderIndex < updating.orderIndex) {
     // everything above the old order index and below the new order index increases one
-    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
+    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex} AND "deletedAt" IS NULL`);
   }
 }

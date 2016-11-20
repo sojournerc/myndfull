@@ -1,5 +1,7 @@
 
 import Task from '../schema/task';
+import Goal from '../schema/goal';
+
 import db from '../index';
 import { reorder } from '../db-util';
 
@@ -31,7 +33,7 @@ export default {
     // destroy the item
     yield Task.destroy({ where: { id }})
     // update the other rows to have correct orderIdx
-    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
+    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex} AND "deletedAt" IS NULL`);
     return;
   }
 }

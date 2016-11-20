@@ -28,7 +28,7 @@ export default create({
     return <div id="Header" className={cn(
       'border-bottom'
     )}>
-      <div className={cn('h1', 'px2', 'h100')}>
+      <div className={cn('h4', 'px2', 'h100')}>
         <div className="flex flex-row justify-between items-center h100">
           <div className="flex-s-50">{'Myndfull'}</div>
           {this.props.isMobile &&

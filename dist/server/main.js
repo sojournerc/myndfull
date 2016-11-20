@@ -61,12 +61,29 @@ const db = new Sequelize(dbConnectString, {
 
 db.sync();
 
+const Task = db.define('task', {
+  text: { type: Sequelize.STRING, allowNull: false },
+  notes: { type: Sequelize.TEXT },
+  orderIndex: { type: Sequelize.INTEGER, allowNull: false }
+}, {
+  paranoid: true
+});
+
+const Entry = db.define('entry', {
+  text: { type: Sequelize.TEXT, allowNull: false }
+}, {
+  paranoid: true
+});
+
 const Goal = db.define('goal', {
   text: { type: Sequelize.TEXT, allowNull: false },
   orderIndex: { type: Sequelize.INTEGER, allowNull: false }
 }, {
-
+  paranoid: true
 });
+
+Goal.hasMany(Task);
+Goal.hasMany(Entry);
 
 function* reorder(db, Schema, body, updating) {
   const table = Schema.getTableName();
@@ -75,11 +92,11 @@ function* reorder(db, Schema, body, updating) {
   // down in order
   if (body.orderIndex > updating.orderIndex) {
     // everything above the old order index and below the new order index decreases one
-    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex}`);
+    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex} AND "deletedAt" IS NULL`);
   // up in order
   } else if (body.orderIndex < updating.orderIndex) {
     // everything above the old order index and below the new order index increases one
-    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex}`);
+    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex} AND "deletedAt" IS NULL`);
   }
 }
 
@@ -111,18 +128,10 @@ var goalProvider = {
     // destroy the item
     yield Goal.destroy({ where: { id }})
     // update the other rows to have correct orderIdx
-    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
+    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex} AND "deletedAt" IS NULL`);
     return;
   }
 }
-
-const Task = db.define('task', {
-  text: { type: Sequelize.STRING, allowNull: false },
-  notes: { type: Sequelize.TEXT },
-  orderIndex: { type: Sequelize.INTEGER, allowNull: false }
-}, {
-
-});
 
 var taskProvider = {
   create: function*(body) {
@@ -152,16 +161,10 @@ var taskProvider = {
     // destroy the item
     yield Task.destroy({ where: { id }})
     // update the other rows to have correct orderIdx
-    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
+    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex} AND "deletedAt" IS NULL`);
     return;
   }
 }
-
-const Entry = db.define('entry', {
-  text: { type: Sequelize.TEXT, allowNull: false }
-}, {
-
-});
 
 var entryProvider = {
   create: function*(body) {

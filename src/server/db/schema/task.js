@@ -7,6 +7,7 @@ const Task = db.define('task', {
   notes: { type: Sequelize.TEXT },
   orderIndex: { type: Sequelize.INTEGER, allowNull: false }
 }, {
-
+  paranoid: true
 });
+
 export default Task;

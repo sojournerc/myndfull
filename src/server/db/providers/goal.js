@@ -31,7 +31,7 @@ export default {
     // destroy the item
     yield Goal.destroy({ where: { id }})
     // update the other rows to have correct orderIdx
-    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex}`);
+    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex} AND "deletedAt" IS NULL`);
     return;
   }
 }

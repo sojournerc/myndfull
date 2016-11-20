@@ -1,4 +1,4 @@
-
+  
 // To create a new migration
 npm run newMigration
 

@@ -6,7 +6,7 @@ import { store } from '../../redux';
 
 import { AddButton, CloseButton } from '../common/Buttons';
 
-import Editor from '../../connectors/Editor';
+import Form from '../../components/core/Form';
 import List from '../../connectors/ListConnector';
 
 
@@ -46,7 +46,7 @@ export default create({
       </div>
       <div className="flex-s-50 overflow-auto px2 mb2">
         {showingForm &&
-        <Editor ItemClass={ItemClass} />
+        <Form ItemClass={ItemClass} />
         ||
         <List ItemClass={ItemClass} onShowForm={this.props.onShowForm} />
         }

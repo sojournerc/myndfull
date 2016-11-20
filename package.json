@@ -6,7 +6,7 @@
     "newMigration": "node_modules/.bin/sequelize --config config.custom.json migration:create",
     "migrate": "node dist/server/migrate",
     "prod": "gulp build_prod & webpack -p --progress --config webpack.config.prod.js;",
-    "dev": "webpack --watch --progress --config webpack.config.dev.js & gulp develop"
+    "dev": "webpack --watch --config webpack.config.dev.js & gulp develop"
   },
   "dependencies": {
     "koa": "^1.2.1",
@@ -19,7 +19,8 @@
     "koa-router": "^5.4.0",
     "koa-static": "^2.0.0",
     "pg": "^6.1.0",
-    "sequelize": "^3.24.1",
+    "sequelize": "^3.24.5",
+    "sequelize-cli": "^2.4.0",
     "umzug": "^1.11.0"
   },
   "devDependencies": {

@@ -9,9 +9,55 @@ var compress = _interopDefault(require('koa-compress'));
 var Router = _interopDefault(require('koa-router'));
 var mount = _interopDefault(require('koa-mount'));
 var hbs = _interopDefault(require('koa-hbs'));
+var session = _interopDefault(require('koa-session'));
+var passport = _interopDefault(require('koa-passport'));
 var KoaBody = _interopDefault(require('koa-body'));
+var passportLocal = require('passport-local');
 var Sequelize = _interopDefault(require('sequelize'));
 var fs = _interopDefault(require('fs'));
+
+// setup passport
+passport.use(new passportLocal.Strategy(function(username, password, done) {
+  // retrieve user ...
+  if (username === 'test' && password === 'test') {
+    done(null, { id: 'boop' })
+  } else {
+    console.log('HERE')
+    done(null, false)
+  }
+}));
+
+const app$2 = new Koa();
+const router$1 = Router()
+const koaBody = KoaBody();
+
+// login / logout endpoints
+router$1.post('/login', koaBody, function*() {
+  const login = this.req.login;
+  const self = this;
+  const handleError = (e) => {
+    this.status = 500; 
+    this.body = e.message || e;
+  }
+
+  // console.log(self);
+  yield passport.authenticate('local', {
+  }, function*(err, user, info, status) {
+    if (err) return handleError(err);
+    if (!user) {
+      self.status = 403;
+      return;
+    }
+    console.log(user)
+    login(user, (er) => {
+      if (er) return handleError(er);
+      self.body = user;
+      self.status = 200;
+    })
+  })
+});
+
+app$2.use(router$1.routes());
 
 // reading these from the file system b/c we don't want to include any configuratin in the rolled up bundle
 const DEFAULT = JSON.parse(fs.readFileSync(`${process.cwd()}/config.default.json`));
@@ -182,9 +228,9 @@ var entryProvider = {
   }
 }
 
-const app$2 = new Koa();
-const router$1 = Router()
-const koaBody = KoaBody();
+const app$3 = new Koa();
+const router$2 = Router()
+const koaBody$1 = KoaBody();
 
 restify(goalProvider, 'goals');
 restify(taskProvider, 'tasks');
@@ -196,14 +242,14 @@ function handleError(ctx, err) {
 }
 
 function restify(provider, path) {
-  router$1.get(`/${path}`, function*(){
+  router$2.get(`/${path}`, function*(){
     try {
       const response = yield provider.get(this.query);
       this.status = 200;
       this.body = response;
     } catch (err) { handleError(this, err); }
   });
-  router$1.post(`/${path}`, koaBody, function*() {
+  router$2.post(`/${path}`, koaBody$1, function*() {
     try {
       const body = this.request.body;
       const created = yield provider.create(body);
@@ -211,7 +257,7 @@ function restify(provider, path) {
       this.body = created;
     } catch (err) { handleError(this, err); }
   });
-  router$1.put(`/${path}`, koaBody, function*() {
+  router$2.put(`/${path}`, koaBody$1, function*() {
     try {
       const body = this.request.body;
       const updated = yield provider.update(body);
@@ -219,7 +265,7 @@ function restify(provider, path) {
       this.body = updated;
     } catch (err) { handleError(this, err) }
   });
-  router$1.delete(`/${path}/:id`, function*() {
+  router$2.delete(`/${path}/:id`, function*() {
     try {
       yield provider.remove(this.params.id);
       this.status = 204;
@@ -227,7 +273,7 @@ function restify(provider, path) {
   });
 }
 
-app$2.use(router$1.routes());
+app$3.use(router$2.routes());
 
 const PORT = process.env.NODE_PORT || 5000;
 const IP = process.env.NODE_IP || 'localhost';
@@ -237,16 +283,57 @@ const DEV_CLIENT_PATH = `${__dirname}/../client/dev`;
 const PROD_CLIENT_PATH = `${__dirname}/../client/prod`;
 const STATIC_PATH = `${__dirname}/../../public`;
 
+const SESSION_KEYS = ['your-session-secret', 'another-session-secret']
+
+
 const router = Router();
 const app = new Koa();
-app.use(compress())
+app.keys = SESSION_KEYS;
+const SESSION_CONFIG = {
+  key: 'mf:sesh', /** (string) cookie key (default is koa:sess) */
+  maxAge: 86400000, /** (number) maxAge in ms (default is 1 days) */
+  overwrite: true, /** (boolean) can overwrite or not (default true) */
+  httpOnly: true, /** (boolean) httpOnly or not (default true) */
+  signed: true, /** (boolean) signed or not (default true) */
+};
+app.use(session(SESSION_CONFIG, app));
 
+// authentication
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+app.use(compress())
 app.use(hbs.middleware({
   extname:".hbs",
   defaultLayout: 'index',
   layoutsPath: VIEW_PATH,
   viewPath: VIEW_PATH
 }));
+
+
+// only log requests that make it past static dirs
+app.use(logger());
+
+// support openshift health check
+router.get('/health', function*(){
+  this.status = 200;
+  this.body = { status: 'up' };
+});
+
+app.use(mount('/identity', app$2));
+
+// Require authentication for now
+app.use(function*(next) {
+  if (this.isAuthenticated()) {
+    yield next
+  } else {
+    yield this.render('login', {
+      title: 'Myndfull Login',
+      endpoint: '/identity/login'
+    });
+  }
+})
 
 if (process.env.NODE_ENV === 'development') {
   app.use(serve(DEV_CLIENT_PATH));
@@ -255,18 +342,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use(serve(STATIC_PATH));
 
-// only log requests that make it past static dirs
-app.use(logger());
+app.use(mount('/api', app$3));
 
-app.use(mount('/api', app$2));
-
-// support openshift health check
-router.get('/health', function*(){
-  this.status = 200;
-  this.body = { status: 'up' };
-});
-
-router.get('/', function*() {
+router.get('/*', function*() {
   yield this.render('home', {
     title: 'Myndfull'
   });

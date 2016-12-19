@@ -3,7 +3,7 @@
 export const SHOW_FORM = 'SHOW_FORM';
 export const HIDE_FORM = 'HIDE_FORM';
 export const VIEWPORT_CHANGE = 'VIEWPORT_CHANGE';
-export const ACTIVE_VIEW_CHANGE = 'ACTIVE_VIEW_CHANGE';
+export const LOCATION_CHANGE = 'LOCATION_CHANGE';
 
 // API 
 export const GET = 'GET';

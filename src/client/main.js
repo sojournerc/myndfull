@@ -2,7 +2,7 @@
 import polyfill from 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './view/App';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Needed for onTouchTap

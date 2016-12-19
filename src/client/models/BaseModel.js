@@ -1,9 +1,9 @@
 
-import { store } from '../redux';
+import { store } from '../state';
 
 import mapValues from 'lodash/mapValues';
-import createAction from '../redux/actionFactory';
-import createFetch from '../redux/fetchFactory';
+import createAction from '../state/actionFactory';
+import createFetch from '../state/fetchFactory';
 
 import {
   propChange,
@@ -20,7 +20,7 @@ import {
   updateSuccess,
   updateFail,
   setWorkingItem
-} from '../redux/api/actions';
+} from '../state/api/actions';
 
 import {
   GET,

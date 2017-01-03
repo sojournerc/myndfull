@@ -69,10 +69,11 @@ app.use(function*(next) {
   } else {
     yield this.render('login', {
       title: 'Myndfull Login',
-      endpoint: '/identity/login'
+      loginEndpoint: '/identity/login',
+      registerEndpoint: '/identity/register'
     });
   }
-})
+});
 
 if (process.env.NODE_ENV === 'development') {
   app.use(serve(DEV_CLIENT_PATH));

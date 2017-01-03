@@ -23,7 +23,7 @@ function handleError(ctx, err) {
 function restify(provider, path) {
   router.get(`/${path}`, function*(){
     try {
-      const response = yield provider.get(this.query);
+      const response = yield provider.get(this.query, this);
       this.status = 200;
       this.body = response;
     } catch (err) { handleError(this, err); }
@@ -31,7 +31,7 @@ function restify(provider, path) {
   router.post(`/${path}`, koaBody, function*() {
     try {
       const body = this.request.body;
-      const created = yield provider.create(body);
+      const created = yield provider.create(body, this);
       this.status = 201;
       this.body = created;
     } catch (err) { handleError(this, err); }
@@ -39,14 +39,14 @@ function restify(provider, path) {
   router.put(`/${path}`, koaBody, function*() {
     try {
       const body = this.request.body;
-      const updated = yield provider.update(body);
+      const updated = yield provider.update(body, this);
       this.status = 200;
       this.body = updated;
     } catch (err) { handleError(this, err) }
   });
   router.delete(`/${path}/:id`, function*() {
     try {
-      yield provider.remove(this.params.id);
+      yield provider.remove(this.params.id, this);
       this.status = 204;
     } catch (err) { handleError(this, err); }
   });

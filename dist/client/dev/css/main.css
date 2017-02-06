@@ -648,6 +648,9 @@
 .flex-s-item {
   flex: 0 1;
 }
+.flex-g-item {
+  flex: 1 0;
+}
 .flex-gs-item {
   flex: 1 1;
 }
@@ -1127,8 +1130,11 @@
 .button.button-x-small > * {
   padding: 3px 3px 2px;
 }
+.list > *:nth-child(even) {
+  background-color: #383838;
+}
 .list > *:nth-child(odd) {
-  background-color: #eaeaea;
+  background-color: #454545;
 }
 .input {
   font-family: sans-serif;
@@ -1149,6 +1155,8 @@
 textarea.input {
   min-height: 6rem;
   line-height: 1.5;
+  background-color: #121212;
+  color: #eaeaea;
 }
 @-webkit-keyframes uil-ripple {
   0% {
@@ -1393,7 +1401,7 @@ textarea.input {
   z-index: 4;
 }
 html {
-  font-size: 13px;
+  font-size: 15px;
 }
 body {
   color: #454545;
@@ -1455,4 +1463,8 @@ body {
 }
 .dragging-element {
   cursor: move;
+}
+a[href],
+a[href]:active {
+  color: #dfe2df;
 }

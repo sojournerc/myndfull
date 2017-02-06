@@ -1,5 +1,9 @@
 import create from '../actionFactory';
 
+import GoalModel from '../../models/GoalModel';
+import TaskModel from '../../models/TaskModel';
+import EntryModel from '../../models/EntryModel';
+
 import {
   PROP_CHANGE,
   GET,
@@ -32,3 +36,9 @@ export const updateSuccess = (...args)  => create(UPDATE_SUCCESS, ...args);
 export const updateFail = (...args)     => create(UPDATE_FAIL, ...args);
 export const setWorkingItem = (...args) => create(SET_WORKING_ITEM, ...args);
 
+export const fetchAll = dispatch => 
+  Promise.all([
+    GoalModel,
+    TaskModel,
+    EntryModel
+  ].map(Model => Model.fetch()));

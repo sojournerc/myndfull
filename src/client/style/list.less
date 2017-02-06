@@ -1,8 +1,11 @@
 
 .list {
   & > * {
+    &:nth-child(even) {
+      background-color: darken(@darker, 5%);
+    }
     &:nth-child(odd) {
-      background-color: @lightest;
+      background-color: @darker;
     }
   }
 }

@@ -13,16 +13,20 @@ const mapStateToProps = (state) => ({
   entries: state.api.entries.items
 });
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  onFetch() {
+    dispatch(EntryModel.fetch());
+  }
+});
 
 const EntryList = create({
   displayName: 'EntryList',
   propTypes: {
-    entries: React.PropTypes.array.isRequired
+    entries: React.PropTypes.array.isRequired,
+    onFetch: React.PropTypes.func.isRequired
   },
   componentWillMount() {
-    
-    EntryModel.fetch();
+    this.props.onFetch();
   },
   render() {
     const { entries } = this.props;

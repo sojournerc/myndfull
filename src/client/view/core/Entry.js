@@ -57,6 +57,7 @@ const Entry = create({
           'break-word',
           'pr1',
           'line-height-4',
+          'lighter-color',
           {
             pl1: !isMobile,
             mt1: isMobile

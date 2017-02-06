@@ -1,8 +1,5 @@
 
 import React from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
 
 import {
   STRING,
@@ -30,17 +27,17 @@ function _passInputValue(handler) {
 }
 
 export function TextInput(props) {
-  const { value, onChange, disabled } = props;
+  const { value, onChange, disabled, className, placeholder } = props;
   return (
-    <TextField
+    <input
       type="text"
       // Matches MAXCHAR of STRING datatype in postgreSQL
       maxLength="255"
-      className="input"
+      placeholder={placeholder}
+      className={`input ${className || ''}`} 
       onChange={_passInputValue(onChange)}
       value={value}
       disabled={disabled}
-      fullWidth={true}
     />
   );
 }
@@ -50,17 +47,16 @@ TextInput.propTypes = inputPropTypes;
  * Text Area Component
  */
 export function TextArea(props) {
-  const { value, onChange, onKeyDown, disabled } = props;
+  const { value, onChange, onKeyDown, disabled, className, placeholder } = props;
   return (
-    <TextField 
+    <textarea 
       type="text" 
-      className="input" 
+      className={`input ${className || ''}`} 
       onChange={_passInputValue(onChange)} 
       value={value} 
-      onKeyDown={onKeyDown}
+      onKeyDown={onKeyDown  }
       disabled={disabled}
-      multiLine={true}
-      fullWidth={true}
+      placeholder={placeholder}
     />
   );
 }
@@ -74,7 +70,7 @@ TextArea.propTypes = Object.assign({}, inputPropTypes, {
  */
 export function Select({ options, onChange, value, disabled }) {
   return (
-    <SelectField
+    <Select
       value={value}
       onChange={(e, i, v) => { onChange(v); }}
       maxHeight={200}
@@ -84,7 +80,7 @@ export function Select({ options, onChange, value, disabled }) {
       {options.map(opt => {
         return <MenuItem value={opt.id} key={opt.id} primaryText={opt.text} />
       })}
-    </SelectField>
+    </Select>
   );
 }
 Select.propTypes = Object.assign({}, inputPropTypes, {

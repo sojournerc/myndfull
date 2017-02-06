@@ -23,7 +23,7 @@ const OPEN_SHIFT = {
 
 // can't use Object assign b/c the above environment variables will be undefined and will
 // clobber the default / custom values
-const CONFIG = {}
+const CONFIG = {};
 function mergeConfig(confs) {
   confs.forEach(conf => {
     for (const x in conf) {
@@ -31,7 +31,7 @@ function mergeConfig(confs) {
         CONFIG[x] = conf[x];
       }
     }
-  })
+  });
 }
 mergeConfig([DEFAULT, CUSTOM, OPEN_SHIFT]);
 
@@ -68,10 +68,10 @@ const umzug = new Umzug({
 
 // SEE http://sequelize.readthedocs.io/en/latest/docs/migrations/
 // migrations are in /myndfull/migrations/
-console.log('RUNNING MIGRATIONS')
+console.log('RUNNING MIGRATIONS');
 umzug.up().then(function (migrations) {
   migrations.forEach(mig => {
     console.log('RAN: ', mig.file, '\n');
   });
-  console.log('MIGRATIONS COMPLETE')
+  console.log('MIGRATIONS COMPLETE');
 });

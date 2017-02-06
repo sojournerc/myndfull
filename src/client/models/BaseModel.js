@@ -1,6 +1,4 @@
 
-import { store } from '../state';
-
 import mapValues from 'lodash/mapValues';
 import createAction from '../state/actionFactory';
 import createFetch from '../state/fetchFactory';
@@ -118,7 +116,7 @@ export default class BaseModel {
    * the working item
    */
   makeWorkingItem() { 
-    store.dispatch(setWorkingItem(this.clone(), { Class: this.constructor }))
+    return setWorkingItem(this.clone(), { Class: this.constructor });
   }
 
 
@@ -139,63 +137,64 @@ export default class BaseModel {
   ****************/
   // update prop on instance
   static _propChange(instance, prop, value) {
-    store.dispatch(createAction(PROP_CHANGE, { prop, value }, { Class: this }));
+    return createAction(PROP_CHANGE, { prop, value }, { Class: this });
   }
 
   // CRUD actions
   static fetch(params) {
+    console.info('put caching back');
     // if state is valid for this path, then we don't need to fetch
-    if (store.getState().api[this.API_PATH].cacheValid) { 
-      console.info(`cache is valid not fetching ${this.API_PATH}`)
-      return; 
-    }
-    return store.dispatch(createFetch({
+    // if (store.getState().api[this.API_PATH].cacheValid) { 
+    //   console.info(`cache is valid not fetching ${this.API_PATH}`)
+    //   return; 
+    // }
+    return createFetch({
       path: __getPath(this.API_PATH),
       method: 'GET',
       params,
       start: __wrapAction(this, get),
       success: __wrapAction(this, getSuccess),
       fail: __wrapAction(this, getFail)
-    }));
+    });
   }
   
   // instance only crud
   static _add(instance) {
-    return store.dispatch(createFetch({
+    return createFetch({
       path: __getPath(this.API_PATH),
       method: 'POST',
       body: instance.toJSON(),
         start: __wrapAction(this, add),
       success: __wrapAction(this, addSuccess),
       fail: __wrapAction(this, addFail)
-    }))
-    .then(() => {
-      this.fetch(instance.params);
-    });
+    })
+    // .then(() => {
+    //   this.fetch(instance.params);
+    // });
   }
 
   static _update(instance) {
-    return store.dispatch(createFetch({
+    return createFetch({
       path: __getPath(this.API_PATH),
       method: 'PUT',
       body: instance.toJSON(),
       start: __wrapAction(this, update),
       success: __wrapAction(this, updateSuccess),
       fail: __wrapAction(this, updateFail)
-    }))
-    .then(() => {
-      this.fetch(instance.params);
-    });
+    })
+    // .then(() => {
+    //   this.fetch(instance.params);
+    // });
   }
 
   static _remove(instance) {
-    return store.dispatch(createFetch({
+    return createFetch({
       path: __getPath(this.API_PATH, instance.id),
       method: 'DELETE',
       start: __wrapAction(this, remove),
       success: __wrapAction(this, removeSuccess),
       fail: __wrapAction(this, removeFail)
-    }))
+    })
     .then(() => {
       this.fetch(instance.params);
     });

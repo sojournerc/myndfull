@@ -6,6 +6,7 @@ import connect from './connectorFactory';
 import cn from 'classnames';
 
 import { getViewport } from 'dom-util';
+import { fetchAll } from '../state/api/actions';
 import { viewportChange } from '../state/ui/actions';
 
 import Header from './common/Header';
@@ -39,6 +40,7 @@ const App = create({
   },
   componentWillMount() {
     global.addEventListener('resize', _handleViewportChange(this.props.onViewportChange));
+    fetchAll();
   },
   render() {
     const { dragging, clientInfo } = this.props;

@@ -1,6 +1,7 @@
 
-import Models from '../../models';
 import { setIn } from 'immutable-setter';
+
+import Models, { TYPE_LIST } from '../../models/index';
 
 import {
   GET,
@@ -20,22 +21,19 @@ import {
 } from '../../constants/action-types';
 
 const initialState = {};
-const initiateApiState = ((Classes) => {
-  for (const TYPE in Classes) {
-    if (Classes.hasOwnProperty(TYPE)) {
-      initialState[Classes[TYPE].API_PATH] = Object.freeze(
-        // Initial state for each api item
-        {
-          items: [],
-          cacheValid: false,
-          workingItem: new Classes[TYPE](),
-          isFetching: false,
-          isSaving: false
-        }
-      );
-    }
-  }
-})(Models)
+
+(function () {
+  TYPE_LIST.forEach(type => {
+    const Model = Models[type];
+    initialState[Model.API_PATH] = Object.freeze({
+      items: [],
+      cacheValid: false,
+      workingItem: new Model(),
+      isFetching: false,
+      isSaving: false
+    })
+  });
+}())
 
 Object.freeze(initialState);
 

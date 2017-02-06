@@ -1,15 +1,20 @@
 
 import Goal from '../schema/goal';
 import db from '../index';
-import { reorder, getSessionedUser } from '../db-util';
+import { 
+  reorder, 
+  getSessionedUser,
+  incOrderIndexAbove,
+  decOrderIndexAbove
+} from '../db-util';
 
 export default {
   create: function*(body, ctx) {
-    // add the new goal to the top of the list
-    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1)`);
+    const userId = getSessionedUser(ctx).id;
+    yield incOrderIndexAbove(db, Goal.getTableName(), 0, userId);
     return Goal.create(Object.assign({}, body, { 
       orderIndex: 1,
-      userId: getSessionedUser(ctx).id
+      userId
     }));
   },
   update: function*(body, ctx) {
@@ -17,8 +22,10 @@ export default {
     const updating = yield Goal.findById(body.id);
     // if the new orderIndex doesn't match the old, we need to update some ordering
     if (body.orderIndex !== updating.orderIndex) {
-      yield reorder(db, Goal, body, updating);
+      yield reorder(db, Goal, body, updating, getSessionedUser(ctx).id);
     }
+    // TODO: need to check that the userId matches that of the session
+    // and that the goal is owned by that userId
     yield Goal.upsert(body);
     // upsert doesn't return the updated record
     return Goal.findById(body.id);
@@ -31,11 +38,19 @@ export default {
   },
   remove: function*(id, ctx) {
     const goal = yield Goal.findById(id);
+    const userId =  getSessionedUser(ctx).id
     const removingOrderIndex = goal.orderIndex;
-    // destroy the item
-    yield Goal.destroy({ where: { id }})
-    // update the other rows to have correct orderIdx
-    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex} AND "deletedAt" IS NULL`);
-    return;
+    yield Goal.destroy({ 
+      where: { 
+        userId,
+        id 
+      }
+    })
+    yield decOrderIndexAbove(
+      db, 
+      Goal.getTableName(), 
+      removingOrderIndex, 
+      userId      
+    );
   }
 }

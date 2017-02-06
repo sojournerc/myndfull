@@ -74,7 +74,9 @@
 
   loginForm.onsubmit = function (ev) {
     ev.preventDefault();
-    sendForm(serializeForm(ev.currentTarget), '{{ loginEndpoint }}');
+    sendForm(serializeForm(ev.currentTarget), '{{ loginEndpoint }}', function () {
+      location.reload();
+    });
   }
 
   registerForm.onsubmit = function (ev) {
@@ -96,7 +98,9 @@
       alert('passwords do not match');
       return;
     }
-    sendForm(data, '{{ registerEndpoint }}');
+    sendForm(data, '{{ registerEndpoint }}', function () {
+      location.reload()
+    });
   }
 
   loginLink.onclick = function (ev) {

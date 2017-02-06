@@ -24,6 +24,13 @@ const mapDispatchToProps = (dispatch, props) => ({
   },
   onHideForm() {
     dispatch(hideForm(props.ItemClass.TYPE));
+  },
+  onNewWorkingItem() {
+    const newInstance = new props.ItemClass();
+    dispatch(newInstance.makeWorkingItem());
+  },
+  onFetch() {
+    dispatch(props.ItemClass.fetch())
   }
 });
 
@@ -36,12 +43,14 @@ const Pane = create({
     onShowForm: React.PropTypes.func.isRequired,
     onHideForm: React.PropTypes.func.isRequired,
     ItemClass: React.PropTypes.func.isRequired,
+    onNewWorkingItem: React.PropTypes.func.isRequired,
+    onFetch: React.PropTypes.func.isRequired
   },
   componentWillMount() {
-    this.props.ItemClass.fetch();
+    this.props.onFetch();
   },
   _handleAddItem() {
-    new this.props.ItemClass().makeWorkingItem();
+    this.props.onNewWorkingItem();
     this.props.onShowForm();
   },
   render() {

@@ -10,13 +10,17 @@ import { handleInputChange } from 'form-util';
 import { SubmitButton } from '../common/Buttons';
 import { TextInput, TextArea } from '../common/Inputs';
 import Loading from '../common/Loading';
+import EntryModel from '../../models/EntryModel';
 
 const mapStateToProps = (state) => ({
   workingItem: state.api.entries.workingItem,
   isSaving: state.api.entries.isSaving
 }); 
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  save(inst) { return dispatch(inst.save()) },
+  fetch() { return dispatch(EntryModel.fetch()) }
+});
 
 const EntryForm = create({
   displayName: 'EntryForm',
@@ -29,29 +33,27 @@ const EntryForm = create({
     ev.stopPropagation();
     const { workingItem } = this.props;
     if (!workingItem.valid) { return; }
-    workingItem.save();
-  },
-  _handleKeyDown(ev) {
-    // submit the form on TextArea enter, unless shift is pressed
-    if (ev.keyCode === 13 && !ev.shiftKey) {
-      this._onSubmit(ev);
-    }
+    this.props.save(workingItem)
+      .then(this.props.fetch);
   },
   render() {
     const { workingItem, isSaving } = this.props;
     return <div className={cn(
+      'h100',
+      'mxn1'
     )}>
-      <form onSubmit={this._onSubmit}>
-        <div className="flex items-center w100 my2">
-          <span className="flex-gs-item mr1">
+      <form onSubmit={this._onSubmit} className='h100'>
+        <div className="flex flex-column w100 h100">
+          <span className="flex-g-item self-center w100 p1">
             <TextArea 
               onChange={handleInputChange(workingItem, 'text')} 
               value={workingItem.text} 
-              onKeyDown={this._handleKeyDown} 
               disabled={isSaving}
+              className='h100'
+              placeholder={'what are you thinking?'}
             />
           </span>
-          <span className="flex-item">
+          <span className="flex-item mb2 self-end">
             {isSaving &&
             <Loading />
             ||

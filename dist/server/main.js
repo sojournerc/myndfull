@@ -35,7 +35,7 @@ const OPEN_SHIFT = {
 
 // can't use Object assign b/c the above environment variables will be undefined and will
 // clobber the default / custom values
-const CONFIG = {}
+const CONFIG = {};
 function mergeConfig(confs) {
   confs.forEach(conf => {
     for (const x in conf) {
@@ -43,7 +43,7 @@ function mergeConfig(confs) {
         CONFIG[x] = conf[x];
       }
     }
-  })
+  });
 }
 mergeConfig([DEFAULT, CUSTOM, OPEN_SHIFT]);
 
@@ -154,25 +154,58 @@ const CRYPTO_OPTIONS = {
   saltlen:  32,
   iterations: 12000,
   keylen:  512
-}
+};
 
 User.hasMany(Task);
 User.hasMany(Entry);
 User.hasMany(Goal);
 
-function* reorder(db, Schema, body, updating) {
+function* reorder(db, Schema, body, updating, userId) {
   const table = Schema.getTableName();
   // first set the one we're updating to 0 to get it out of the way
   yield Schema.update({ orderIndex: 0 }, { where: { id: body.id } });
   // down in order
   if (body.orderIndex > updating.orderIndex) {
     // everything above the old order index and below the new order index decreases one
-    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${updating.orderIndex} AND "orderIndex" <= ${body.orderIndex} AND "deletedAt" IS NULL`);
-  // up in order
+    yield db.query(`
+      UPDATE ${table} 
+      SET "orderIndex" = ("orderIndex" - 1) 
+      WHERE "orderIndex" > ${updating.orderIndex} 
+        AND "orderIndex" <= ${body.orderIndex} 
+        AND "userId" IS ${userId}
+        AND "deletedAt" IS NULL
+    `);  
   } else if (body.orderIndex < updating.orderIndex) {
     // everything above the old order index and below the new order index increases one
-    yield db.query(`UPDATE ${table} SET "orderIndex" = ("orderIndex" + 1) WHERE "orderIndex" >= ${body.orderIndex} AND "orderIndex" < ${updating.orderIndex} AND "deletedAt" IS NULL`);
+    yield db.query(`
+      UPDATE ${table} 
+      SET "orderIndex" = ("orderIndex" + 1) 
+      WHERE "orderIndex" >= ${body.orderIndex} 
+        AND "orderIndex" < ${updating.orderIndex} 
+        AND "userId" IS ${userId}
+        AND "deletedAt" IS NULL
+    `);
   }
+}
+
+function* decOrderIndexAbove(db, table, idx, userId) {
+  yield db.query(`
+    UPDATE ${table} 
+    SET "orderIndex" = ("orderIndex" - 1) 
+      WHERE "orderIndex" > ${idx}
+        AND "userId" IS ${userId}
+        AND "deletedAt" IS NULL
+  `);
+}
+
+function* incOrderIndexAbove(db, table, idx, userId) {
+  yield db.query(`
+    UPDATE ${table} 
+    SET "orderIndex" = ("orderIndex" + 1)
+      WHERE "orderIndex" > ${idx}
+        AND "userId" IS ${userId}
+        AND "deletedAt" IS NULL
+  `);
 }
 
 function getSessionedUser(ctx) {
@@ -203,7 +236,7 @@ var userProvider = {
   //   yield User.destroy({ where: { id }})
   //   return;
   // }
-}
+};
 
 // setup passport
 passport.use(new passportLocal.Strategy(function(username, password, done) {
@@ -225,7 +258,7 @@ passport.deserializeUser((user, done) => {
 });
 
 const app$2 = new Koa();
-const router$1 = Router()
+const router$1 = Router();
 const koaBody = KoaBody();
 
 // login / logout endpoints
@@ -235,7 +268,7 @@ router$1.post('/login', koaBody, function*() {
   const handleError = (e) => {
     this.status = 500; 
     this.body = e.message || e;
-  }
+  };
 
   yield passport.authenticate('local', {
   }, function*(err, user, info, status) {
@@ -248,8 +281,8 @@ router$1.post('/login', koaBody, function*() {
       if (er) return handleError(er);
       self.body = user;
       self.status = 200;
-    })
-  })
+    });
+  });
 });
 
 router$1.post('/register', koaBody, function*() {
@@ -276,11 +309,11 @@ app$2.use(router$1.routes());
 
 var goalProvider = {
   create: function*(body, ctx) {
-    // add the new goal to the top of the list
-    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" + 1)`);
+    const userId = getSessionedUser(ctx).id;
+    yield incOrderIndexAbove(db, Goal.getTableName(), 0, userId);
     return Goal.create(Object.assign({}, body, { 
       orderIndex: 1,
-      userId: getSessionedUser(ctx).id
+      userId
     }));
   },
   update: function*(body, ctx) {
@@ -288,8 +321,10 @@ var goalProvider = {
     const updating = yield Goal.findById(body.id);
     // if the new orderIndex doesn't match the old, we need to update some ordering
     if (body.orderIndex !== updating.orderIndex) {
-      yield reorder(db, Goal, body, updating);
+      yield reorder(db, Goal, body, updating, getSessionedUser(ctx).id);
     }
+    // TODO: need to check that the userId matches that of the session
+    // and that the goal is owned by that userId
     yield Goal.upsert(body);
     // upsert doesn't return the updated record
     return Goal.findById(body.id);
@@ -302,66 +337,96 @@ var goalProvider = {
   },
   remove: function*(id, ctx) {
     const goal = yield Goal.findById(id);
+    const userId =  getSessionedUser(ctx).id;
     const removingOrderIndex = goal.orderIndex;
-    // destroy the item
-    yield Goal.destroy({ where: { id }})
-    // update the other rows to have correct orderIdx
-    yield db.query(`UPDATE goals SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex} AND "deletedAt" IS NULL`);
-    return;
+    yield Goal.destroy({ 
+      where: { 
+        userId,
+        id 
+      }
+    });
+    yield decOrderIndexAbove(
+      db, 
+      Goal.getTableName(), 
+      removingOrderIndex, 
+      userId      
+    );
   }
-}
+};
 
 var taskProvider = {
-  create: function*(body) {
-    // add the new task to the top of the list
-    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" + 1)`);
-    return Task.create(Object.assign({}, body, { orderIndex: 1 }));
+  create: function*(body, ctx) {
+    const userId = getSessionedUser(ctx).id;
+    yield incOrderIndexAbove(db, Task.getTableName(), 0, userId);
+    return Task.create(Object.assign({}, body, { 
+      orderIndex: 1,
+      userId  
+    }));
   },
-  update: function*(body) {
+  update: function*(body, ctx) {
     // look up item to be updated
     const updating = yield Task.findById(body.id);
     // if the new orderIndex doesn't match the old, we need to update some ordering
     if (body.orderIndex !== updating.orderIndex) {
-      yield reorder(db, Task, body, updating);
+      yield reorder(db, Task, body, updating, getSessionedUser(ctx).id);
     }
+    // TODO: need to check that the userId matches that of the session
+    // and that the goal is owned by that userId
     yield Task.upsert(body);
     // upsert doesn't return the updated record
     return Task.findById(body.id);
   },
-  get: function*(query) {
+  get: function*(query, ctx) {
     return Task.findAll({
-      order: ['orderIndex']
+      order: ['orderIndex'],
+      where: { userId: getSessionedUser(ctx).id }
     });
   },
-  remove: function*(id) {
+  remove: function*(id, ctx) {
     const task = yield Task.findById(id);
+    const userId = getSessionedUser(ctx).id;
     const removingOrderIndex = task.orderIndex;
-    // destroy the item
-    yield Task.destroy({ where: { id }})
-    // update the other rows to have correct orderIdx
-    yield db.query(`UPDATE tasks SET "orderIndex" = ("orderIndex" - 1) WHERE "orderIndex" > ${removingOrderIndex} AND "deletedAt" IS NULL`);
-    return;
+    yield Task.destroy({ where: { 
+      userId,
+      id
+    }});
+    yield decOrderIndexAbove(
+      db, 
+      Task.getTableName(), 
+      removingOrderIndex, 
+      userId
+    );
   }
-}
+};
 
 var entryProvider = {
-  create: function*(body) {
-    return Entry.create(body);
+  create: function*(body, ctx) {
+    return Entry.create(Object.assign({}, body, {
+      userId: getSessionedUser(ctx).id
+    }));
   },
   update: function*(body) {
+    // TODO: need to check that the userId matches that of the session
+    // and that the goal is owned by that userId
     return Entry.upsert(body);
   },
-  get: function*(query) {
+  get: function*(query, ctx) {
     return Entry.findAll({
+      where: { 
+        userId: getSessionedUser(ctx).id 
+      }
     });
   },
   remove: function*(id) {
-    return Entry.destroy({ where: { id }});
+    return Entry.destroy({ where: {
+      userId: getSessionedUser(ctx).id,
+      id 
+    }});
   }
-}
+};
 
 const app$3 = new Koa();
-const router$2 = Router()
+const router$2 = Router();
 const koaBody$1 = KoaBody();
 
 restify(goalProvider, 'goals');
@@ -395,7 +460,7 @@ function restify(provider, path$$1) {
       const updated = yield provider.update(body, this);
       this.status = 200;
       this.body = updated;
-    } catch (err) { handleError(this, err) }
+    } catch (err) { handleError(this, err); }
   });
   router$2.delete(`/${path$$1}/:id`, function*() {
     try {
@@ -415,7 +480,7 @@ const DEV_CLIENT_PATH = `${__dirname}/../client/dev`;
 const PROD_CLIENT_PATH = `${__dirname}/../client/prod`;
 const STATIC_PATH = `${__dirname}/../../public`;
 
-const SESSION_KEYS = ['your-session-secret', 'another-session-secret']
+const SESSION_KEYS = ['your-session-secret', 'another-session-secret'];
 
 
 const router = Router();
@@ -431,11 +496,11 @@ const SESSION_CONFIG = {
 app.use(session(SESSION_CONFIG, app));
 
 // authentication
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.initialize());
+app.use(passport.session());
 
 
-app.use(compress())
+app.use(compress());
 app.use(hbs.middleware({
   extname:".hbs",
   defaultLayout: 'index',
@@ -458,7 +523,7 @@ app.use(mount('/identity', app$2));
 // Require authentication for now
 app.use(function*(next) {
   if (this.isAuthenticated()) {
-    yield next
+    yield next;
   } else {
     yield this.render('login', {
       title: 'Myndfull Login',
@@ -489,7 +554,7 @@ process.on('uncaughtException', function(err) {
   console.error(err.stack);
 });
 
-app.listen(PORT, IP)
+app.listen(PORT, IP);
 console.info(`listening on port ${IP}:${PORT}`);
 
 module.exports = app;

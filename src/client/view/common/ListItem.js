@@ -6,7 +6,6 @@ import connect from '../connectorFactory';
 
 import { showForm } from '../../state/ui/actions';
 
-import MenuItem from 'material-ui/MenuItem';
 import { RemoveButton } from './Buttons';
 
 import { TYPE_LIST } from '../../models'
@@ -26,7 +25,7 @@ const mapStateToProps = (state) => ({
   isMobile: state.ui.clientInfo.isMobile()
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, props) => ({
   onDragStart(index, item) {
     dispatch(startDrag({
       dragging: true,
@@ -63,6 +62,9 @@ const mapDispatchToProps = (dispatch) => ({
       debugger;
     }
     dispatch(endDrag());
+  },
+  makeWorkingItem() {
+    dispatch(props.item.makeWorkingItem());
   }
 });
 
@@ -77,6 +79,7 @@ const Item = create({
     isMobile: React.PropTypes.bool.isRequired,
     isTouch: React.PropTypes.bool.isRequired,
     onShowForm: React.PropTypes.func.isRequired,
+    makeWorkingItem: React.PropTypes.func.isRequired,
     onDragStart: React.PropTypes.func,
     onDragEnd: React.PropTypes.func,
     onTouchMove: React.PropTypes.func,
@@ -97,7 +100,7 @@ const Item = create({
     this.props.onTouchEnd();
   },
   _handleTouchTap() {
-    this.props.item.makeWorkingItem();
+    this.props.makeWorkingItem();
     this.props.onShowForm();
   },
   _handleRemoveClick(ev) {

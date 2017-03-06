@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { store } from '../../state';
 
 import cn from 'classnames';
 import create from '../componentFactory';
@@ -17,16 +16,16 @@ function __isDragWithin(pos, el) {
       (pos.x <= boundRect.right && pos.x >= boundRect.left)) {
     return true;
   }
+  return false;
 }
-
 
 const mapStateToProps = (state, props) => {
   const { dragging, draggingItem, draggingIndex, dropTarget } = state.dnd;
-  const active =  !!dragging && (draggingItem.type === props.type) &&
+  const active = !!dragging && (draggingItem.type === props.type) &&
                   // targets next to the item being dragged would do nothing.
-                  (props.index !== draggingIndex && props.index !== (draggingIndex+1));
+                  (props.index !== draggingIndex && props.index !== (draggingIndex + 1));
 
-  const isTargeted =  (active && !!dropTarget) &&
+  const isTargeted = (active && !!dropTarget) &&
                       (props.type === dropTarget.type && props.index === dropTarget.index);
 
   return {
@@ -42,15 +41,10 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = (dispatch) => ({
   onDragOver(dat) {
-    dispatch(setDropTarget(dat))
+    dispatch(setDropTarget(dat));
   },
   onDragLeave() {
     dispatch(clearDropTarget());
-  },
-  onDragDrop(idx) {
-    const dnd = store.getState().dnd;
-    const { draggingItem } = dnd;
-    draggingItem.reorder(idx);
   }
 });
 
@@ -63,7 +57,6 @@ const Target = create({
     isTargeted: React.PropTypes.bool.isRequired,
     onDragOver: React.PropTypes.func.isRequired,
     onDragLeave: React.PropTypes.func.isRequired,
-    onDragDrop: React.PropTypes.func.isRequired,
     isTouch: React.PropTypes.bool.isRequired,
     dragPos: React.PropTypes.object,
     children: React.PropTypes.node
@@ -72,7 +65,7 @@ const Target = create({
   // the dragPosition is going to be within the container of
   componentWillUpdate(props) {
     const { active, isTouch, isTargeted, dragPos, type, index } = props;
-    if (this.props.active && isTouch && (!isTargeted && __isDragWithin(dragPos, this._droppableInner))) {
+    if (active && isTouch && (!isTargeted && __isDragWithin(dragPos, this._droppableInner))) {
       this.props.onDragOver({ type, index });
     } else if (isTouch && isTargeted && !__isDragWithin(dragPos, this._droppableInner)) {
       this.props.onDragLeave();
@@ -87,18 +80,15 @@ const Target = create({
   _handleDragLeave() {
     this.props.onDragLeave();
   },
-  _handleDragDrop() {
-    this.props.onDragDrop(this.props.index);
-  },
   render() {
     const { active, children, isTargeted } = this.props;
     if (!active) {
-      return <span />
+      return <span />;
     }
-    return <div
+    return (
+    <div
       onDragOver={this._handleDragOver}
       onDragLeave={this._handleDragLeave}
-      onDrop={this._handleDragDrop}
       className={cn(
         'droppable',
         {
@@ -113,6 +103,7 @@ const Target = create({
         {children}
       </div>
     </div>
+    );
   }
 });
 

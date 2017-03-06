@@ -6,26 +6,13 @@
     'mocha': true
   },
 
-  'ecmaFeatures': {
-    'arrowFunctions': true,
-    'blockBindings': true,
-    'classes': true,
-    'defaultParams': true,
-    'destructuring': true,
-    'forOf': true,
-    'generators': true,
-    'modules': true,
-    'objectLiteralComputedProperties': true,
-    'objectLiteralDuplicateProperties': false,
-    'objectLiteralShorthandMethods': true,
-    'objectLiteralShorthandProperties': true,
-    'restParams': true,
-    'spread': true,
-    'superInFunctions': true,
-    'templateStrings': true,
-    'jsx': true
+  'parserOptions': {
+      'ecmaFeatures': {
+        'experimentalObjectRestSpread': true,
+        'jsx': true
+      },
+      "sourceType": "module"
   },
-
   'plugins': [
     'react'
   ],
@@ -67,8 +54,6 @@
     'no-div-regex': 0,
     // disallow else after a return in an if
     'no-else-return': 2,
-    // disallow use of labels for anything other then loops and switches
-    'no-empty-label': 2,
     // disallow comparisons to null without a type-checking operator
     'no-eq-null': 0,
     // disallow use of eval()
@@ -294,9 +279,6 @@
     //  From AirBnB's react.js
     //
 
-    // Prevent missing displayName in a React component definition
-    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/display-name.md
-    'react/display-name': [2, { 'acceptTranspilerName': false }],
     // Forbid certain propTypes (any, array, object)
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/forbid-prop-types.md
     'react/forbid-prop-types': [0, { 'forbid': ['any', 'array', 'object'] }],
@@ -353,7 +335,7 @@
     }],
     // Prevent React to be incorrectly marked as unused
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-uses-react.md
-    'react/jsx-uses-react': [2, { 'pragma': 'React' }],
+    'react/jsx-uses-react': [2],
     // Prevent variables used in JSX to be incorrectly marked as unused
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-uses-vars.md
     'react/jsx-uses-vars': 2,
@@ -362,13 +344,13 @@
     'react/no-danger': 2,
     // Prevent usage of deprecated methods
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-deprecated.md
-    'react/no-deprecated': [2, { 'react': '0.14.5' }],
+    'react/no-deprecated': [2],
     // Prevent usage of setState in componentDidMount
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-did-mount-set-state.md
-    'react/no-did-mount-set-state': [2, 'allow-in-func'],
+    'react/no-did-mount-set-state': [2],
     // Prevent usage of setState in componentDidUpdate
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-did-update-set-state.md
-    'react/no-did-update-set-state': [2, 'allow-in-func'],
+    'react/no-did-update-set-state': [2],
     // Prevent direct mutation of this.state
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-direct-mutation-state.md
     'react/no-direct-mutation-state': 2,
@@ -533,10 +515,7 @@
     'semi': [2, 'always'],
     // sort variables within the same declaration block
     'sort-vars': 0,
-    // require a space before certain keywords
-    'space-before-keywords': [2, 'always'],
-    // require a space after certain keywords
-    'space-after-keywords': [2, 'always'],
+    'keyword-spacing': [2],
     // require or disallow space before blocks
     'space-before-blocks': 2,
     // require or disallow space before function opening parenthesis
@@ -546,8 +525,6 @@
     'space-in-parens': [2, 'never'],
     // require spaces around operators
     'space-infix-ops': 2,
-    // require a space after return, throw, and case
-    'space-return-throw-case': 2,
     // Require or disallow spaces before/after unary operators
     'space-unary-ops': 0,
     // require or disallow a space immediately following the // or /* in a comment

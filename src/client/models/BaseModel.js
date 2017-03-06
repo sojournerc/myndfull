@@ -4,7 +4,6 @@ import createAction from '../state/actionFactory';
 import createFetch from '../state/fetchFactory';
 
 import {
-  propChange,
   add,
   addSuccess,
   addFail,
@@ -21,23 +20,14 @@ import {
 } from '../state/api/actions';
 
 import {
-  GET,
-  GET_SUCCESS,
-  GET_FAIL,
-  ADD,
-  ADD_SUCCESS,
-  ADD_FAIL,
-  UPDATE,
-  UPDATE_SUCCESS,
-  UPDATE_FAIL,
-  REMOVE,
-  REMOVE_SUCCESS,
-  REMOVE_FAIL,
   PROP_CHANGE
 } from '../constants/action-types';
 
+const __getPath = (apiPath, pathParam) => (`/api/${apiPath}${pathParam ? `/${pathParam}` : ''}`);
+const __wrapAction = (Class, action) => (pl) => action(pl, { Class });
+
 export default class BaseModel {
-  
+
   constructor(args) {
     if (!this.constructor.TYPE) { throw new Error('Model classes must provide static TYPE'); }
     if (!this.constructor.API_PATH) { throw new Error('Model classes must provide static API_PATH'); }
@@ -51,10 +41,10 @@ export default class BaseModel {
     );
   }
 
-  /**************
-  
+  /* *************
+
   * Instance Async (persistence)
-  
+
   ***************/
 
   /**
@@ -76,16 +66,16 @@ export default class BaseModel {
    * @return thunk that will reorder the instance to the given index
    */
   reorder(idx) { return this.constructor._reorder(this, idx); }
-  
-  /****************
+
+  /* ***************
 
    * Instance Mutators
-  
+
    ************/
-  
+
   /**
    * @return action that will update the workingItem in
-   *  the respective part of the state tree. 
+   *  the respective part of the state tree.
    */
   change(...args) { return this.constructor._propChange(this, ...args); }
 
@@ -98,11 +88,11 @@ export default class BaseModel {
   /**
    *
    * Utility
-   * 
+   *
    */
-  
+
   /**
-   * @return a new instance that is a clone of this 
+   * @return a new instance that is a clone of this
    */
   clone() { return new this.constructor(this.toJSON()); }
 
@@ -112,15 +102,15 @@ export default class BaseModel {
   toJSON() { return this.constructor._serialize(this); }
 
   /**
-   * Dispatches an action to make this item 
+   * Dispatches an action to make this item
    * the working item
    */
-  makeWorkingItem() { 
+  makeWorkingItem() {
     return setWorkingItem(this.clone(), { Class: this.constructor });
   }
 
 
-  /***************
+  /* **************
 
   * Getters
 
@@ -129,8 +119,7 @@ export default class BaseModel {
   get type() { return this.constructor.TYPE; }
   get isNew() { return !this.id; }
 
-
-  /***************
+  /* **************
 
   * Class Static
 
@@ -142,12 +131,6 @@ export default class BaseModel {
 
   // CRUD actions
   static fetch(params) {
-    console.info('put caching back');
-    // if state is valid for this path, then we don't need to fetch
-    // if (store.getState().api[this.API_PATH].cacheValid) { 
-    //   console.info(`cache is valid not fetching ${this.API_PATH}`)
-    //   return; 
-    // }
     return createFetch({
       path: __getPath(this.API_PATH),
       method: 'GET',
@@ -157,20 +140,17 @@ export default class BaseModel {
       fail: __wrapAction(this, getFail)
     });
   }
-  
+
   // instance only crud
   static _add(instance) {
     return createFetch({
       path: __getPath(this.API_PATH),
       method: 'POST',
       body: instance.toJSON(),
-        start: __wrapAction(this, add),
+      start: __wrapAction(this, add),
       success: __wrapAction(this, addSuccess),
       fail: __wrapAction(this, addFail)
-    })
-    // .then(() => {
-    //   this.fetch(instance.params);
-    // });
+    });
   }
 
   static _update(instance) {
@@ -181,10 +161,7 @@ export default class BaseModel {
       start: __wrapAction(this, update),
       success: __wrapAction(this, updateSuccess),
       fail: __wrapAction(this, updateFail)
-    })
-    // .then(() => {
-    //   this.fetch(instance.params);
-    // });
+    });
   }
 
   static _remove(instance) {
@@ -194,20 +171,17 @@ export default class BaseModel {
       start: __wrapAction(this, remove),
       success: __wrapAction(this, removeSuccess),
       fail: __wrapAction(this, removeFail)
-    })
-    .then(() => {
-      this.fetch(instance.params);
     });
   }
 
   static _reorder(instance, idx) {
     // order is stored starting at 1 to allow for resorting using 0 index,
     // but if we are moving towards the bottom of the list (orderIndex is increasing)
-    // we would be subtracting 1 from the new index because everything moves up 
+    // we would be subtracting 1 from the new index because everything moves up
     // into the vacated spot, thus we only add one if the orderIndex is decreasing
-    if ((idx+1) < instance.orderIndex) {
-      idx++;      
-    } 
+    if ((idx + 1) < instance.orderIndex) {
+      idx++;
+    }
     return this._update(instance.set('orderIndex', (idx)));
   }
 
@@ -221,7 +195,7 @@ export default class BaseModel {
     for (const field in this.FIELDS) {
       values[field] = instance[field];
     }
-    return Object.assign({}, { 
+    return Object.assign({}, {
       id: instance.id,
       orderIndex: instance.orderIndex
     }, values);
@@ -232,13 +206,9 @@ export default class BaseModel {
     for (const field in this.FIELDS) {
       // check for required fields
       if (this.FIELDS[field].required && !instance[field]) { valid = false; }
-    } 
+    }
     return valid
   }
 }
 
-const __getPath = (apiPath, pathParam) => (`/api/${apiPath}${pathParam ? `/${pathParam}` : ''}`);
-const __wrapAction = (Class, action) => { return (pl) => {
-  return action(pl, { Class });
-}};
- 
+

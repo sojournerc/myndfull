@@ -4,13 +4,13 @@ module.exports = {
   output: {
     filename: './dist/client/dev/js/main.js'
   },
-  devtool: 'cheap-source-map',
+  devtool: 'module-source-map',
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: './node_modules',
-        loader: 'babel-loader',
+        loader: 'babel-loader?cacheDirectory',
         query: {
           presets: [["es2015", { "modules": false }], 'stage-0', 'react']
         }

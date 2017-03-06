@@ -1148,9 +1148,11 @@
   border: 2px #4d5d53 solid;
   font-size: 0.9em;
   resize: none;
+  background-color: #454545;
+  color: inherit;
 }
 .input:disabled {
-  background-color: #cdcdcd;
+  background-color: #aaa;
 }
 textarea.input {
   min-height: 6rem;
@@ -1404,8 +1406,8 @@ html {
   font-size: 15px;
 }
 body {
-  color: #454545;
-  background-color: #cdcdcd;
+  color: #eaeaea;
+  background-color: #121212;
   font-family: sans-serif;
   margin: 0;
 }

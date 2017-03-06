@@ -4,16 +4,10 @@ import GoalModel from './GoalModel';
 
 import { STRING, TEXT, SELECT } from '../constants/field-types';
 
-export function create(dat) {
-  return new TaskModel(dat);
-}
-
 class TaskModel extends BaseModel {
-  
-  constructor(args) { super(args); }
 
   // properties mapped to field types
-  static get FIELDS() { 
+  static get FIELDS() {
     return Object.freeze({
       goalId: Object.freeze({
         required: true,
@@ -30,12 +24,16 @@ class TaskModel extends BaseModel {
         type: TEXT,
         default: ''
       })
-    }); 
+    });
   }
 
-  static get TYPE() { return 'TASK'; } 
+  static get TYPE() { return 'TASK'; }
   static get API_PATH() { return 'tasks'; }
 
+}
+
+export function create(dat) {
+  return new TaskModel(dat);
 }
 
 export default TaskModel;

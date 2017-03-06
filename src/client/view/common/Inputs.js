@@ -7,23 +7,20 @@ import {
   SELECT
 } from '../../constants/field-types.js';
 
-export const FIELD_MAP = {
-  [STRING]: TextInput,
-  [TEXT]: TextArea,
-  [SELECT]: Select
-}
 
 const inputPropTypes = {
   value: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func.isRequired,
-  disabled: React.PropTypes.bool
-}
+  disabled: React.PropTypes.bool,
+  className: React.PropTypes.string,
+  placeholder: React.PropTypes.string
+};
 
 function _passInputValue(handler) {
   return function(ev) {
     const val = ev.currentTarget.value;
     handler(val);
-  }
+  };
 }
 
 export function TextInput(props) {
@@ -34,7 +31,7 @@ export function TextInput(props) {
       // Matches MAXCHAR of STRING datatype in postgreSQL
       maxLength="255"
       placeholder={placeholder}
-      className={`input ${className || ''}`} 
+      className={`input ${className || ''}`}
       onChange={_passInputValue(onChange)}
       value={value}
       disabled={disabled}
@@ -49,12 +46,12 @@ TextInput.propTypes = inputPropTypes;
 export function TextArea(props) {
   const { value, onChange, onKeyDown, disabled, className, placeholder } = props;
   return (
-    <textarea 
-      type="text" 
-      className={`input ${className || ''}`} 
-      onChange={_passInputValue(onChange)} 
-      value={value} 
-      onKeyDown={onKeyDown  }
+    <textarea
+      type="text"
+      className={`input ${className || ''}`}
+      onChange={_passInputValue(onChange)}
+      value={value}
+      onKeyDown={onKeyDown}
       disabled={disabled}
       placeholder={placeholder}
     />
@@ -70,30 +67,34 @@ TextArea.propTypes = Object.assign({}, inputPropTypes, {
  */
 export function Select({ options, onChange, value, disabled }) {
   return (
-    <Select
+    <select
       value={value}
       onChange={(e, i, v) => { onChange(v); }}
-      maxHeight={200}
-      anchorOrigin={{ horizontal: 'left', vertical: 'center' }}
-      fullWidth={true}
+      disabled={disabled}
     >
-      {options.map(opt => {
-        return <MenuItem value={opt.id} key={opt.id} primaryText={opt.text} />
-      })}
-    </Select>
+      {options && options.map(opt => (
+        <option key={opt.id} value={opt.id}>{opt.text}</option>
+      ))}
+    </select>
   );
 }
 Select.propTypes = Object.assign({}, inputPropTypes, {
-  options: React.PropTypes.array.isRequired,
+  options: React.PropTypes.array,
   value: React.PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.number
   ]).isRequired
 });
 
+
+export const FIELD_MAP = {
+  [STRING]: TextInput,
+  [TEXT]: TextArea,
+  [SELECT]: Select
+};
+
 export default {
   TextInput,
   TextArea,
   Select
-}
- 
+};

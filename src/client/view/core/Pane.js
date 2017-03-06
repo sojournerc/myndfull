@@ -3,7 +3,6 @@ import React from 'react';
 import cn from 'classnames';
 import create from '../componentFactory';
 import connect from '../connectorFactory';
-import { store } from '../../state';
 
 import { showForm, hideForm } from '../../state/ui/actions';
 
@@ -15,12 +14,12 @@ import List from '../common/List';
 const mapStateToProps = (state, props) => ({
   items: state.api[props.ItemClass.API_PATH].items,
   itemsLoading: state.api[props.ItemClass.API_PATH].isFetching,
-  showingForm: state.ui.showingForm[props.ItemClass.TYPE]
+  showingForm: !!state.ui.showingForm[props.ItemClass.TYPE]
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
   onShowForm() {
-    dispatch(showForm(props.ItemClass.TYPE))
+    dispatch(showForm(props.ItemClass.TYPE));
   },
   onHideForm() {
     dispatch(hideForm(props.ItemClass.TYPE));
@@ -30,7 +29,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     dispatch(newInstance.makeWorkingItem());
   },
   onFetch() {
-    dispatch(props.ItemClass.fetch())
+    dispatch(props.ItemClass.fetch());
   }
 });
 
@@ -54,21 +53,23 @@ const Pane = create({
     this.props.onShowForm();
   },
   render() {
-    const { 
-      showingForm, 
-      onShowForm, 
-      onHideForm, 
-      ItemClass, 
-      items, 
-      itemsLoading 
+    const {
+      showingForm,
+      onHideForm,
+      ItemClass,
+      items,
+      itemsLoading
     } = this.props;
 
-    return <div className={cn(
-      'flex',
-      'flex-column',
-      'h100',
-      'w100'
-    )}>
+    return (
+    <div
+      className={cn(
+        'flex',
+        'flex-column',
+        'h100',
+        'w100'
+      )}
+    >
       <div className="py2 flex-item">
         <div className="flex flex-row justify-between items-center px2">
           <span className="h4 flex-item bold">{ItemClass.TYPE}</span>
@@ -85,15 +86,16 @@ const Pane = create({
         {showingForm &&
         <Form ItemClass={ItemClass} />
         ||
-        <List 
-          ItemClass={ItemClass} 
-          onShowForm={this.props.onShowForm} 
+        <List
+          ItemClass={ItemClass}
+          onShowForm={this.props.onShowForm}
           items={items}
           itemsLoading={itemsLoading}
         />
         }
       </div>
     </div>
+    );
   }
 });
 

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -18,7 +18,8 @@ import { store } from '../state';
 const App = create({
   displayName: 'App',
   render() {
-    return <div id='App'>
+    return (
+    <div id='App'>
       <Provider store={store} >
         <Router history={syncHistoryWithStore(browserHistory, store)}>
           <Route path="/" component={Myndfull}>
@@ -31,6 +32,7 @@ const App = create({
         </Router>
       </Provider>
     </div>
+    );
   }
 });
 

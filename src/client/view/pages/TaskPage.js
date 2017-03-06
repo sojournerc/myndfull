@@ -26,11 +26,11 @@ export const TaskPage = create({
         'h100',
         'w100'
       )}>
-        <Pane 
+        <Pane
           onShowForm={() => {}}
           onHideForm={() => {}}
           ItemClass={TaskModel}
-        />  
+        />
       </div>
     </div>
   }

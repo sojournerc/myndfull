@@ -172,17 +172,18 @@ function* reorder(db, Schema, body, updating, userId) {
       SET "orderIndex" = ("orderIndex" - 1) 
       WHERE "orderIndex" > ${updating.orderIndex} 
         AND "orderIndex" <= ${body.orderIndex} 
-        AND "userId" IS ${userId}
+        AND "userId" = ${userId}
         AND "deletedAt" IS NULL
     `);  
   } else if (body.orderIndex < updating.orderIndex) {
     // everything above the old order index and below the new order index increases one
+    console.log(body.orderIndex, updating.orderIndex);
     yield db.query(`
       UPDATE ${table} 
       SET "orderIndex" = ("orderIndex" + 1) 
       WHERE "orderIndex" >= ${body.orderIndex} 
         AND "orderIndex" < ${updating.orderIndex} 
-        AND "userId" IS ${userId}
+        AND "userId" = ${userId}
         AND "deletedAt" IS NULL
     `);
   }
@@ -193,7 +194,7 @@ function* decOrderIndexAbove(db, table, idx, userId) {
     UPDATE ${table} 
     SET "orderIndex" = ("orderIndex" - 1) 
       WHERE "orderIndex" > ${idx}
-        AND "userId" IS ${userId}
+        AND "userId" = ${userId}
         AND "deletedAt" IS NULL
   `);
 }
@@ -203,7 +204,7 @@ function* incOrderIndexAbove(db, table, idx, userId) {
     UPDATE ${table} 
     SET "orderIndex" = ("orderIndex" + 1)
       WHERE "orderIndex" > ${idx}
-        AND "userId" IS ${userId}
+        AND "userId" = ${userId}
         AND "deletedAt" IS NULL
   `);
 }

@@ -30,6 +30,12 @@ const mapStateToProps = (state, props) => ({
     return foreign;
   })(props)
 });
+const mapDispatchToProps = (dispatch, props) => ({
+  save(inst) { return dispatch(inst.save()); },
+  remove(inst) { return dispatch(inst.remove()); },
+  fetch() { return dispatch(props.ItemClass.fetch()) },
+  hideForm() { return dispatch(hideForm(props.ItemClass.TYPE)) }
+});  
 
 const Editor = create({
   displayName: 'Form',
@@ -46,15 +52,15 @@ const Editor = create({
     ev.preventDefault();
     const { workingItem } = this.props;
     if (!workingItem.valid) { return; }
-    workingItem.save().then(() => {
-      store.dispatch(hideForm(workingItem.type));
-    });
+    this.props.save(workingItem)
+    .then(this.props.fetch)
+    .then(this.props.hideForm);
   },
   _onRemove(ev) {
     const { workingItem } = this.props;
-    workingItem.remove().then(() => {
-      store.dispatch(hideForm(workingItem.type));
-    });
+    this.props.remove(workingItem)
+    .then(this.props.fetch)
+    .then(this.props.hideForm);
   },
   render() {
     const { ItemClass, workingItem, isSaving, foreignItems } = this.props;
@@ -98,4 +104,4 @@ const Editor = create({
   }
 });
 
-export default connect(Editor, mapStateToProps, () => ({}));
+export default connect(Editor, mapStateToProps, mapDispatchToProps);

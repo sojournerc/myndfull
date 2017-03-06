@@ -26,9 +26,9 @@ export const GoalPage = create({
         'h100',
         'w100'
       )}>
-        <Pane 
+        <Pane
           ItemClass={GoalModel}
-        />  
+        />
       </div>
     </div>
   }

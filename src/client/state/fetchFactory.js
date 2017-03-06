@@ -37,9 +37,10 @@ export default function createFetch({ path, method, start, success, fail, body, 
     })
     // http error codes handled here
     .then(handleResponse)
-    .then(res =>
+    .then(res => {
       dispatch(success(res))
-    )
+      return res;
+    })
     // app logic errors here
     .catch((err) => {
       console && console.error(err);

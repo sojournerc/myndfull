@@ -4,12 +4,6 @@ import cn from 'classnames';
 import create from '../componentFactory';
 import connect from '../connectorFactory';
 
-import { showForm } from '../../state/ui/actions';
-
-import { RemoveButton } from './Buttons';
-
-import { TYPE_LIST } from '../../models'
-
 import { store } from '../../state/index';
 
 import Target from './Target';
@@ -19,6 +13,19 @@ import {
   endDrag,
   moveDrag
 } from '../../state/dnd/actions';
+
+const persistReorder = (dispatch, props) => {
+  const state = store.getState();
+  const { dragging, dropTarget, draggingItem } = state.dnd;
+  // if we are touch then we need to add the element here
+  // otherwise this happens in droppable on the onDrop event
+  if (dragging && !!dropTarget) {
+    const updateClone = draggingItem.set('orderIndex',
+      draggingItem.orderIndex > dropTarget.index ? dropTarget.index + 1 : dropTarget.index);
+    dispatch(updateClone.save())
+      .then(() => dispatch(props.ItemClass.fetch()));
+  }
+};
 
 const mapStateToProps = (state) => ({
   isTouch: state.ui.clientInfo.isTouch,
@@ -34,6 +41,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     }));
   },
   onDragEnd() {
+    persistReorder(dispatch, props);
     dispatch(endDrag());
   },
   onTouchMove(ev, index, item) {
@@ -42,7 +50,7 @@ const mapDispatchToProps = (dispatch, props) => ({
       dispatch(moveDrag({
         dragX: touch.pageX,
         dragY: touch.pageY
-      }))
+      }));
     } else {
       dispatch(startDrag({
         dragX: touch.pageX,
@@ -50,17 +58,11 @@ const mapDispatchToProps = (dispatch, props) => ({
         dragging: true,
         draggingIndex: index,
         draggingItem: item
-      }))
+      }));
     }
   },
   onTouchEnd() {
-    const state = store.getState();
-    const { dragging, dropTarget, draggingItem } = state.dnd;
-    // if we are touch then we need to add the element here
-    // otherwise this happens in droppable on the onDrop event
-    if (dragging && !!dropTarget) {
-      debugger;
-    }
+    persistReorder(dispatch, props);
     dispatch(endDrag());
   },
   makeWorkingItem() {
@@ -85,12 +87,12 @@ const Item = create({
     onTouchMove: React.PropTypes.func,
     onTouchEnd: React.PropTypes.func
   },
-  _handleDragStart(ev) {
+  _handleDragStart() {
     const { index, item } = this.props;
     this.props.onDragStart(index, item);
   },
-  _handleDragEnd(ev) {
-    this.props.onDragEnd()
+  _handleDragEnd() {
+    this.props.onDragEnd();
   },
   _handleTouchMove(ev) {
     const { index, item } = this.props;
@@ -99,23 +101,17 @@ const Item = create({
   _handleTouchEnd() {
     this.props.onTouchEnd();
   },
-  _handleTouchTap() {
+  _handleClick() {
     this.props.makeWorkingItem();
     this.props.onShowForm();
   },
-  _handleRemoveClick(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.item.remove();
-  },
   render() {
-    const { item, index, isLast, isMobile, isTouch } = this.props;
-    return <div>
-      <Target  type={item.type} index={index} />
-      <MenuItem
-        onTouchTap={this._handleTouchTap}
-
-        desktop={!isMobile}
+    const { item, index, isLast, isTouch } = this.props;
+    return (
+    <div>
+      <Target type={item.type} index={index} />
+      <div
+        onClick={this._handleClick}
 
         // desktop
         draggable={!isTouch}
@@ -126,18 +122,23 @@ const Item = create({
         onTouchMove={this._handleTouchMove}
         onTouchEnd={this._handleTouchEnd}
       >
-        <div className={cn({py2: !isMobile})} >
-          <div className={cn(
-            'flex',
-            'flex-row',
-            'items-center'
-          )}>
-            <span className="flex-gs-item line-height-4 truncate" style={{ minWidth: 0 }}>{item.text}</span>
+        <div className={'p2'} >
+          <div
+            className={cn(
+             'flex',
+             'flex-row',
+             'items-center'
+            )}
+          >
+            <span className="lightest-color flex-gs-item line-height-4 truncate">
+              {item.text}
+            </span>
           </div>
         </div>
-      </MenuItem>
-      {isLast && <Target type={item.type} index={index+1} />}
+      </div>
+      {isLast && <Target type={item.type} index={index + 1} />}
     </div>
+    );
   }
 });
 
